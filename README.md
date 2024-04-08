@@ -12,28 +12,18 @@ Scalable Microservices Template with NestJS, Kafka, PostgreSQL, (Docker and K8S)
 
 ## Getting Started
 
-Follow these instructions to get Octopus up and running on your local machine for development and testing purposes.
-
-### Installation
-
-1. Clone the repository:
-
 ```bash
 git clone https://github.com/MahdadGhasemian/octopus.git
-```
 
-2. Install dependencies:
-
-```bash
 cd octopus
-pnpm install
+
+docker-compose up
 ```
 
-3. Start the development server:
+## Web UI Tools
 
-```bash
-pnpm run start:dev
-```
+1. [PgAdmin](http://localhost:8087/)
+1. [Kafka UI](http://localhost:9020/)
 
 ## Contributing
 
