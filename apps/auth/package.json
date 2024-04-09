@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@nestjs/mapped-types": "*",
+    "@nestjs/typeorm": "^10.0.2",
+    "typeorm": "^0.3.20"
+  }
 }
