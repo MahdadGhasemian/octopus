@@ -13,8 +13,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
-import { GetUserDto } from './users/dto/get-user.dto';
 import { GetOtpResponseDto } from './dto/get-otp.response.dto';
+import { GetUserDto } from './users/dto/get-user.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
