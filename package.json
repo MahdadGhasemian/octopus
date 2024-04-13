@@ -23,6 +23,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/microservices": "^10.3.7",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^7.3.1",
     "@nestjs/typeorm": "^10.0.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -35,6 +36,7 @@
     "pino-pretty": "^11.0.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "swagger-ui-express": "^5.0.0",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {

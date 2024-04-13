@@ -5,10 +5,25 @@ import { ConfigService } from '@nestjs/config';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
   const configService = app.get(ConfigService);
+  const documentOptions = new DocumentBuilder()
+    .setTitle('Auth App')
+    .setDescription('Authentication Manager')
+    .setVersion('1.0')
+    .addServer(
+      `http://localhost:${configService.getOrThrow<string>('HTTP_PORT')}`,
+      'Local environment',
+    )
+    // .addServer('https://staging.domain.com/', 'Staging')
+    .addTag('Health')
+    .addTag('Auth')
+    .addTag('Users')
+    .build();
+
   // app.connectMicroservice({
   //   transport: Transport.KAFKA,
   //   options: {
@@ -23,6 +38,9 @@ async function bootstrap() {
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useLogger(app.get(Logger));
+
+  const document = SwaggerModule.createDocument(app, documentOptions);
+  SwaggerModule.setup('docs', app, document);
   await app.startAllMicroservices();
   await app.listen(configService.get('HTTP_PORT'));
 }
