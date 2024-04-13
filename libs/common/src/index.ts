@@ -4,3 +4,4 @@ export * from './database';
 export * from './entities';
 export * from './decorators';
 export * from './auth';
+export * from './constants';
