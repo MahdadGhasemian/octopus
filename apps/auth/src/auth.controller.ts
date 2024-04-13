@@ -45,13 +45,14 @@ export class AuthController {
     @Body() _body: LoginDto,
     @Res({ passthrough: true }) response: Response,
   ) {
-    return this.authService.login(user, response);
+    await this.authService.login(user, response);
+    return user;
   }
 
   @Post('logout')
   @UseGuards(JwtAuthGuard)
   async logout(@Res({ passthrough: true }) response: Response) {
-    return this.authService.logout(response);
+    this.authService.logout(response);
   }
 
   @Get('info')

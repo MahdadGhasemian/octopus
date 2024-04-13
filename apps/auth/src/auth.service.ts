@@ -77,7 +77,8 @@ export class AuthService {
           hashed_password,
         });
 
-        return this.authenticate(user, response);
+        await this.authenticate(user, response);
+        return user;
       }
     } else {
       throw new UnauthorizedException('Credentials are not valid');
