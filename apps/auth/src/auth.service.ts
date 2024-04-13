@@ -4,18 +4,14 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { UsersService } from './users/users.service';
-import { SignupDto } from './dto/signup.dto';
-import { randomBytes, scrypt as _scrypt } from 'crypto';
-import { promisify } from 'util';
 import { GetOtpDto } from './dto/get-otp.dto';
 import { ConfirmOtpDto } from './dto/confirm-otp.dto';
-import { User } from '@app/common';
+import { AuthCommon, User } from '@app/common';
 import { Response } from 'express';
 import { TokenPayload } from './interfaces/token-payload.interface';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-
-const scrypt = promisify(_scrypt);
+import { CreateUserDto } from './users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -32,9 +28,7 @@ export class AuthService {
       otp,
     });
 
-    const salt = randomBytes(10).toString('hex');
-    const hash = (await scrypt(data, salt, 32)) as Buffer;
-    const hashed_code = salt + '.' + hash.toString('hex');
+    const hashed_code = await AuthCommon.createHash(data);
 
     // TODO
     // Send OTP code via Email service
@@ -45,21 +39,18 @@ export class AuthService {
   }
 
   async confirmOtp(confirmOtpDto: ConfirmOtpDto, response: Response) {
-    const [salt, storedHash] = confirmOtpDto.hashed_code.split('.');
+    try {
+      const data = JSON.stringify({
+        email: confirmOtpDto.email,
+        otp: confirmOtpDto.confirmation_code,
+      });
 
-    const data = JSON.stringify({
-      email: confirmOtpDto.email,
-      otp: confirmOtpDto.confirmation_code,
-    });
-    const hash = (await scrypt(data, salt, 32)) as Buffer;
+      await AuthCommon.compareHash(confirmOtpDto.hashed_code, data);
 
-    if (storedHash === hash.toString('hex')) {
       let hashed_password;
 
       if (confirmOtpDto?.password) {
-        const salt = randomBytes(10).toString('hex');
-        const hash = (await scrypt(confirmOtpDto.password, salt, 32)) as Buffer;
-        hashed_password = salt + '.' + hash.toString('hex');
+        hashed_password = await AuthCommon.createHash(confirmOtpDto.password);
       }
 
       try {
@@ -74,13 +65,14 @@ export class AuthService {
         const user = await this.usersService.create({
           email: confirmOtpDto.email,
           full_name: confirmOtpDto.full_name,
+          // @ts-expect-error
           hashed_password,
         });
 
         await this.authenticate(user, response);
         return user;
       }
-    } else {
+    } catch (error) {
       throw new UnauthorizedException('Credentials are not valid');
     }
   }
@@ -95,30 +87,18 @@ export class AuthService {
 
   async verifyUser(email: string, password: string) {
     const user = await this.usersService.findOne({ email });
-
-    const [salt, storedHash] = user.hashed_password.split('.');
-
-    const hash = (await scrypt(password, salt, 32)) as Buffer;
-
-    if (storedHash === hash.toString('hex')) {
-      return user;
-    } else {
+    try {
+      await AuthCommon.compareHash(user.hashed_password, password);
+    } catch (error) {
       throw new UnauthorizedException('Credentials are not valid');
     }
+
+    return user;
   }
 
   private generateUniqCode() {
     // random * (max - min) + min);
     return +Math.floor(Math.random() * 90000 + 10000);
-  }
-
-  private async validateSingup(signupDto: SignupDto) {
-    try {
-      await this.usersService.findOne({ email: signupDto.email });
-    } catch (error) {
-      return;
-    }
-    throw new UnprocessableEntityException('Email already exists!');
   }
 
   private async authenticate(user: User, response: Response): Promise<string> {

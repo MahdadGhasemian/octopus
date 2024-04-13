@@ -15,6 +15,7 @@ import {
 import { LoginDto } from './dto/login.dto';
 import { GetOtpResponseDto } from './dto/get-otp.response.dto';
 import { GetUserDto } from './users/dto/get-user.dto';
+import { Serialize } from './users/interceptors/serialize.interceptor';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -31,6 +32,7 @@ export class AuthController {
   }
 
   @Post('otp/confirm')
+  @Serialize(GetUserDto)
   async confirmOtp(
     @Body() body: ConfirmOtpDto,
     @Res({ passthrough: true }) response: Response,
@@ -40,6 +42,7 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(LocalAuthGuard)
+  @Serialize(GetUserDto)
   async login(
     @CurrentUser() user: User,
     @Body() _body: LoginDto,
@@ -57,6 +60,7 @@ export class AuthController {
 
   @Get('info')
   @UseGuards(JwtAuthGuard)
+  @Serialize(GetUserDto)
   @ApiOkResponse({
     type: GetUserDto,
   })

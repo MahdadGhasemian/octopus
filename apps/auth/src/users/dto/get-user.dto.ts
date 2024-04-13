@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class GetUserDto {
@@ -8,6 +9,7 @@ export class GetUserDto {
   })
   @IsNumber()
   @IsOptional()
+  @Expose()
   id?: number;
 
   @ApiProperty({
@@ -16,6 +18,7 @@ export class GetUserDto {
   })
   @IsEmail()
   @IsOptional()
+  @Expose()
   email?: string;
 
   @ApiProperty({
@@ -24,5 +27,6 @@ export class GetUserDto {
   })
   @IsString()
   @IsOptional()
+  @Expose()
   full_name?: string;
 }

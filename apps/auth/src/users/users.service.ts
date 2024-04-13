@@ -3,11 +3,22 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUserDto } from './dto/get-user.dto';
 import { UsersRepository } from './users.repository';
-import { Role, User } from '@app/common';
+import { AuthCommon, Role, User } from '@app/common';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
+
+  async propareNewUser(createUserDto: CreateUserDto) {
+    const hashed_password = await AuthCommon.createHash(createUserDto.password);
+
+    return this.create({
+      email: createUserDto.email,
+      full_name: createUserDto.full_name,
+      // @ts-expect-error
+      hashed_password,
+    });
+  }
 
   async create(createUserDto: CreateUserDto) {
     const user = new User({
@@ -18,7 +29,7 @@ export class UsersService {
   }
 
   async findAll() {
-    return `This action returns all users`;
+    return this.usersRepository.find({});
   }
 
   async findOne(getUserDto: GetUserDto) {
@@ -26,11 +37,16 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    return this.usersRepository.findOneAndUpdate(
+      { id },
+      {
+        full_name: updateUserDto.full_name,
+      },
+    );
   }
 
   async remove(id: number) {
-    return `This action removes a #${id} user`;
+    return this.usersRepository.findOneAndDelete({ id });
   }
 
   async getUser(getUserDto: GetUserDto) {
