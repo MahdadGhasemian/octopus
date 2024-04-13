@@ -1,8 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignupDto } from './dto/signup.dto';
 import { GetOtpDto } from './dto/get-otp.dto';
 import { ConfirmOtpDto } from './dto/confirm-otp.dto';
+import { Response } from 'express';
+import { CurrentUser, User } from '@app/common';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -13,13 +16,32 @@ export class AuthController {
     return this.authService.getOtp(body);
   }
 
-  @Post('/otp/confirm')
-  async confirmOtp(@Body() body: ConfirmOtpDto) {
-    return this.authService.confirmOtp(body);
+  @Post('otp/confirm')
+  async confirmOtp(
+    @Body() body: ConfirmOtpDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    return this.authService.confirmOtp(body, response);
   }
 
-  @Post('/signup')
-  async signup(@Body() body: SignupDto) {
-    return this.authService.signup(body);
+  @Post('login')
+  @UseGuards(LocalAuthGuard)
+  async login(
+    @CurrentUser() user: User,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    return this.authService.login(user, response);
+  }
+
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  async logout(@Res({ passthrough: true }) response: Response) {
+    return this.authService.logout(response);
+  }
+
+  @Get('info')
+  @UseGuards(JwtAuthGuard)
+  async getUser(@CurrentUser() user: User) {
+    return user;
   }
 }

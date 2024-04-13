@@ -26,5 +26,5 @@ export class ConfirmOtpDto {
 
   @IsString()
   @IsNotEmpty()
-  temp_token: string;
+  hashed_code: string;
 }

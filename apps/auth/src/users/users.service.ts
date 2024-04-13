@@ -33,12 +33,7 @@ export class UsersService {
     return `This action removes a #${id} user`;
   }
 
-  private async validateCreateUser(createUserDto: CreateUserDto) {
-    try {
-      await this.usersRepository.findOne({ email: createUserDto.email });
-    } catch (error) {
-      return;
-    }
-    throw new UnprocessableEntityException('Email already exists!');
+  async getUser(getUserDto: GetUserDto) {
+    return this.usersRepository.findOne(getUserDto, { roles: true });
   }
 }
