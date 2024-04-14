@@ -33,6 +33,12 @@ export class CreateUserDto {
   @IsOptional()
   password?: string;
 
+  @ApiProperty({
+    type: String,
+    example: ['admin'],
+    required: false,
+    isArray: true,
+  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })

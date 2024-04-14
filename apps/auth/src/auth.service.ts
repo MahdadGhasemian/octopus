@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  UnauthorizedException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users/users.service';
 import { GetOtpDto } from './dto/get-otp.dto';
 import { ConfirmOtpDto } from './dto/confirm-otp.dto';
@@ -11,7 +7,6 @@ import { Response } from 'express';
 import { TokenPayload } from './interfaces/token-payload.interface';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from './users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -67,6 +62,7 @@ export class AuthService {
           full_name: confirmOtpDto.full_name,
           // @ts-expect-error
           hashed_password,
+          roles: ['user'],
         });
 
         await this.authenticate(user, response);

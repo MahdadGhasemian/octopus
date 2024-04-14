@@ -15,6 +15,7 @@ import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Serialize } from './interceptors/serialize.interceptor';
 import { GetUserDto } from './dto/get-user.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { JwtAuthRoleGuard, Roles } from '@app/common';
 
 @ApiTags('Users')
 @Serialize(GetUserDto)
@@ -32,6 +33,8 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(JwtAuthRoleGuard)
+  @Roles('admin')
   @ApiOkResponse({
     type: [GetUserDto],
   })

@@ -17,6 +17,7 @@ export class UsersService {
       full_name: createUserDto.full_name,
       // @ts-expect-error
       hashed_password,
+      roles: createUserDto.roles,
     });
   }
 
@@ -29,11 +30,11 @@ export class UsersService {
   }
 
   async findAll() {
-    return this.usersRepository.find({});
+    return this.usersRepository.find({}, { roles: true });
   }
 
   async findOne(getUserDto: GetUserDto) {
-    return this.usersRepository.findOne(getUserDto);
+    return this.usersRepository.findOne({ id: getUserDto.id });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
@@ -50,6 +51,6 @@ export class UsersService {
   }
 
   async getUser(getUserDto: GetUserDto) {
-    return this.usersRepository.findOne(getUserDto, { roles: true });
+    return this.usersRepository.findOne({ id: getUserDto.id }, { roles: true });
   }
 }

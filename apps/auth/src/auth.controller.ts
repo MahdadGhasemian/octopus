@@ -33,6 +33,9 @@ export class AuthController {
 
   @Post('otp/confirm')
   @Serialize(GetUserDto)
+  @ApiOkResponse({
+    type: GetUserDto,
+  })
   async confirmOtp(
     @Body() body: ConfirmOtpDto,
     @Res({ passthrough: true }) response: Response,
