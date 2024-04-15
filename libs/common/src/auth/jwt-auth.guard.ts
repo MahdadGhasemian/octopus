@@ -1,9 +1,9 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   Logger,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
@@ -38,7 +38,7 @@ export class JwtAuthRoleGuard implements CanActivate {
         for (const role of roles) {
           if (!userRoles?.map((role) => role.name).includes(role)) {
             this.logger.error('The user does not have valid roles.');
-            throw new UnauthorizedException();
+            throw new ForbiddenException();
           }
         }
       }
@@ -55,7 +55,7 @@ export class JwtAuthRoleGuard implements CanActivate {
       //         for (const role of roles) {
       //           if (!res.roles?.map((role) => role.name).includes(role)) {
       //             this.logger.error('The user does not have valid roles.');
-      //             throw new UnauthorizedException();
+      //             throw new ForbiddenException();
       //           }
       //         }
       //       }

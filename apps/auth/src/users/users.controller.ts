@@ -25,6 +25,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @UseGuards(JwtAuthRoleGuard)
+  @Roles('admin')
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -43,6 +45,8 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthRoleGuard)
+  @Roles('admin')
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -51,6 +55,8 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthRoleGuard)
+  @Roles('admin')
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -59,6 +65,8 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthRoleGuard)
+  @Roles('admin')
   async remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }

@@ -34,7 +34,7 @@ export class UsersService {
   }
 
   async findOne(getUserDto: GetUserDto) {
-    return this.usersRepository.findOne({ id: getUserDto.id });
+    return this.usersRepository.findOne(getUserDto, { roles: true });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
@@ -51,6 +51,6 @@ export class UsersService {
   }
 
   async getUser(getUserDto: GetUserDto) {
-    return this.usersRepository.findOne({ id: getUserDto.id }, { roles: true });
+    return this.usersRepository.findOne(getUserDto, { roles: true });
   }
 }

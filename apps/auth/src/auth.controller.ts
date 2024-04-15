@@ -46,6 +46,9 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalAuthGuard)
   @Serialize(GetUserDto)
+  @ApiOkResponse({
+    type: GetUserDto,
+  })
   async login(
     @CurrentUser() user: User,
     @Body() _body: LoginDto,
