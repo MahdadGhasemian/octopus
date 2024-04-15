@@ -1,19 +1,17 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { EventPattern, Payload } from '@nestjs/microservices';
-import { UserCreatedEvent } from '@app/common';
+import { JwtAuthRoleGuard, Roles } from '@app/common';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller()
+@ApiTags('Products')
+@Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
+  @UseGuards(JwtAuthRoleGuard)
+  @Roles('admin')
   getHello(): string {
     return this.productsService.getHello();
-  }
-
-  @EventPattern('user_created')
-  async userCreated(@Payload() data: UserCreatedEvent) {
-    console.log({ stage: 'user_created products', ...data });
   }
 }

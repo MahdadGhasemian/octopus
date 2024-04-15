@@ -1,23 +1,13 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUserDto } from './dto/get-user.dto';
 import { UsersRepository } from './users.repository';
-import {
-  AuthCommon,
-  GENERAL_SERVICE,
-  Role,
-  User,
-  UserCreatedEvent,
-} from '@app/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { AuthCommon, Role, User } from '@app/common';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly usersRepository: UsersRepository,
-    @Inject(GENERAL_SERVICE) private readonly client: ClientKafka,
-  ) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   async propareNewUser(createUserDto: CreateUserDto) {
     const hashed_password = await AuthCommon.createHash(createUserDto.password);
@@ -36,11 +26,6 @@ export class UsersService {
       ...createUserDto,
       roles: createUserDto.roles?.map((roleDto) => new Role({ name: roleDto })),
     });
-
-    this.client.emit(
-      'user_created',
-      new UserCreatedEvent(user.id, user.email, user.full_name),
-    );
 
     return this.usersRepository.create(user);
   }

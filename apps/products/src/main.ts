@@ -5,6 +5,7 @@ import { Transport } from '@nestjs/microservices';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
+import { KAFKA_PRODUCTS_NAME } from '@app/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(ProductsModule);
@@ -16,7 +17,7 @@ async function bootstrap() {
         brokers: [configService.getOrThrow<string>('KAFKA_BROKER_URI')],
       },
       consumer: {
-        groupId: configService.getOrThrow<string>('KAFKA_GROUP_ID'),
+        groupId: `${KAFKA_PRODUCTS_NAME}-consumer`,
       },
     },
   });

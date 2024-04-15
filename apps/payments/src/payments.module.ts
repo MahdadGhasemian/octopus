@@ -1,7 +1,12 @@
 import { Module } from '@nestjs/common';
 import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
-import { GENERAL_SERVICE, HealthModule, LoggerModule } from '@app/common';
+import {
+  GENERAL_SERVICE,
+  HealthModule,
+  KAFKA_PAYMENTS_NAME,
+  LoggerModule,
+} from '@app/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { ClientsModule, Transport } from '@nestjs/microservices';
@@ -22,10 +27,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           transport: Transport.KAFKA,
           options: {
             client: {
+              clientId: `${KAFKA_PAYMENTS_NAME}`,
               brokers: [configService.getOrThrow<string>('KAFKA_BROKER_URI')],
             },
             consumer: {
-              groupId: configService.getOrThrow<string>('KAFKA_GROUP_ID'),
+              groupId: `${KAFKA_PAYMENTS_NAME}-consumer`,
             },
           },
         }),

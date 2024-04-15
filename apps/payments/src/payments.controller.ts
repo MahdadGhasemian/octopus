@@ -1,19 +1,17 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
-import { EventPattern, Payload } from '@nestjs/microservices';
-import { UserCreatedEvent } from '@app/common';
+import { JwtAuthRoleGuard, Roles } from '@app/common';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller()
+@ApiTags('Payments')
+@Controller('payments')
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @Get()
+  @UseGuards(JwtAuthRoleGuard)
+  @Roles('admin')
   getHello(): string {
     return this.paymentsService.getHello();
-  }
-
-  @EventPattern('user_created')
-  async userCreated(@Payload() data: UserCreatedEvent) {
-    console.log({ stage: 'user_created payments', ...data });
   }
 }

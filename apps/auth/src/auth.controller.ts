@@ -16,6 +16,7 @@ import { LoginDto } from './dto/login.dto';
 import { GetOtpResponseDto } from './dto/get-otp.response.dto';
 import { GetUserDto } from './users/dto/get-user.dto';
 import { Serialize } from './users/interceptors/serialize.interceptor';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -72,5 +73,11 @@ export class AuthController {
   })
   async getUser(@CurrentUser() user: User) {
     return user;
+  }
+
+  @MessagePattern('authenticate')
+  @UseGuards(JwtAuthGuard)
+  async authenticate(@Payload() data: Partial<{ user: GetUserDto }>) {
+    return JSON.stringify(data.user);
   }
 }
