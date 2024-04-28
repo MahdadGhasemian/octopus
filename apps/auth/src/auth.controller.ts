@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Patch, Post, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GetOtpDto } from './dto/get-otp.dto';
 import { ConfirmOtpDto } from './dto/confirm-otp.dto';
@@ -82,8 +90,6 @@ export class AuthController {
     type: GetUserDto,
   })
   async changeUserRole(@CurrentUser() user: User) {
-    console.log("============================================")
-    console.log(user)
     return this.authService.changeRole(user);
   }
 
