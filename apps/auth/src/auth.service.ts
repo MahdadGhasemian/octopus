@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users/users.service';
 import { GetOtpDto } from './dto/get-otp.dto';
 import { ConfirmOtpDto } from './dto/confirm-otp.dto';
-import { AuthCommon, User } from '@app/common';
+import { AuthCommon, Role, User } from '@app/common';
 import { Response } from 'express';
 import { TokenPayload } from './interfaces/token-payload.interface';
 import { ConfigService } from '@nestjs/config';
@@ -90,6 +90,10 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  async changeRole(user: User) {
+    return this.usersService.updateRole(user.id, { roles: ['user', 'admin'] });   
   }
 
   private generateUniqCode() {

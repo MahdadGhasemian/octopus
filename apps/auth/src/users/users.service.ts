@@ -47,6 +47,16 @@ export class UsersService {
     );
   }
 
+  async updateRole(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.usersRepository.findOne({ id }, { roles: true });
+
+    user.roles = updateUserDto.roles?.map(
+      (roleDto) => new Role({ name: roleDto }),
+    );
+
+    return this.usersRepository.create(user);
+  }
+
   async remove(id: number) {
     return this.usersRepository.findOneAndDelete({ id });
   }

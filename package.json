@@ -1,7 +1,7 @@
 {
   "name": "octopus",
   "version": "0.0.1",
-  "description": "",
+  "description": "![Octopus](.images/octopus.png)",
   "author": "",
   "scripts": {
     "build": "nest build",
@@ -85,5 +85,15 @@
     "moduleNameMapper": {
       "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1"
     }
-  }
+  },
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MahdadGhasemian/octopus.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MahdadGhasemian/octopus/issues"
+  },
+  "homepage": "https://github.com/MahdadGhasemian/octopus#readme"
 }

@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: ./apps/auth/Dockerfile
       target: development
-    command: pnpm run start:dev auth
+    command: npm run start:dev auth
     env_file:
       - ./apps/auth/.env
     ports:
@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: ./apps/payments/Dockerfile
       target: development
-    command: pnpm run start:dev payments
+    command: npm run start:dev payments
     env_file:
       - ./apps/payments/.env
     ports:
@@ -36,7 +36,7 @@ services:
       context: .
       dockerfile: ./apps/products/Dockerfile
       target: development
-    command: pnpm run start:dev products
+    command: npm run start:dev products
     env_file:
       - ./apps/products/.env
     ports:
