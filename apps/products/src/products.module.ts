@@ -10,6 +10,7 @@ import {
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -39,6 +40,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       },
     ]),
     HealthModule,
+    CategoriesModule,
+    CategoriesModule,
   ],
   controllers: [ProductsController],
   providers: [ProductsService],

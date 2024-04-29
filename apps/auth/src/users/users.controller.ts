@@ -12,10 +12,9 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Serialize } from './interceptors/serialize.interceptor';
 import { GetUserDto } from './dto/get-user.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { Roles } from '@app/common';
+import { Roles, Serialize } from '@app/common';
 import { JwtAuthRoleGuard } from '../guards/jwt-auth-role.guard';
 
 @ApiTags('Users')
