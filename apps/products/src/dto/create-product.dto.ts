@@ -23,6 +23,7 @@ export class CreateProductDto {
   description?: string;
 
   @ApiProperty({
+    example: 'http://www.localhost/image1000.jpg',
     required: false,
   })
   @IsString()
