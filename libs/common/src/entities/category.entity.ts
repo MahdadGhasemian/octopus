@@ -1,5 +1,6 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { AbstractEntity } from '../database';
+import { Product } from './product.entity';
 
 @Entity()
 export class Category extends AbstractEntity<Category> {
@@ -11,4 +12,7 @@ export class Category extends AbstractEntity<Category> {
 
   @Column()
   image?: string;
+
+  @OneToMany(() => Product, (product) => product.category)
+  products: Product[];
 }
