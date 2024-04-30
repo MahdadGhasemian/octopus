@@ -87,4 +87,14 @@ export class OrdersController {
   async clearOrderItems(@CurrentUser() user: User, @Param('id') id: string) {
     return this.ordersService.clearItems({ id: +id }, user);
   }
+
+  @Patch(':id/cancel')
+  @UseGuards(JwtAuthRoleGuard)
+  @Roles('user')
+  @ApiOkResponse({
+    type: GetOrderDto,
+  })
+  async cancelOrder(@CurrentUser() user: User, @Param('id') id: string) {
+    return this.ordersService.cancelOrder({ id: +id }, user);
+  }
 }

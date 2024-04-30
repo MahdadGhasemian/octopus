@@ -1,7 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
-import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { CreateOrderItemDto } from './create-order-items.dto';
+import { OrderStatus } from '@app/common';
 
 export class GetOrderDto {
   @ApiProperty({
@@ -30,6 +37,15 @@ export class GetOrderDto {
   @Type(() => CreateOrderItemDto)
   @Expose()
   order_items?: CreateOrderItemDto[];
+
+  @ApiProperty({
+    enum: OrderStatus,
+    default: OrderStatus.PENDING,
+    required: true,
+  })
+  @IsEnum(OrderStatus)
+  @Expose()
+  order_status?: OrderStatus;
 
   @ApiProperty({
     required: false,
