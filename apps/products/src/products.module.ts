@@ -15,6 +15,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsRepository } from './products.repository';
 import { OrdersModule } from './orders/orders.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -48,8 +49,10 @@ import { OrdersModule } from './orders/orders.module';
     HealthModule,
     CategoriesModule,
     OrdersModule,
+    PaymentsModule,
   ],
   controllers: [ProductsController],
   providers: [ProductsService, ProductsRepository],
+  exports: [ProductsService],
 })
 export class ProductsModule {}

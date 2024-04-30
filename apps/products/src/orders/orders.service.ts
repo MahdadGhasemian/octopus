@@ -5,15 +5,19 @@ import { Order, OrderItem, OrderStatus, Product, User } from '@app/common';
 import { OrdersRepository } from './orders.repository';
 import { GetOrderDto } from './dto/get-orders.dto';
 import { OrderItemsRepository } from './order-items.repository';
+// import { ProductsService } from '../products.service';
 
 @Injectable()
 export class OrdersService {
   constructor(
     private readonly ordersRepository: OrdersRepository,
     private readonly orderItemsRepository: OrderItemsRepository,
+    // private readonly productsService: ProductsService,
   ) {}
 
   async create(createOrderDto: CreateOrderDto, user: User) {
+    const total_bill_amount = await this.calcualteTotalAmount(createOrderDto);
+
     const order = new Order({
       ...createOrderDto,
       order_items: createOrderDto.order_items.map((item) => {
@@ -22,6 +26,7 @@ export class OrdersService {
           quantity: item.quantity,
         });
       }),
+      total_bill_amount,
       order_status: OrderStatus.PENDING,
       user_id: user.id,
     });
@@ -54,10 +59,11 @@ export class OrdersService {
     user: User,
   ) {
     await this.checkOrderIsValidToEdit(orderDto, user);
+    const total_bill_amount = await this.calcualteTotalAmount(updateOrderDto);
 
     const result = await this.ordersRepository.findOneAndUpdate(
       { ...orderDto, user_id: user.id },
-      updateOrderDto,
+      { ...updateOrderDto, total_bill_amount },
     );
 
     return this.findOne({ id: result.id }, user);
@@ -82,11 +88,18 @@ export class OrdersService {
       },
     );
 
-    return Promise.all(
+    await Promise.all(
       order.order_items?.map(async (orderItem) => {
         await this.orderItemsRepository.findOneAndDelete({ id: orderItem.id });
       }),
     );
+
+    await this.ordersRepository.findOneAndUpdate(
+      { ...orderDto, user_id: user.id },
+      { total_bill_amount: 0 },
+    );
+
+    return;
   }
 
   async cancelOrder(orderDto: GetOrderDto, user: User) {
@@ -111,5 +124,23 @@ export class OrdersService {
         'This order is not on pending status, so you can not edit it.',
       );
     }
+  }
+
+  private async calcualteTotalAmount(
+    createOrderDto: CreateOrderDto | UpdateOrderDto,
+  ) {
+    // return (
+    //   await Promise.all(
+    //     createOrderDto.order_items.map(async (item) => {
+    //       const product = await this.productsService.findOne({
+    //         id: item.product_id,
+    //       });
+
+    //       return { amount: item.quantity * product.sale_price };
+    //     }),
+    //   )
+    // ).reduce((acc, current) => acc + current.amount, 0);
+
+    return 0;
   }
 }

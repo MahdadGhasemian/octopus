@@ -1,25 +1,21 @@
 import { Module } from '@nestjs/common';
-import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
-import {
-  GENERAL_SERVICE,
-  HealthModule,
-  KAFKA_PAYMENTS_NAME,
-  LoggerModule,
-} from '@app/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import * as Joi from 'joi';
+import { PaymentsController } from './payments.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import {
+  Payment,
+  DatabaseModule,
+  GENERAL_SERVICE,
+  KAFKA_PRODUCTS_NAME,
+} from '@app/common';
+import { ConfigService } from '@nestjs/config';
+import { PaymentsRepository } from './payments.repository';
+import { OrdersModule } from '../orders/orders.module';
 
 @Module({
   imports: [
-    LoggerModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-      validationSchema: Joi.object({
-        HTTP_PORT: Joi.number().required(),
-      }),
-    }),
+    DatabaseModule,
+    DatabaseModule.forFeature([Payment]),
     ClientsModule.registerAsync([
       {
         name: GENERAL_SERVICE,
@@ -27,20 +23,21 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           transport: Transport.KAFKA,
           options: {
             client: {
-              clientId: `${KAFKA_PAYMENTS_NAME}`,
+              clientId: `${KAFKA_PRODUCTS_NAME}`,
               brokers: [configService.getOrThrow<string>('KAFKA_BROKER_URI')],
             },
             consumer: {
-              groupId: `${KAFKA_PAYMENTS_NAME}-consumer`,
+              groupId: `${KAFKA_PRODUCTS_NAME}-consumer`,
             },
           },
         }),
         inject: [ConfigService],
       },
     ]),
-    HealthModule,
+    OrdersModule,
   ],
   controllers: [PaymentsController],
-  providers: [PaymentsService],
+  providers: [PaymentsService, PaymentsRepository],
+  exports: [PaymentsService],
 })
 export class PaymentsModule {}
