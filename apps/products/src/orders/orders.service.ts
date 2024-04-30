@@ -108,7 +108,7 @@ export class OrdersService {
 
     if (order.order_status !== OrderStatus.PENDING) {
       throw new ForbiddenException(
-        'This order is not on pending status, so you can not edited it.',
+        'This order is not on pending status, so you can not edit it.',
       );
     }
   }
