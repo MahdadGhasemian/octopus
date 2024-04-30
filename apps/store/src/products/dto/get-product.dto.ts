@@ -8,7 +8,7 @@ import {
   IsString,
   IsUrl,
 } from 'class-validator';
-import { GetCategoryDto } from '../categories/dto/get-category.dto';
+import { GetCategoryDto } from '../../categories/dto/get-category.dto';
 
 export class GetProductDto {
   @ApiProperty({

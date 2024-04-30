@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payments.dto';
 import { UpdatePaymentDto } from './dto/update-payments.dto';
-import { Payment, PaymentStatus, User } from '@app/common';
+import { OrderStatus, Payment, PaymentStatus, User } from '@app/common';
 import { PaymentsRepository } from './payments.repository';
 import { GetPaymentDto } from './dto/get-payments.dto';
 import { OrdersService } from '../orders/orders.service';
@@ -14,7 +14,6 @@ export class PaymentsService {
   ) {}
 
   async create(createPaymentDto: CreatePaymentDto, user: User) {
-    console.log(createPaymentDto);
     // Do a fake payment
     const order = await this.ordersService.findOne(
       {
@@ -27,12 +26,18 @@ export class PaymentsService {
       ...createPaymentDto,
       amount: order.total_bill_amount,
       payment_status: PaymentStatus.PAID,
+      paid_date: new Date(),
       user_id: user.id,
     });
 
-    const result = await this.paymentsRepository.create(payment);
+    const paymentResult = await this.paymentsRepository.create(payment);
+    await this.ordersService.updateIsPaid(
+      { id: order.id },
+      { order_status: OrderStatus.PAID, is_paid: true },
+      user,
+    );
 
-    return this.findOne({ id: result.id }, user);
+    return this.findOne({ id: paymentResult.id }, user);
   }
 
   async findAll(user: User) {

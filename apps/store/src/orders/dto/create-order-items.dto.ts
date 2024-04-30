@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { IsNumber, IsObject, IsString } from 'class-validator';
-import { GetProductDto } from '../../dto/get-product.dto';
+import { GetProductDto } from '../../products/dto/get-product.dto';
 
 export class CreateOrderItemDto {
   @ApiProperty({

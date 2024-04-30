@@ -11,11 +11,8 @@ export class Payment extends AbstractEntity<Payment> {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   amount: number;
 
-  @Column({ length: 3 })
-  currency: string;
-
-  @Column()
-  paid_date: Date;
+  @Column({ nullable: true })
+  paid_date?: Date;
 
   @Column({
     type: 'enum',
@@ -32,5 +29,5 @@ export class Payment extends AbstractEntity<Payment> {
   order: Order;
 
   @Column({ length: 255 })
-  description: string;
+  description?: string;
 }

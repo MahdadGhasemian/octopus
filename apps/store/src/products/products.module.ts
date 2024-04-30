@@ -5,17 +5,14 @@ import {
   DatabaseModule,
   GENERAL_SERVICE,
   HealthModule,
-  KAFKA_PRODUCTS_NAME,
+  KAFKA_STORE_NAME,
   LoggerModule,
   Product,
 } from '@app/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { CategoriesModule } from './categories/categories.module';
 import { ProductsRepository } from './products.repository';
-import { OrdersModule } from './orders/orders.module';
-import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -35,11 +32,11 @@ import { PaymentsModule } from './payments/payments.module';
           transport: Transport.KAFKA,
           options: {
             client: {
-              clientId: `${KAFKA_PRODUCTS_NAME}`,
+              clientId: `${KAFKA_STORE_NAME}`,
               brokers: [configService.getOrThrow<string>('KAFKA_BROKER_URI')],
             },
             consumer: {
-              groupId: `${KAFKA_PRODUCTS_NAME}-consumer`,
+              groupId: `${KAFKA_STORE_NAME}-consumer`,
             },
           },
         }),
@@ -47,9 +44,6 @@ import { PaymentsModule } from './payments/payments.module';
       },
     ]),
     HealthModule,
-    CategoriesModule,
-    OrdersModule,
-    PaymentsModule,
   ],
   controllers: [ProductsController],
   providers: [ProductsService, ProductsRepository],

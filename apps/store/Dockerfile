@@ -8,12 +8,12 @@ COPY package-lock.json ./
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
 
-COPY apps/products apps/products
+COPY apps/store apps/store
 COPY libs libs
 
 RUN npm install -r
 
-RUN npm run build products
+RUN npm run build store
 
 # ============== Stage 2 ================
 FROM node:alpine as production
@@ -30,4 +30,4 @@ RUN npm install --prod
 
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD [ "node", "dist/apps/products/main" ]
+CMD [ "node", "dist/apps/store/main" ]

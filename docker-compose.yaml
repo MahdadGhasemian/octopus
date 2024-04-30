@@ -15,14 +15,14 @@ services:
       - kafka
       - postgres
 
-  products:
+  store:
     build:
       context: .
-      dockerfile: ./apps/products/Dockerfile
+      dockerfile: ./apps/store/Dockerfile
       target: development
-    command: npm run start:dev products
+    command: npm run start:dev store
     env_file:
-      - ./apps/products/.env
+      - ./apps/store/.env
     ports:
       - '3001:3001'
     volumes:

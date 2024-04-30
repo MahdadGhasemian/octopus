@@ -28,6 +28,9 @@ export class Order extends AbstractEntity<Order> {
   @OneToMany(() => Payment, (payment) => payment.order)
   payments: Payment[];
 
+  @Column({ default: false })
+  is_paid: boolean;
+
   @Column()
   note: string;
 }

@@ -6,12 +6,13 @@ import {
   Order,
   DatabaseModule,
   GENERAL_SERVICE,
-  KAFKA_PRODUCTS_NAME,
+  KAFKA_STORE_NAME,
   OrderItem,
 } from '@app/common';
 import { ConfigService } from '@nestjs/config';
 import { OrdersRepository } from './orders.repository';
 import { OrderItemsRepository } from './order-items.repository';
+import { ProductsModule } from '../products/products.module';
 
 @Module({
   imports: [
@@ -24,17 +25,18 @@ import { OrderItemsRepository } from './order-items.repository';
           transport: Transport.KAFKA,
           options: {
             client: {
-              clientId: `${KAFKA_PRODUCTS_NAME}`,
+              clientId: `${KAFKA_STORE_NAME}`,
               brokers: [configService.getOrThrow<string>('KAFKA_BROKER_URI')],
             },
             consumer: {
-              groupId: `${KAFKA_PRODUCTS_NAME}-consumer`,
+              groupId: `${KAFKA_STORE_NAME}-consumer`,
             },
           },
         }),
         inject: [ConfigService],
       },
     ]),
+    ProductsModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService, OrdersRepository, OrderItemsRepository],

@@ -6,7 +6,7 @@ import {
   Category,
   DatabaseModule,
   GENERAL_SERVICE,
-  KAFKA_PRODUCTS_NAME,
+  KAFKA_STORE_NAME,
 } from '@app/common';
 import { ConfigService } from '@nestjs/config';
 import { CategoriesRepository } from './categories.repository';
@@ -22,11 +22,11 @@ import { CategoriesRepository } from './categories.repository';
           transport: Transport.KAFKA,
           options: {
             client: {
-              clientId: `${KAFKA_PRODUCTS_NAME}`,
+              clientId: `${KAFKA_STORE_NAME}`,
               brokers: [configService.getOrThrow<string>('KAFKA_BROKER_URI')],
             },
             consumer: {
-              groupId: `${KAFKA_PRODUCTS_NAME}-consumer`,
+              groupId: `${KAFKA_STORE_NAME}-consumer`,
             },
           },
         }),

@@ -4,13 +4,14 @@ import {
   IsDateString,
   IsEnum,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
 } from 'class-validator';
-import { CreateOrderItemDto } from './create-order-items.dto';
-import { OrderStatus } from '@app/common';
+import { Order, PaymentStatus } from '@app/common';
+import { GetOrderDto } from '../../orders/dto/get-orders.dto';
 
-export class GetOrderDto {
+export class GetPaymentDto {
   @ApiProperty({
     example: '1',
     required: true,
@@ -21,39 +22,34 @@ export class GetOrderDto {
   id?: number;
 
   @ApiProperty({
-    type: Date,
-    required: true,
-  })
-  @IsDateString()
-  @Expose()
-  order_date?: Date;
-
-  @ApiProperty({
-    type: String,
-    required: true,
-    isArray: true,
-  })
-  @IsString()
-  @Type(() => CreateOrderItemDto)
-  @Expose()
-  order_items?: CreateOrderItemDto[];
-
-  @ApiProperty({
     example: 49,
     required: true,
   })
   @IsNumber()
   @Expose()
-  total_bill_amount?: number;
+  amount?: number;
 
   @ApiProperty({
-    enum: OrderStatus,
-    default: OrderStatus.PENDING,
+    type: Date,
     required: true,
   })
-  @IsEnum(OrderStatus)
+  @IsDateString()
   @Expose()
-  order_status?: OrderStatus;
+  paid_date?: Date;
+
+  @ApiProperty({
+    enum: PaymentStatus,
+    default: PaymentStatus.PENDING,
+    required: true,
+  })
+  @IsEnum(PaymentStatus)
+  @Expose()
+  payment_status?: PaymentStatus;
+
+  @IsObject()
+  @Type(() => GetOrderDto)
+  @Expose()
+  order?: Order;
 
   @ApiProperty({
     required: false,

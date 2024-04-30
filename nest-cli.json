@@ -26,13 +26,13 @@
         "tsConfigPath": "apps/auth/tsconfig.app.json"
       }
     },
-    "products": {
+    "store": {
       "type": "application",
-      "root": "apps/products",
+      "root": "apps/store",
       "entryFile": "main",
-      "sourceRoot": "apps/products/src",
+      "sourceRoot": "apps/store/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/products/tsconfig.app.json"
+        "tsConfigPath": "apps/store/tsconfig.app.json"
       }
     }
   },

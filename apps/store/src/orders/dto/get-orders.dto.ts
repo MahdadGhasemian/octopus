@@ -1,18 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import {
-  IsCurrency,
+  IsBoolean,
   IsDateString,
   IsEnum,
   IsNumber,
-  IsObject,
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Order, PaymentStatus } from '@app/common';
-import { GetOrderDto } from '../../orders/dto/get-orders.dto';
+import { CreateOrderItemDto } from './create-order-items.dto';
+import { OrderStatus } from '@app/common';
 
-export class GetPaymentDto {
+export class GetOrderDto {
   @ApiProperty({
     example: '1',
     required: true,
@@ -23,42 +22,47 @@ export class GetPaymentDto {
   id?: number;
 
   @ApiProperty({
-    example: 49,
-    required: true,
-  })
-  @IsNumber()
-  @Expose()
-  amount?: number;
-
-  @ApiProperty({
-    example: '',
-    required: true,
-  })
-  @IsCurrency()
-  @Expose()
-  currency?: string;
-
-  @ApiProperty({
     type: Date,
     required: true,
   })
   @IsDateString()
   @Expose()
-  paid_date?: Date;
+  order_date?: Date;
 
   @ApiProperty({
-    enum: PaymentStatus,
-    default: PaymentStatus.PENDING,
+    type: String,
+    required: true,
+    isArray: true,
+  })
+  @IsString()
+  @Type(() => CreateOrderItemDto)
+  @Expose()
+  order_items?: CreateOrderItemDto[];
+
+  @ApiProperty({
+    example: 49,
     required: true,
   })
-  @IsEnum(PaymentStatus)
+  @IsNumber()
   @Expose()
-  payment_status?: PaymentStatus;
+  total_bill_amount?: number;
 
-  @IsObject()
-  @Type(() => GetOrderDto)
+  @ApiProperty({
+    enum: OrderStatus,
+    default: OrderStatus.PENDING,
+    required: true,
+  })
+  @IsEnum(OrderStatus)
   @Expose()
-  order?: Order;
+  order_status?: OrderStatus;
+
+  @ApiProperty({
+    example: true,
+    required: true,
+  })
+  @IsBoolean()
+  @Expose()
+  is_paid?: boolean;
 
   @ApiProperty({
     required: false,

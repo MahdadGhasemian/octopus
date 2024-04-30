@@ -1,19 +1,19 @@
 import { NestFactory } from '@nestjs/core';
-import { ProductsModule } from './products.module';
+import { StoreModule } from './store.module';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
-import { KAFKA_PRODUCTS_NAME } from '@app/common';
+import { KAFKA_STORE_NAME } from '@app/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(ProductsModule);
+  const app = await NestFactory.create(StoreModule);
   const configService = app.get(ConfigService);
   const documentOptions = new DocumentBuilder()
-    .setTitle('Products App')
-    .setDescription('Product Manager')
+    .setTitle('Store App')
+    .setDescription('Store Manager')
     .setVersion('1.0')
     .addServer(
       `http://localhost:${configService.getOrThrow<string>('HTTP_PORT')}`,
@@ -22,6 +22,8 @@ async function bootstrap() {
     .addTag('Health')
     .addTag('Categories')
     .addTag('Products')
+    .addTag('Orders')
+    .addTag('Payments')
     .build();
 
   app.connectMicroservice({
@@ -31,7 +33,7 @@ async function bootstrap() {
         brokers: [configService.getOrThrow<string>('KAFKA_BROKER_URI')],
       },
       consumer: {
-        groupId: `${KAFKA_PRODUCTS_NAME}-consumer`,
+        groupId: `${KAFKA_STORE_NAME}-consumer`,
       },
     },
   });
