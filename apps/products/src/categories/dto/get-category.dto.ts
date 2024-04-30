@@ -13,7 +13,7 @@ export class GetCategoryDto {
   id?: number;
 
   @ApiProperty({
-    example: 'Cateogry 1',
+    example: 'Category 1',
     required: true,
   })
   @IsString()

@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { AbstractEntity } from '../database';
 import { Category } from './category.entity';
+import { OrderItem } from './order_item.entity';
 
 @Entity()
 export class Product extends AbstractEntity<Product> {
@@ -28,4 +29,7 @@ export class Product extends AbstractEntity<Product> {
 
   @Column()
   is_active: boolean;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
+  order_items: OrderItem[];
 }

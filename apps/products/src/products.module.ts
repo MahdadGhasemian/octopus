@@ -14,6 +14,7 @@ import * as Joi from 'joi';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsRepository } from './products.repository';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { ProductsRepository } from './products.repository';
     ]),
     HealthModule,
     CategoriesModule,
+    OrdersModule,
   ],
   controllers: [ProductsController],
   providers: [ProductsService, ProductsRepository],

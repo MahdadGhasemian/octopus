@@ -3,7 +3,7 @@ import { IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class CreateCategoryDto {
   @ApiProperty({
-    example: 'Cateogry 1',
+    example: 'Category 1',
     required: true,
   })
   @IsString()
