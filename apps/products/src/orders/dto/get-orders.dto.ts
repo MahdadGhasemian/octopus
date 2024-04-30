@@ -13,10 +13,6 @@ export class GetOrderDto {
   @Expose()
   id?: number;
 
-  @IsNumber()
-  @Expose()
-  user_id?: number;
-
   @ApiProperty({
     type: Date,
     required: true,

@@ -37,7 +37,7 @@ export class OrdersController {
     @CurrentUser() user: User,
     @Body() createOrderDto: CreateOrderDto,
   ) {
-    return this.ordersService.create({ ...createOrderDto, user_id: user.id });
+    return this.ordersService.create(createOrderDto, user);
   }
 
   @Get()
@@ -47,7 +47,7 @@ export class OrdersController {
     type: [GetOrderDto],
   })
   async findAll(@CurrentUser() user: User) {
-    return this.ordersService.findAll({ user_id: user.id });
+    return this.ordersService.findAll(user);
   }
 
   @Get(':id')
@@ -57,7 +57,7 @@ export class OrdersController {
     type: GetOrderDto,
   })
   async findOne(@CurrentUser() user: User, @Param('id') id: string) {
-    return this.ordersService.findOne({ id: +id, user_id: user.id });
+    return this.ordersService.findOne({ id: +id }, user);
   }
 
   @Patch(':id')
@@ -71,23 +71,20 @@ export class OrdersController {
     @Param('id') id: string,
     @Body() updateOrderDto: UpdateOrderDto,
   ) {
-    return this.ordersService.update(
-      { id: +id, user_id: user.id },
-      updateOrderDto,
-    );
+    return this.ordersService.update({ id: +id }, updateOrderDto, user);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthRoleGuard)
   @Roles('user')
   async remove(@CurrentUser() user: User, @Param('id') id: string) {
-    return this.ordersService.remove({ id: +id, user_id: user.id });
+    return this.ordersService.remove({ id: +id }, user);
   }
 
   @Delete(':id/clear')
   @UseGuards(JwtAuthRoleGuard)
   @Roles('user')
   async clearOrderItems(@CurrentUser() user: User, @Param('id') id: string) {
-    return this.ordersService.clearItems({ id: +id, user_id: user.id });
+    return this.ordersService.clearItems({ id: +id }, user);
   }
 }

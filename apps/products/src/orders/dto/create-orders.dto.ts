@@ -1,18 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsArray,
-  IsDateString,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsArray, IsDateString, IsOptional, IsString } from 'class-validator';
 import { CreateOrderItemDto } from './create-order-items.dto';
 
 export class CreateOrderDto {
-  @IsOptional()
-  @IsNumber()
-  user_id?: number;
-
   @ApiProperty({
     type: Date,
     required: true,

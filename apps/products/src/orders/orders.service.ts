@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { UpdateOrderDto } from './dto/update-orders.dto';
-import { Order, OrderItem, Product } from '@app/common';
+import { Order, OrderItem, Product, User } from '@app/common';
 import { OrdersRepository } from './orders.repository';
 import { GetOrderDto } from './dto/get-orders.dto';
 import { OrderItemsRepository } from './order-items.repository';
@@ -13,7 +13,7 @@ export class OrdersService {
     private readonly orderItemsRepository: OrderItemsRepository,
   ) {}
 
-  async create(createOrderDto: CreateOrderDto) {
+  async create(createOrderDto: CreateOrderDto, user: User) {
     const order = new Order({
       ...createOrderDto,
       order_items: createOrderDto.order_items.map((item) => {
@@ -22,39 +22,56 @@ export class OrdersService {
           quantity: item.quantity,
         });
       }),
+      user_id: user.id,
     });
 
     const result = await this.ordersRepository.create(order);
 
-    return this.findOne({ id: result.id });
+    return this.findOne({ id: result.id }, user);
   }
 
-  async findAll(orderDto: GetOrderDto) {
-    return this.ordersRepository.find(orderDto);
+  async findAll(user: User) {
+    return this.ordersRepository.find({ user_id: user.id });
   }
 
-  async findOne(orderDto: GetOrderDto) {
-    return this.ordersRepository.findOne(orderDto, {
-      order_items: {
-        product: {
-          category: true,
+  async findOne(orderDto: GetOrderDto, user: User) {
+    return this.ordersRepository.findOne(
+      { ...orderDto, user_id: user.id },
+      {
+        order_items: {
+          product: {
+            category: true,
+          },
         },
       },
+    );
+  }
+
+  async update(
+    orderDto: GetOrderDto,
+    updateOrderDto: UpdateOrderDto,
+    user: User,
+  ) {
+    return this.ordersRepository.findOneAndUpdate(
+      { ...orderDto, user_id: user.id },
+      updateOrderDto,
+    );
+  }
+
+  async remove(orderDto: GetOrderDto, user: User) {
+    return this.ordersRepository.findOneAndDelete({
+      ...orderDto,
+      user_id: user.id,
     });
   }
 
-  async update(orderDto: GetOrderDto, updateOrderDto: UpdateOrderDto) {
-    return this.ordersRepository.findOneAndUpdate(orderDto, updateOrderDto);
-  }
-
-  async remove(orderDto: GetOrderDto) {
-    return this.ordersRepository.findOneAndDelete(orderDto);
-  }
-
-  async clearItems(orderDto: GetOrderDto) {
-    const order = await this.ordersRepository.findOne(orderDto, {
-      order_items: true,
-    });
+  async clearItems(orderDto: GetOrderDto, user: User) {
+    const order = await this.ordersRepository.findOne(
+      { ...orderDto, user_id: user.id },
+      {
+        order_items: true,
+      },
+    );
 
     return Promise.all(
       order.order_items?.map(async (orderItem) => {
