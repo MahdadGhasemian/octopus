@@ -9,3 +9,4 @@ export * from './events';
 export * from './modules';
 export * from './interceptors';
 export * from './enum';
+export * from './files';

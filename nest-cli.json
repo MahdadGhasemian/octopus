@@ -34,6 +34,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/store/tsconfig.app.json"
       }
+    },
+    "storage": {
+      "type": "application",
+      "root": "apps/storage",
+      "entryFile": "main",
+      "sourceRoot": "apps/storage/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/storage/tsconfig.app.json"
+      }
     }
   },
   "monorepo": true,

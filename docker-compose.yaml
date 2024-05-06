@@ -30,6 +30,23 @@ services:
     depends_on:
       - kafka
       - postgres
+  
+  storage:
+    build:
+      context: .
+      dockerfile: ./apps/storage/Dockerfile
+      target: development
+    command: npm run start:dev storage
+    env_file:
+      - ./apps/storage/.env
+    ports:
+      - '3002:3002'
+    volumes:
+      - .:/usr/src/app
+      - images_data:/usr/src/values/images
+    depends_on:
+      - kafka
+      - postgres
 
   kafdrop:
     image: obsidiandynamics/kafdrop
@@ -106,3 +123,4 @@ volumes:
   kafka_data:
   postgres_data:
   pgadmin_data:
+  images_data:
