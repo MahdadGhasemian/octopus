@@ -5,6 +5,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -12,11 +13,12 @@ import {
 import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ImagesService } from './images.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Express, Response } from 'express';
+import { Response } from 'express';
 import { diskStorage } from 'multer';
 import { IMAGE_PATH, fileName, imageFileFilter } from '@app/common';
 import { UploadImageDto } from './dto/upload-image.dto';
 import { GetImageDto } from './dto/get-image.dto';
+import { UploadImageResponseDto } from './dto/get-image-response.dto';
 
 @ApiTags('Images')
 @Controller('images')
@@ -35,11 +37,10 @@ export class ImagesController {
   )
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'List of cats',
     type: UploadImageDto,
   })
   @ApiOkResponse({
-    type: GetImageDto,
+    type: UploadImageResponseDto,
   })
   async uploadImage(
     @UploadedFile() file: Express.Multer.File,
@@ -48,17 +49,22 @@ export class ImagesController {
     return this.imagesService.uploadImage(file, uploadImageDto);
   }
 
-  @Get(':filename')
+  @Get(':fileName')
   async downloadImage(
-    @Param('filename') filename: string,
+    @Param('fileName') fileName: string,
+    @Query() query: GetImageDto,
     @Res() res: Response,
   ) {
     try {
-      const imagePath = await this.imagesService.downloadImage(filename);
+      const imagePath = await this.imagesService.downloadImage(
+        fileName,
+        query.width,
+        query.quality,
+      );
 
       res.download(imagePath);
     } catch (error) {
-      throw new NotFoundException(error);
+      throw new NotFoundException('File Not Found');
     }
   }
 }

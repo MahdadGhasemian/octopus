@@ -31,7 +31,9 @@ RUN npm install --prod
 COPY --from=development /usr/src/app/dist ./dist
 
 RUN mkdir -p /usr/src/values/images
+RUN mkdir -p /usr/src/values/cache_images
 
 ENV IMAGE_PATH=/usr/src/values/images
+ENV CACHE_IMAGE_PATH=/usr/src/values/cache_images
 
 CMD [ "node", "dist/apps/storage/main" ]

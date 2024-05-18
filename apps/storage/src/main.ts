@@ -2,10 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { StorageModule } from './storage.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { Transport } from '@nestjs/microservices';
+// import { Transport } from '@nestjs/microservices';
 import * as cookieParser from 'cookie-parser';
 import { Logger } from 'nestjs-pino';
-import { KAFKA_STORAGE_NAME } from '@app/common';
+// import { KAFKA_STORAGE_NAME } from '@app/common';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {

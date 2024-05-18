@@ -30,7 +30,7 @@ services:
     depends_on:
       - kafka
       - postgres
-  
+
   storage:
     build:
       context: .
@@ -44,6 +44,7 @@ services:
     volumes:
       - .:/usr/src/app
       - images_data:/usr/src/values/images
+      - cache_images_data:/usr/src/values/cache_images
     depends_on:
       - kafka
       - postgres
@@ -124,3 +125,4 @@ volumes:
   postgres_data:
   pgadmin_data:
   images_data:
+  cache_images_data:

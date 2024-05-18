@@ -19,6 +19,7 @@ import * as Joi from 'joi';
         HTTP_PORT: Joi.number().required(),
         UPLOAD_FILE_MAX_SIZE: Joi.number().required(),
         BASE_URL_DOWNLOAD_IMAGES: Joi.string().required(),
+        CACHE_IMAGE_PATH: Joi.string().required(),
       }),
     }),
     ClientsModule.registerAsync([

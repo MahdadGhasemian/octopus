@@ -1,30 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNumber, IsOptional } from 'class-validator';
 
 export class GetImageDto {
   @ApiProperty({
-    required: true,
-  })
-  @IsString()
-  name?: string;
-
-  @ApiProperty({
-    required: true,
+    required: false,
   })
   @IsNumber()
-  size?: number;
-
-  @ApiProperty({
-    required: true,
-  })
-  @IsString()
-  @IsUrl()
-  url?: string;
+  @IsOptional()
+  @Type(() => Number)
+  width?: number;
 
   @ApiProperty({
     required: false,
   })
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  description?: string;
+  @Type(() => Number)
+  quality?: number;
 }
