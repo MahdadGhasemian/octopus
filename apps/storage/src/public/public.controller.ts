@@ -11,58 +11,58 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { ImagesService } from './images.service';
+import { PublicService } from './public.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { diskStorage } from 'multer';
-import { IMAGE_PATH, fileName, imageFileFilter } from '@app/common';
-import { UploadImageDto } from './dto/upload-image.dto';
-import { GetImageDto } from './dto/get-image.dto';
-import { UploadImageResponseDto } from './dto/get-image-response.dto';
+import { destination, fileName, imageFileFilter } from '@app/common';
+import { UploadFileDto } from './dto/upload-file.dto';
+import { GetFileDto } from './dto/get-file.dto';
+import { UploadFileResponseDto } from './dto/get-file-response.dto';
 
-@ApiTags('Images')
-@Controller('images')
-export class ImagesController {
-  constructor(private readonly imagesService: ImagesService) {}
+@ApiTags('Public')
+@Controller('public')
+export class PublicController {
+  constructor(private readonly publicService: PublicService) {}
 
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
         filename: fileName,
-        destination: IMAGE_PATH,
+        destination: destination,
       }),
       fileFilter: imageFileFilter,
     }),
   )
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    type: UploadImageDto,
+    type: UploadFileDto,
   })
   @ApiOkResponse({
-    type: UploadImageResponseDto,
+    type: UploadFileResponseDto,
   })
-  async uploadImage(
+  async uploadFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body() uploadImageDto: UploadImageDto,
+    @Body() uploadFileDto: UploadFileDto,
   ) {
-    return this.imagesService.uploadImage(file, uploadImageDto);
+    return this.publicService.uploadFile(file, uploadFileDto);
   }
 
   @Get(':fileName')
-  async downloadImage(
+  async downloadFile(
     @Param('fileName') fileName: string,
-    @Query() query: GetImageDto,
+    @Query() query: GetFileDto,
     @Res() res: Response,
   ) {
     try {
-      const imagePath = await this.imagesService.downloadImage(
+      const filePath = await this.publicService.downloadFile(
         fileName,
         query.width,
         query.quality,
       );
 
-      res.download(imagePath);
+      res.download(filePath);
     } catch (error) {
       throw new NotFoundException('File Not Found');
     }

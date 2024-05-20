@@ -31,9 +31,15 @@ RUN npm install --prod
 COPY --from=development /usr/src/app/dist ./dist
 
 RUN mkdir -p /usr/src/values/images
+RUN mkdir -p /usr/src/values/documents
+RUN mkdir -p /usr/src/values/media
+RUN mkdir -p /usr/src/values/compressed
 RUN mkdir -p /usr/src/values/cache_images
 
 ENV IMAGE_PATH=/usr/src/values/images
+ENV DOCUMENT_PATH=/usr/src/values/documents
+ENV MEDIA_PATH=/usr/src/values/media
+ENV COMPRESSED_PATH=/usr/src/values/compressed
 ENV CACHE_IMAGE_PATH=/usr/src/values/cache_images
 
 CMD [ "node", "dist/apps/storage/main" ]

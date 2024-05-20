@@ -20,7 +20,8 @@ async function bootstrap() {
       'Local environment',
     )
     .addTag('Health')
-    .addTag('Images')
+    .addTag('Public')
+    .addTag('Private')
     .build();
 
   // app.connectMicroservice({

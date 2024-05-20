@@ -1,15 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ImagesController } from './images.controller';
-import { ImagesService } from './images.service';
+import { PublicController } from './public.controller';
+import { PublicService } from './public.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
-import { IMAGE_PATH } from '@app/common';
 
 @Module({
   imports: [
     MulterModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
-        dest: IMAGE_PATH,
         limits: {
           fieldSize: configService.get<number>('UPLOAD_FILE_MAX_SIZE'),
         },
@@ -17,7 +15,7 @@ import { IMAGE_PATH } from '@app/common';
       inject: [ConfigService],
     }),
   ],
-  controllers: [ImagesController],
-  providers: [ImagesService],
+  controllers: [PublicController],
+  providers: [PublicService],
 })
-export class ImagesModule {}
+export class PublicModule {}

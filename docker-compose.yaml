@@ -44,6 +44,9 @@ services:
     volumes:
       - .:/usr/src/app
       - images_data:/usr/src/values/images
+      - documents_data:/usr/src/values/documents
+      - media_data:/usr/src/values/media
+      - compressed_data:/usr/src/values/compressed
       - cache_images_data:/usr/src/values/cache_images
     depends_on:
       - kafka
@@ -125,4 +128,7 @@ volumes:
   postgres_data:
   pgadmin_data:
   images_data:
+  documents_data:
+  media_data:
+  compressed_data:
   cache_images_data:

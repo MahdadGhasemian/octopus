@@ -7,7 +7,7 @@ import {
 } from '@app/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ImagesModule } from './images/images.module';
+import { PublicModule } from './public/public.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -18,7 +18,11 @@ import * as Joi from 'joi';
       validationSchema: Joi.object({
         HTTP_PORT: Joi.number().required(),
         UPLOAD_FILE_MAX_SIZE: Joi.number().required(),
-        BASE_URL_DOWNLOAD_IMAGES: Joi.string().required(),
+        BASE_URL_DOWNLOAD: Joi.string().required(),
+        IMAGE_PATH: Joi.string().required(),
+        DOCUMENT_PATH: Joi.string().required(),
+        MEDIA_PATH: Joi.string().required(),
+        COMPRESSED_PATH: Joi.string().required(),
         CACHE_IMAGE_PATH: Joi.string().required(),
       }),
     }),
@@ -41,7 +45,7 @@ import * as Joi from 'joi';
       },
     ]),
     HealthModule,
-    ImagesModule,
+    PublicModule,
   ],
   controllers: [],
   providers: [],
