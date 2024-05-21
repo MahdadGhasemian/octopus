@@ -27,6 +27,7 @@ export class PrivateFilesService {
     const privateFile = new PrivateFile({
       file_name: file.filename,
       url,
+      description: uploadFileDto.description,
       user_id: user.id,
     });
 

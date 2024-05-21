@@ -9,6 +9,9 @@ export class PrivateFile extends AbstractEntity<PrivateFile> {
   @Column()
   url: string;
 
+  @Column({ nullable: true })
+  description: string;
+
   @Column()
   user_id: number;
 }
