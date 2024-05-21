@@ -48,6 +48,11 @@ services:
       - media_data:/usr/src/values/media
       - compressed_data:/usr/src/values/compressed
       - cache_images_data:/usr/src/values/cache_images
+      - images_data_private:/usr/src/values/images_private
+      - documents_data_private:/usr/src/values/documents_private
+      - media_data_private:/usr/src/values/media_private
+      - compressed_data_private:/usr/src/values/compressed_private
+      - cache_images_data_private:/usr/src/values/cache_images_private
     depends_on:
       - kafka
       - postgres
@@ -132,3 +137,8 @@ volumes:
   media_data:
   compressed_data:
   cache_images_data:
+  images_data_private:
+  documents_data_private:
+  media_data_private:
+  compressed_data_private:
+  cache_images_data_private:

@@ -35,11 +35,23 @@ RUN mkdir -p /usr/src/values/documents
 RUN mkdir -p /usr/src/values/media
 RUN mkdir -p /usr/src/values/compressed
 RUN mkdir -p /usr/src/values/cache_images
+RUN mkdir -p /usr/src/values/images_private
+RUN mkdir -p /usr/src/values/documents_private
+RUN mkdir -p /usr/src/values/media_private
+RUN mkdir -p /usr/src/values/compressed_private
+RUN mkdir -p /usr/src/values/cache_images_private
+
 
 ENV IMAGE_PATH=/usr/src/values/images
 ENV DOCUMENT_PATH=/usr/src/values/documents
 ENV MEDIA_PATH=/usr/src/values/media
 ENV COMPRESSED_PATH=/usr/src/values/compressed
 ENV CACHE_IMAGE_PATH=/usr/src/values/cache_images
+ENV IMAGE_PRIVATE_PATH=/usr/src/values/images_private
+ENV DOCUMENT_PRIVATE_PATH=/usr/src/values/documents_private
+ENV MEDIA_PRIVATE_PATH=/usr/src/values/media_private
+ENV COMPRESSED_PRIVATE_PATH=/usr/src/values/compressed_private
+ENV CACHE_IMAGE_PRIVATE_PATH=/usr/src/values/cache_images_private
+
 
 CMD [ "node", "dist/apps/storage/main" ]

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString, IsUrl } from 'class-validator';
 
-export class UploadFileResponseDto {
+export class UploadPublicFileResponseDto {
   @ApiProperty({
     required: true,
   })
@@ -20,10 +20,4 @@ export class UploadFileResponseDto {
   @IsString()
   @IsUrl()
   url: string;
-
-  @ApiProperty({
-    required: true,
-  })
-  @IsString()
-  description: string;
 }

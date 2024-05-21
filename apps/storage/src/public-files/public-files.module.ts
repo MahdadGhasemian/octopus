@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { PublicController } from './public.controller';
-import { PublicService } from './public.service';
+import { PublicFilesController } from './public-files.controller';
+import { PublicFilesService } from './public-files.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 
@@ -15,7 +15,7 @@ import { ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
   ],
-  controllers: [PublicController],
-  providers: [PublicService],
+  controllers: [PublicFilesController],
+  providers: [PublicFilesService],
 })
-export class PublicModule {}
+export class PublicFilesModule {}

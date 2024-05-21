@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   NotFoundException,
@@ -11,52 +10,52 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { PublicService } from './public.service';
+import { PublicFilesService } from './public-files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { diskStorage } from 'multer';
-import { destination, fileName, imageFileFilter } from '@app/common';
-import { UploadFileDto } from './dto/upload-file.dto';
-import { GetFileDto } from './dto/get-file.dto';
-import { UploadFileResponseDto } from './dto/get-file-response.dto';
+import { FileTypeValidationPipe } from '@app/common';
+import { UploadPublicFileDto } from './dto/upload-public-file.dto';
+import { GetPublicFileDto } from './dto/get-public-file.dto';
+import { UploadPublicFileResponseDto } from './dto/get-public-file-response.dto';
+import { publicDestination, fileName } from '../file/files.utils';
 
-@ApiTags('Public')
-@Controller('public')
-export class PublicController {
-  constructor(private readonly publicService: PublicService) {}
+@ApiTags('PublicFiles')
+@Controller('public-files')
+export class PublicFilesController {
+  constructor(private readonly publicFilesService: PublicFilesService) {}
 
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
         filename: fileName,
-        destination: destination,
+        destination: publicDestination,
       }),
-      fileFilter: imageFileFilter,
     }),
   )
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    type: UploadFileDto,
+    type: UploadPublicFileDto,
   })
   @ApiOkResponse({
-    type: UploadFileResponseDto,
+    type: UploadPublicFileResponseDto,
   })
   async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() uploadFileDto: UploadFileDto,
+    @UploadedFile(new FileTypeValidationPipe())
+    file: Express.Multer.File,
   ) {
-    return this.publicService.uploadFile(file, uploadFileDto);
+    return this.publicFilesService.uploadFile(file);
   }
 
   @Get(':fileName')
   async downloadFile(
     @Param('fileName') fileName: string,
-    @Query() query: GetFileDto,
+    @Query() query: GetPublicFileDto,
     @Res() res: Response,
   ) {
     try {
-      const filePath = await this.publicService.downloadFile(
+      const filePath = await this.publicFilesService.downloadFile(
         fileName,
         query.width,
         query.quality,

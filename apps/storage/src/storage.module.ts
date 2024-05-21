@@ -7,7 +7,8 @@ import {
   LoggerModule,
 } from '@app/common';
 import { ConfigModule } from '@nestjs/config';
-import { PublicModule } from './public/public.module';
+import { PublicFilesModule } from './public-files/public-files.module';
+import { PrivateFilesModule } from './private-files/private-files.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -18,12 +19,18 @@ import * as Joi from 'joi';
       validationSchema: Joi.object({
         HTTP_PORT: Joi.number().required(),
         UPLOAD_FILE_MAX_SIZE: Joi.number().required(),
-        BASE_URL_DOWNLOAD: Joi.string().required(),
+        BASE_PUBLIC_URL_DOWNLOAD: Joi.string().required(),
+        BASE_PRIVATE_URL_DOWNLOAD: Joi.string().required(),
         IMAGE_PATH: Joi.string().required(),
         DOCUMENT_PATH: Joi.string().required(),
         MEDIA_PATH: Joi.string().required(),
         COMPRESSED_PATH: Joi.string().required(),
         CACHE_IMAGE_PATH: Joi.string().required(),
+        IMAGE_PRIVATE_PATH: Joi.string().required(),
+        DOCUMENT_PRIVATE_PATH: Joi.string().required(),
+        MEDIA_PRIVATE_PATH: Joi.string().required(),
+        COMPRESSED_PRIVATE_PATH: Joi.string().required(),
+        CACHE_IMAGE_PRIVATE_PATH: Joi.string().required(),
       }),
     }),
     KafkaModule.forRoot(
@@ -32,7 +39,8 @@ import * as Joi from 'joi';
       `${KAFKA_STORAGE_NAME}-consumer`,
     ),
     HealthModule,
-    PublicModule,
+    PublicFilesModule,
+    PrivateFilesModule,
   ],
   controllers: [],
   providers: [],
