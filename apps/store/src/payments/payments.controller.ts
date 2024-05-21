@@ -2,13 +2,7 @@ import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payments.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import {
-  CurrentUser,
-  JwtAuthRoleGuard,
-  Roles,
-  Serialize,
-  User,
-} from '@app/common';
+import { CurrentUser, JwtAuthAccessGuard, Serialize, User } from '@app/common';
 import { GetPaymentDto } from './dto/get-payments.dto';
 
 @ApiTags('Payments')
@@ -18,8 +12,7 @@ export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @Post()
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('user')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: GetPaymentDto,
   })

@@ -12,13 +12,7 @@ import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { UpdateOrderDto } from './dto/update-orders.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import {
-  CurrentUser,
-  JwtAuthRoleGuard,
-  Roles,
-  Serialize,
-  User,
-} from '@app/common';
+import { CurrentUser, JwtAuthAccessGuard, Serialize, User } from '@app/common';
 import { GetOrderDto } from './dto/get-orders.dto';
 
 @ApiTags('Orders')
@@ -28,8 +22,7 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('user')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: GetOrderDto,
   })
@@ -41,8 +34,7 @@ export class OrdersController {
   }
 
   @Get()
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('user')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: [GetOrderDto],
   })
@@ -51,8 +43,7 @@ export class OrdersController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('user')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: GetOrderDto,
   })
@@ -61,8 +52,7 @@ export class OrdersController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('user')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: GetOrderDto,
   })
@@ -75,22 +65,19 @@ export class OrdersController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('user')
+  @UseGuards(JwtAuthAccessGuard)
   async remove(@CurrentUser() user: User, @Param('id') id: string) {
     return this.ordersService.remove({ id: +id }, user);
   }
 
   @Delete(':id/clear')
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('user')
+  @UseGuards(JwtAuthAccessGuard)
   async clearOrderItems(@CurrentUser() user: User, @Param('id') id: string) {
     return this.ordersService.clearItems({ id: +id }, user);
   }
 
   @Patch(':id/cancel')
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('user')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: GetOrderDto,
   })

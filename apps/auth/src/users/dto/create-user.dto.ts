@@ -34,14 +34,12 @@ export class CreateUserDto {
   password?: string;
 
   @ApiProperty({
-    type: String,
-    example: ['admin'],
-    required: false,
+    type: Number,
+    example: [1, 2],
+    required: true,
     isArray: true,
   })
-  @IsOptional()
   @IsArray()
-  @IsString({ each: true })
   @IsNotEmpty({ each: true })
-  roles?: string[];
+  access_ids: number[];
 }

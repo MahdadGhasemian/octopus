@@ -8,6 +8,7 @@ import * as Joi from 'joi';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt-strategy';
+import { AccessesModule } from './accesses/accesses.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { JwtStrategy } from './strategies/jwt-strategy';
     }),
     HealthModule,
     UsersModule,
+    AccessesModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],

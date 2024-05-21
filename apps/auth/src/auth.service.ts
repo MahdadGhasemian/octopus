@@ -60,9 +60,8 @@ export class AuthService {
         const user = await this.usersService.create({
           email: confirmOtpDto.email,
           full_name: confirmOtpDto.full_name,
-          // @ts-expect-error
           hashed_password,
-          roles: ['user'],
+          access_ids: [3],
         });
 
         await this.authenticate(user, response);
@@ -90,10 +89,6 @@ export class AuthService {
     }
 
     return user;
-  }
-
-  async changeRole(user: User) {
-    return this.usersService.updateRole(user.id, { roles: ['user', 'admin'] });
   }
 
   private generateUniqCode() {

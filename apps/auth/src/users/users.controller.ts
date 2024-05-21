@@ -14,8 +14,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { GetUserDto } from './dto/get-user.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { Roles, Serialize } from '@app/common';
-import { JwtAuthRoleGuard } from '../guards/jwt-auth-role.guard';
+import { Serialize } from '@app/common';
+import { JwtAuthAccessGuard } from '../guards/jwt-auth-access.guard';
 
 @ApiTags('Users')
 @Serialize(GetUserDto)
@@ -25,8 +25,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -35,8 +34,7 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: [GetUserDto],
   })
@@ -45,8 +43,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -55,8 +52,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -65,8 +61,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthAccessGuard)
   async remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }

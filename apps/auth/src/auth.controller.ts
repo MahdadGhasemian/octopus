@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Patch,
-  Post,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GetOtpDto } from './dto/get-otp.dto';
 import { ConfirmOtpDto } from './dto/confirm-otp.dto';
@@ -81,16 +73,6 @@ export class AuthController {
   })
   async getUser(@CurrentUser() user: User) {
     return user;
-  }
-
-  @Patch('role/to/admin')
-  @UseGuards(JwtAuthGuard)
-  @Serialize(GetUserDto)
-  @ApiOkResponse({
-    type: GetUserDto,
-  })
-  async changeUserRole(@CurrentUser() user: User) {
-    return this.authService.changeRole(user);
   }
 
   @MessagePattern('authenticate')

@@ -1,28 +1,33 @@
-import { Module, DynamicModule } from '@nestjs/common';
+import { Module, DynamicModule, Global } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ConfigService } from '@nestjs/config';
 
+@Global()
 @Module({})
 export class KafkaModule {
-  static register(options: {
-    name: string;
-    brokerUri: string;
-    groupId: string;
-  }): DynamicModule {
+  static forRoot(
+    name: string,
+    clientId: string,
+    groupId: string,
+  ): DynamicModule {
     return {
       module: KafkaModule,
       imports: [
+        ConfigModule,
         ClientsModule.registerAsync([
           {
-            name: options.name,
+            name,
             useFactory: (configService: ConfigService) => ({
               transport: Transport.KAFKA,
               options: {
                 client: {
-                  brokers: [options.brokerUri],
+                  clientId,
+                  brokers: [
+                    configService.getOrThrow<string>('KAFKA_BROKER_URI'),
+                  ],
                 },
                 consumer: {
-                  groupId: options.groupId,
+                  groupId,
                 },
               },
             }),

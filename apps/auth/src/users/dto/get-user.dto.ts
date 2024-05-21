@@ -8,7 +8,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { RoleDto } from './role.dto';
+import { GetAccessDto } from '../../accesses/dto/get-access.dto';
 
 export class GetUserDto {
   @ApiProperty({
@@ -39,15 +39,13 @@ export class GetUserDto {
   full_name?: string;
 
   @ApiProperty({
-    required: false,
+    type: GetAccessDto,
+    required: true,
     isArray: true,
-    type: RoleDto,
   })
-  @IsOptional()
   @IsArray()
-  @IsString({ each: true })
   @IsNotEmpty({ each: true })
-  @Type(() => RoleDto)
+  @Type(() => GetAccessDto)
   @Expose()
-  roles?: RoleDto[];
+  accesses?: GetAccessDto[];
 }

@@ -1,4 +1,4 @@
-import { JwtAuthRoleGuard, Roles, Serialize } from '@app/common';
+import { JwtAuthAccessGuard, Serialize } from '@app/common';
 import {
   Controller,
   Get,
@@ -22,8 +22,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: GetProductDto,
   })
@@ -48,8 +47,7 @@ export class ProductsController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: GetProductDto,
   })
@@ -61,8 +59,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthAccessGuard)
   async remove(@Param('id') id: string) {
     return this.productsService.remove(+id);
   }

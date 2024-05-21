@@ -12,7 +12,7 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { JwtAuthRoleGuard, Roles, Serialize } from '@app/common';
+import { JwtAuthAccessGuard, Serialize } from '@app/common';
 import { GetCategoryDto } from './dto/get-category.dto';
 
 @ApiTags('Categories')
@@ -22,8 +22,7 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Post()
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: GetCategoryDto,
   })
@@ -48,8 +47,7 @@ export class CategoriesController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthAccessGuard)
   @ApiOkResponse({
     type: GetCategoryDto,
   })
@@ -61,8 +59,7 @@ export class CategoriesController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthRoleGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthAccessGuard)
   async remove(@Param('id') id: string) {
     return this.categoriesService.remove(+id);
   }

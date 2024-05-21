@@ -3,15 +3,12 @@ import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import {
   DatabaseModule,
-  GENERAL_SERVICE,
   HealthModule,
-  KAFKA_STORE_NAME,
   LoggerModule,
   Product,
 } from '@app/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ProductsRepository } from './products.repository';
 
 @Module({
@@ -25,24 +22,6 @@ import { ProductsRepository } from './products.repository';
         HTTP_PORT: Joi.number().required(),
       }),
     }),
-    ClientsModule.registerAsync([
-      {
-        name: GENERAL_SERVICE,
-        useFactory: (configService: ConfigService) => ({
-          transport: Transport.KAFKA,
-          options: {
-            client: {
-              clientId: `${KAFKA_STORE_NAME}`,
-              brokers: [configService.getOrThrow<string>('KAFKA_BROKER_URI')],
-            },
-            consumer: {
-              groupId: `${KAFKA_STORE_NAME}-consumer`,
-            },
-          },
-        }),
-        inject: [ConfigService],
-      },
-    ]),
     HealthModule,
   ],
   controllers: [ProductsController],

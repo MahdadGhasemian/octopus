@@ -1,6 +1,6 @@
 import { AbstractEntity } from '../database';
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
-import { Role } from './role.entity';
+import { Access } from './access.entity';
 
 @Entity()
 export class User extends AbstractEntity<User> {
@@ -13,7 +13,7 @@ export class User extends AbstractEntity<User> {
   @Column()
   hashed_password: string;
 
-  @ManyToMany(() => Role, { cascade: true })
+  @ManyToMany(() => Access)
   @JoinTable()
-  roles?: Role[];
+  accesses: Access[];
 }

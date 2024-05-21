@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import {
-  GENERAL_SERVICE,
+  AUTH_SERVICE,
   HealthModule,
   KAFKA_STORAGE_NAME,
+  KafkaModule,
   LoggerModule,
 } from '@app/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule } from '@nestjs/config';
 import { PublicModule } from './public/public.module';
 import * as Joi from 'joi';
 
@@ -26,24 +26,11 @@ import * as Joi from 'joi';
         CACHE_IMAGE_PATH: Joi.string().required(),
       }),
     }),
-    ClientsModule.registerAsync([
-      {
-        name: GENERAL_SERVICE,
-        useFactory: (configService: ConfigService) => ({
-          transport: Transport.KAFKA,
-          options: {
-            client: {
-              clientId: `${KAFKA_STORAGE_NAME}`,
-              brokers: [configService.getOrThrow<string>('KAFKA_BROKER_URI')],
-            },
-            consumer: {
-              groupId: `${KAFKA_STORAGE_NAME}-consumer`,
-            },
-          },
-        }),
-        inject: [ConfigService],
-      },
-    ]),
+    KafkaModule.forRoot(
+      AUTH_SERVICE,
+      `${KAFKA_STORAGE_NAME}`,
+      `${KAFKA_STORAGE_NAME}-consumer`,
+    ),
     HealthModule,
     PublicModule,
   ],
