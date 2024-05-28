@@ -19,7 +19,7 @@ import { ProductsModule } from './products/products.module';
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
-        HTTP_PORT: Joi.number().required(),
+        HTTP_PORT_STORE: Joi.number().required(),
       }),
     }),
     KafkaModule.forRoot(

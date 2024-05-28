@@ -7,19 +7,26 @@ import {
   LoggerModule,
   Product,
 } from '@app/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { ProductsRepository } from './products.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
     LoggerModule,
-    DatabaseModule,
-    DatabaseModule.forFeature([Product]),
+    ConfigModule,
+    DatabaseModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        database: configService.getOrThrow('POSTGRES_DATABASE_STORE'),
+      }),
+      inject: [ConfigService],
+    }),
+    TypeOrmModule.forFeature([Product]),
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
-        HTTP_PORT: Joi.number().required(),
+        HTTP_PORT_STORE: Joi.number().required(),
       }),
     }),
     HealthModule,

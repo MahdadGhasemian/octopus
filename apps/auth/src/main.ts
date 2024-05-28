@@ -16,7 +16,7 @@ async function bootstrap() {
     .setDescription('Authentication Manager')
     .setVersion('1.0')
     .addServer(
-      `http://localhost:${configService.getOrThrow<string>('HTTP_PORT')}`,
+      `http://localhost:${configService.getOrThrow<string>('HTTP_PORT_AUTH')}`,
       'Local environment',
     )
     // .addServer('https://staging.domain.com/', 'Staging')
@@ -43,6 +43,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, documentOptions);
   SwaggerModule.setup('docs', app, document);
   await app.startAllMicroservices();
-  await app.listen(configService.get('HTTP_PORT'));
+  await app.listen(configService.get('HTTP_PORT_AUTH'));
 }
 bootstrap();

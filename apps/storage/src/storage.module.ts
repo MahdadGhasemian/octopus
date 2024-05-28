@@ -17,7 +17,7 @@ import * as Joi from 'joi';
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
-        HTTP_PORT: Joi.number().required(),
+        HTTP_PORT_STORAGE: Joi.number().required(),
         UPLOAD_FILE_MAX_SIZE: Joi.number().required(),
         BASE_PUBLIC_URL_DOWNLOAD: Joi.string().required(),
         BASE_PRIVATE_URL_DOWNLOAD: Joi.string().required(),

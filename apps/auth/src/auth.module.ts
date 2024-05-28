@@ -16,7 +16,7 @@ import { AccessesModule } from './accesses/accesses.module';
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
-        HTTP_PORT: Joi.number().required(),
+        HTTP_PORT_AUTH: Joi.number().required(),
       }),
     }),
     JwtModule.registerAsync({
