@@ -19,9 +19,11 @@ cd octopus
 
 # Run native
 # fill proper environemnt (your external database and kafka)
+npm i && npm i --prefix apps/auth && npm i --prefix apps/storage && npm i --prefix apps/store
 npm run start:dev
 
 # Run with docker-compose
+npm i && npm i --prefix apps/auth && npm i --prefix apps/storage && npm i --prefix apps/store
 docker-compose up
 ```
 
