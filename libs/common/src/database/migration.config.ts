@@ -11,7 +11,7 @@ const entities = String(process.env.POSTGRES_ENTITIES)
   .map((entity) => `libs/common/src/entities/${entity}.entity{.ts,.js}`);
 
 const migrations = [
-  `libs/common/src/migrations/${process.env.MIGRATION_ENV_PATH}/${process.env.SERVICE_MIGRATION}/*{.ts,.js}`,
+  `migrations/${process.env.MIGRATION_ENV_PATH}/${process.env.SERVICE_MIGRATION}/*{.ts,.js}`,
 ];
 
 const config = {
@@ -25,7 +25,7 @@ const config = {
   // entities: ['libs/common/src/entities/*.entity{.ts,.js}'],
   entities,
   // migrations: ['dist/migrations/*{.ts,.js}'],
-  // migrations: ['libs/common/src/migrations/*{.ts,.js}'],
+  // migrations: ['migrations/*{.ts,.js}'],
   migrations,
   autoLoadEntities: true,
   synchronize: false,

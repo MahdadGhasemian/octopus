@@ -17,7 +17,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/auth/test/jest-e2e.json",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
-    "migration:generate:base": "npm run typeorm -- -d ./libs/common/src/database/migration.config.ts migration:generate ./libs/common/src/migrations/$MIGRATION_ENV_PATH/$SERVICE_MIGRATION/$SERVICE_MIGRATION",
+    "migration:generate:base": "npm run typeorm -- -d ./libs/common/src/database/migration.config.ts migration:generate ./migrations/$MIGRATION_ENV_PATH/$SERVICE_MIGRATION/$SERVICE_MIGRATION",
     "migration:run:base": "npm run typeorm migration:run -- -d ./libs/common/src/database/migration.config.ts",
     "migration:generate:auth": "POSTGRES_DATABASE=auth POSTGRES_ENTITIES=user,access,endpoint SERVICE_MIGRATION=auth npm run migration:generate:base",
     "migration:run:auth": "POSTGRES_DATABASE=auth SERVICE_MIGRATION=auth npm run migration:run:base",
