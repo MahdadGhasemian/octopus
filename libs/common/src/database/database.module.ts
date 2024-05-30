@@ -17,7 +17,8 @@ export class DatabaseModule {
             database: configService.getOrThrow('POSTGRES_DATABASE'),
             username: configService.getOrThrow('POSTGRES_USERNAME'),
             password: configService.getOrThrow('POSTGRES_PASSWORD'),
-            synchronize: configService.getOrThrow('POSTGRES_SYNCHRONIZE'),
+            synchronize:
+              configService.getOrThrow('POSTGRES_SYNCHRONIZE') === 'true',
             autoLoadEntities: configService.getOrThrow(
               'POSTGRES_AUTO_LOAD_ENTITIES',
               true,
@@ -46,7 +47,8 @@ export class DatabaseModule {
               database: database,
               username: configService.getOrThrow('POSTGRES_USERNAME'),
               password: configService.getOrThrow('POSTGRES_PASSWORD'),
-              synchronize: configService.getOrThrow('POSTGRES_SYNCHRONIZE'),
+              synchronize:
+                configService.getOrThrow('POSTGRES_SYNCHRONIZE') === 'true',
               autoLoadEntities: configService.getOrThrow(
                 'POSTGRES_AUTO_LOAD_ENTITIES',
                 true,

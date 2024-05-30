@@ -1,0 +1,35 @@
+import { registerAs } from '@nestjs/config';
+import { config as dotenvConfig } from 'dotenv';
+import { DataSource, DataSourceOptions } from 'typeorm';
+
+const env_path = `.env.migration.${process.env.MIGRATION_ENV_PATH}`;
+
+dotenvConfig({ path: env_path });
+
+const entities = String(process.env.POSTGRES_ENTITIES)
+  .split(',')
+  .map((entity) => `libs/common/src/entities/${entity}.entity{.ts,.js}`);
+
+const migrations = [
+  `libs/common/src/migrations/${process.env.MIGRATION_ENV_PATH}/${process.env.SERVICE_MIGRATION}/*{.ts,.js}`,
+];
+
+const config = {
+  type: 'postgres',
+  host: `${process.env.POSTGRES_HOST}`,
+  port: `${process.env.POSTGRES_PORT}`,
+  database: `${process.env.POSTGRES_DATABASE}`,
+  username: `${process.env.POSTGRES_USERNAME}`,
+  password: `${process.env.POSTGRES_PASSWORD}`,
+  // entities: ['dist/**/*.entity{.ts,.js}'],
+  // entities: ['libs/common/src/entities/*.entity{.ts,.js}'],
+  entities,
+  // migrations: ['dist/migrations/*{.ts,.js}'],
+  // migrations: ['libs/common/src/migrations/*{.ts,.js}'],
+  migrations,
+  autoLoadEntities: true,
+  synchronize: false,
+};
+
+export default registerAs('typeorm', () => config);
+export const connectionSource = new DataSource(config as DataSourceOptions);
