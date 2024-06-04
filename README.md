@@ -22,7 +22,7 @@ cd octopus
 npm i && npm i --prefix apps/auth && npm i --prefix apps/storage && npm i --prefix apps/store
 npm run start:dev
 
-# Run with docker-compose
+# Run with docker-compose (Recommended)
 npm i && npm i --prefix apps/auth && npm i --prefix apps/storage && npm i --prefix apps/store
 docker-compose up
 ```
