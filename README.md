@@ -184,6 +184,9 @@ npm run migration:run:production
   - [x] Postman
   - [x] Auto generated swagger
 - [ ] Test
+- [ ] Redis
+  - [ ] App
+  - [ ] Postgresql
 - [ ] K8S
 
 ## Contributing
