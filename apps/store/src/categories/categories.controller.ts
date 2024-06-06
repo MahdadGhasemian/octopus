@@ -12,11 +12,12 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { JwtAuthAccessGuard, Serialize } from '@app/common';
+import { GeneralCache, JwtAuthAccessGuard, Serialize } from '@app/common';
 import { GetCategoryDto } from './dto/get-category.dto';
 
 @ApiTags('Categories')
 @Serialize(GetCategoryDto)
+@GeneralCache()
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}

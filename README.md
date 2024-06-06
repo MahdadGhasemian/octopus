@@ -141,7 +141,7 @@ There is possible to generate and run migration files on different branches sepa
 
 ```
 POSTGRES_HOST=localhost
-POSTGRES_PORT=54132
+POSTGRES_PORT=5436
 POSTGRES_USERNAME=postgres
 POSTGRES_PASSWORD=randompassword
 # POSTGRES_SYNCHRONIZE=true
@@ -166,6 +166,24 @@ npm run migration:generate:production
 npm run migration:run:production
 ```
 
+## Cache Manager **_new_**
+
+1. Only GET endpoints are cached.
+2. Use `@NoCache()` decorator to bypass the caching system for specific endpoints.
+3. Use `@GeneralCache()` decorator to cache the endpoint without including the user's token in the cache key.
+4. Services caching status:
+
+| Service Name | Module     | Cache Status | Decorator       | Note                                 |
+| ------------ | ---------- | ------------ | --------------- | ------------------------------------ |
+| Auth         | auth       | not cached   | @NoCache()      |                                      |
+| Auth         | users      | cached       |                 | are cached according to user's token |
+| Auth         | accesses   | cached       |                 | are cached according to user's token |
+| Store        | categories | cached       | @GeneralCache() |                                      |
+| Store        | products   | cached       | @GeneralCache() |                                      |
+| Store        | orders     | not cached   | @NoCache()      |                                      |
+| Store        | payments   | not cached   | @NoCache()      |                                      |
+| Storage      |            | not cached   |                 |                                      |
+
 ## Roadmap
 
 - [x] App microservices
@@ -184,9 +202,7 @@ npm run migration:run:production
   - [x] Postman
   - [x] Auto generated swagger
 - [ ] Test
-- [ ] Redis
-  - [ ] App
-  - [ ] Postgresql
+- [x] Cache Manager (Redis)
 - [ ] K8S
 
 ## Contributing

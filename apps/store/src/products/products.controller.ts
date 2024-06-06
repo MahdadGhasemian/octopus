@@ -1,4 +1,4 @@
-import { JwtAuthAccessGuard, Serialize } from '@app/common';
+import { GeneralCache, JwtAuthAccessGuard, Serialize } from '@app/common';
 import {
   Controller,
   Get,
@@ -17,6 +17,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 @ApiTags('Products')
 @Serialize(GetProductDto)
+@GeneralCache()
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}

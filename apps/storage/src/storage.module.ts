@@ -43,6 +43,5 @@ import * as Joi from 'joi';
     PrivateFilesModule,
   ],
   controllers: [],
-  providers: [],
 })
 export class StorageModule {}

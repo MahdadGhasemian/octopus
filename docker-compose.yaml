@@ -14,6 +14,7 @@ services:
     depends_on:
       - kafka
       - postgres
+      - redis
 
   store:
     build:
@@ -30,6 +31,7 @@ services:
     depends_on:
       - kafka
       - postgres
+      - redis
 
   storage:
     build:
@@ -110,7 +112,7 @@ services:
     volumes:
       - postgres_data:/data/postgres
     ports:
-      - '54132:5432'
+      - '5436:5432'
     logging:
       driver: none
 
@@ -127,11 +129,21 @@ services:
     logging:
       driver: none
 
+  redis:
+    image: bitnami/redis
+    ports:
+      - 6376:6379
+    volumes:
+      - redis_data:/data
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+
 volumes:
   zookeeper_data:
   kafka_data:
   postgres_data:
   pgadmin_data:
+  redis_data:
   images_data:
   documents_data:
   media_data:

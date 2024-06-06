@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { GetOtpDto } from './dto/get-otp.dto';
 import { ConfirmOtpDto } from './dto/confirm-otp.dto';
 import { Response } from 'express';
-import { CurrentUser, User } from '@app/common';
+import { CurrentUser, NoCache, User } from '@app/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import {
@@ -19,6 +19,7 @@ import { Serialize } from './users/interceptors/serialize.interceptor';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @ApiTags('Auth')
+@NoCache()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

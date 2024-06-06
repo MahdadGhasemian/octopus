@@ -12,11 +12,18 @@ import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-orders.dto';
 import { UpdateOrderDto } from './dto/update-orders.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, JwtAuthAccessGuard, Serialize, User } from '@app/common';
+import {
+  CurrentUser,
+  JwtAuthAccessGuard,
+  NoCache,
+  Serialize,
+  User,
+} from '@app/common';
 import { GetOrderDto } from './dto/get-orders.dto';
 
 @ApiTags('Orders')
 @Serialize(GetOrderDto)
+@NoCache()
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
