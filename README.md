@@ -8,7 +8,7 @@ An octopus has three hearts! One heart circulates blood around the body, while t
 
 ## About
 
-Scalable Microservices Template with NestJS, Kafka, PostgreSQL, (Docker and K8S)
+Scalable Microservices Template with NestJS, Kafka, PostgreSQL and Redis (Docker and K8S)
 
 ## Getting Started
 
