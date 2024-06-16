@@ -209,6 +209,7 @@ npm run migration:run:production
 
 - [ ] Fix Get OTP to expire its session
 - [ ] full_name nullable
+- [ ] Category Tree
 
 ## Contributing
 
