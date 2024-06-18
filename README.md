@@ -211,6 +211,7 @@ npm run migration:run:production
 - [ ] full_name nullable
 - [ ] Category Tree
 - [ ] Get Lists be able to support the pagination
+- [ ] Refresh Token
 
 ## Contributing
 
