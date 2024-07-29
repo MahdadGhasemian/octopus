@@ -20,6 +20,13 @@ export abstract class AbstractRepository<T extends AbstractEntity<T>> {
     return this.entiryManager.save(entity);
   }
 
+  async findOneNoCheck(
+    where: FindOptionsWhere<T>,
+    relations?: FindOptionsRelations<T>,
+  ): Promise<T> {
+    return this.entityRepository.findOne({ where, relations });
+  }
+
   async findOne(
     where: FindOptionsWhere<T>,
     relations?: FindOptionsRelations<T>,

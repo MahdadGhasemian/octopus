@@ -26,6 +26,8 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
       isGlobal: true,
       validationSchema: Joi.object({
         HTTP_PORT_AUTH: Joi.number().required(),
+        OTP_EMAIL_EXPIRATION: Joi.number().required(),
+        DEFAULT_ACCESS_ID: Joi.number().required(),
       }),
     }),
     JwtModule.registerAsync({

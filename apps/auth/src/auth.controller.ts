@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GetOtpDto } from './dto/get-otp.dto';
 import { ConfirmOtpDto } from './dto/confirm-otp.dto';
@@ -17,6 +25,8 @@ import { GetOtpResponseDto } from './dto/get-otp.response.dto';
 import { GetUserDto } from './users/dto/get-user.dto';
 import { Serialize } from './users/interceptors/serialize.interceptor';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EditInfoDto } from './dto/edit-info.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @ApiTags('Auth')
 @NoCache()
@@ -45,6 +55,20 @@ export class AuthController {
     return this.authService.confirmOtp(body, response);
   }
 
+  @Patch('change-password')
+  @UseGuards(JwtAuthGuard)
+  @Serialize(GetUserDto)
+  @ApiOkResponse({
+    type: GetUserDto,
+  })
+  async changePassowrd(
+    @CurrentUser() user: User,
+    @Body() body: ChangePasswordDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    return this.authService.changePassword(body, response, user);
+  }
+
   @Post('login')
   @UseGuards(LocalAuthGuard)
   @Serialize(GetUserDto)
@@ -52,12 +76,10 @@ export class AuthController {
     type: GetUserDto,
   })
   async login(
-    @CurrentUser() user: User,
-    @Body() _body: LoginDto,
+    @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) response: Response,
   ) {
-    await this.authService.login(user, response);
-    return user;
+    return this.authService.login(loginDto, response);
   }
 
   @Post('logout')
@@ -74,6 +96,16 @@ export class AuthController {
   })
   async getUser(@CurrentUser() user: User) {
     return user;
+  }
+
+  @Patch('info')
+  @UseGuards(JwtAuthGuard)
+  @Serialize(GetUserDto)
+  @ApiOkResponse({
+    type: GetUserDto,
+  })
+  async editInfo(@CurrentUser() user: User, @Body() editInfoDto: EditInfoDto) {
+    return this.authService.editInfo(editInfoDto, user);
   }
 
   @MessagePattern('authenticate')

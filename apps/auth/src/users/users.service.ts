@@ -17,12 +17,14 @@ export class UsersService {
   async propareNewUser(createUserDto: CreateUserDto) {
     const hashed_password = await AuthCommon.createHash(createUserDto.password);
 
-    return this.create({
+    const user = await this.create({
       email: createUserDto.email,
       full_name: createUserDto.full_name,
       hashed_password,
       access_ids: createUserDto.access_ids,
     });
+
+    return this.findOne({ id: user.id });
   }
 
   async create(createUserDto: CreateUserDto & { hashed_password: string }) {
@@ -30,12 +32,12 @@ export class UsersService {
       id: In(createUserDto.access_ids),
     });
 
-    const user = new User({
+    const userData = new User({
       ...createUserDto,
       accesses,
     });
 
-    return this.usersRepository.create(user);
+    return this.usersRepository.create(userData);
   }
 
   async findAll() {
@@ -48,13 +50,27 @@ export class UsersService {
     });
   }
 
+  async findOneNoCheck(settingDto: Omit<GetUserDto, 'accesses'>) {
+    return this.usersRepository.findOneNoCheck(settingDto, {
+      accesses: true,
+    });
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
-    return this.usersRepository.findOneAndUpdate(
+    return this.usersRepository.findOneAndUpdate({ id }, { ...updateUserDto });
+  }
+
+  async updatePassword(id: number, password: string) {
+    const hashed_password = await AuthCommon.createHash(password);
+
+    await this.usersRepository.findOneAndUpdate(
       { id },
       {
-        full_name: updateUserDto.full_name,
+        hashed_password,
       },
     );
+
+    return this.findOne({ id });
   }
 
   async remove(id: number) {
@@ -62,10 +78,14 @@ export class UsersService {
   }
 
   async getUser(getUserDto: GetUserDto) {
-    return this.usersRepository.findOne(getUserDto, {
+    const user = await this.usersRepository.findOne(getUserDto, {
       accesses: {
         endpoints: true,
       },
     });
+
+    delete user.hashed_password;
+
+    return user;
   }
 }

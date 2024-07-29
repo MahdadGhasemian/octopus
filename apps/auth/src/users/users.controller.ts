@@ -19,13 +19,13 @@ import { JwtAuthAccessGuard } from '../guards/jwt-auth-access.guard';
 
 @ApiTags('Users')
 @Serialize(GetUserDto)
-@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
   @UseGuards(JwtAuthAccessGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -35,6 +35,7 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtAuthAccessGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({
     type: [GetUserDto],
   })
@@ -44,6 +45,7 @@ export class UsersController {
 
   @Get(':id')
   @UseGuards(JwtAuthAccessGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -53,6 +55,7 @@ export class UsersController {
 
   @Patch(':id')
   @UseGuards(JwtAuthAccessGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -62,6 +65,7 @@ export class UsersController {
 
   @Delete(':id')
   @UseGuards(JwtAuthAccessGuard)
+  @UseGuards(JwtAuthGuard)
   async remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }

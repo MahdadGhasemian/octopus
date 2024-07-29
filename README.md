@@ -207,8 +207,8 @@ npm run migration:run:production
 
 ## TODO
 
-- [ ] Fix Get OTP to expire its session
-- [ ] full_name nullable
+- [x] Fix Get OTP to expire its session
+- [x] full_name nullable
 - [ ] Category Tree
 - [ ] Get Lists be able to support the pagination
 - [ ] Refresh Token
