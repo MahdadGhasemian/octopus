@@ -166,7 +166,7 @@ npm run migration:generate:production
 npm run migration:run:production
 ```
 
-## Cache Manager **_new_**
+## Cache Manager
 
 1. Only GET endpoints are cached.
 2. Use `@NoCache()` decorator to bypass the caching system for specific endpoints.
@@ -220,3 +220,14 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for de
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Change log
+
+### 0.0.2 (2025-01-25)
+
+- Added a caching prefix to support separation of multiple branches in production.
+- Added Redis Insight to the docker-compose file to provide a GUI for Redis.
+
+### 0.0.1 (2024-06-04)
+
+- Initial release.
