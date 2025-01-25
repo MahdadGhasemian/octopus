@@ -137,6 +137,14 @@ services:
       - redis_data:/data
     environment:
       ALLOW_EMPTY_PASSWORD: yes
+  
+  redis-insight:
+    image: redis/redisinsight
+    restart: always
+    ports:
+      - '5549:5540'
+    volumes:
+      - redis_insight_data:/data
 
 volumes:
   zookeeper_data:
@@ -144,6 +152,7 @@ volumes:
   postgres_data:
   pgadmin_data:
   redis_data:
+  redis_insight_data:
   images_data:
   documents_data:
   media_data:
