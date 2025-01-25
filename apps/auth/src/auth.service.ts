@@ -12,6 +12,7 @@ import { EditInfoDto } from './dto/edit-info.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -192,8 +193,12 @@ export class AuthService {
   }
 
   private generateUniqCode() {
-    // random * (max - min) + min);
-    return +Math.floor(Math.random() * 90000 + 10000);
+    // Generate 3 random bytes and convert them to a 5-digit number
+    const buffer = randomBytes(3);
+    const otp = buffer.readUIntBE(0, 3) % 100000;
+
+    // Pad the OTP with leading zeros if necessary
+    return +otp.toString().padStart(5, '1');
   }
 
   private async authenticate(user: User, response: Response): Promise<string> {
