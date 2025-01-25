@@ -11,7 +11,12 @@ import { AuthService } from './auth.service';
 import { GetOtpDto } from './dto/get-otp.dto';
 import { ConfirmOtpDto } from './dto/confirm-otp.dto';
 import { Response } from 'express';
-import { CurrentUser, NoCache, User } from '@app/common';
+import {
+  CurrentUser,
+  EVENT_NAME_AUTHENTICATE,
+  NoCache,
+  User,
+} from '@app/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import {
@@ -108,7 +113,7 @@ export class AuthController {
     return this.authService.editInfo(editInfoDto, user);
   }
 
-  @MessagePattern('authenticate')
+  @MessagePattern(EVENT_NAME_AUTHENTICATE)
   @UseGuards(JwtAuthGuard)
   async authenticate(@Payload() data: Partial<{ user: GetUserDto }>) {
     return JSON.stringify(data.user);

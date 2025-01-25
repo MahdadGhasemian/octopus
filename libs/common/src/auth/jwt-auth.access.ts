@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { ClientKafka } from '@nestjs/microservices';
-import { AUTH_SERVICE } from '../constants';
+import { AUTH_SERVICE, EVENT_NAME_AUTHENTICATE } from '../constants';
 
 @Injectable()
 export class JwtAuthAccessGuard implements CanActivate, OnModuleInit {
@@ -32,7 +32,7 @@ export class JwtAuthAccessGuard implements CanActivate, OnModuleInit {
 
     return this.client
       .send(
-        'authenticate',
+        EVENT_NAME_AUTHENTICATE,
         JSON.stringify({
           Authentication: jwt,
         }),
@@ -89,6 +89,6 @@ export class JwtAuthAccessGuard implements CanActivate, OnModuleInit {
   }
 
   onModuleInit() {
-    this.client.subscribeToResponseOf('authenticate');
+    this.client.subscribeToResponseOf(EVENT_NAME_AUTHENTICATE);
   }
 }
