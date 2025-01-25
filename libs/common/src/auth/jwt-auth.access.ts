@@ -5,17 +5,17 @@ import {
   Inject,
   Injectable,
   Logger,
-  OnModuleInit,
 } from '@nestjs/common';
 import { Observable, catchError, map, of, tap } from 'rxjs';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { AUTH_SERVICE, EVENT_NAME_AUTHENTICATE } from '../constants';
+import { AuthRequestEvent } from '../events';
 
 @Injectable()
-export class JwtAuthAccessGuard implements CanActivate, OnModuleInit {
+export class JwtAuthAccessGuard implements CanActivate {
   private readonly logger = new Logger(JwtAuthAccessGuard.name);
 
-  constructor(@Inject(AUTH_SERVICE) private readonly client: ClientKafka) {}
+  constructor(@Inject(AUTH_SERVICE) private readonly authClient: ClientProxy) {}
 
   canActivate(
     context: ExecutionContext,
@@ -30,21 +30,16 @@ export class JwtAuthAccessGuard implements CanActivate, OnModuleInit {
       return false;
     }
 
-    return this.client
-      .send(
-        EVENT_NAME_AUTHENTICATE,
-        JSON.stringify({
-          Authentication: jwt,
-        }),
-      )
+    return this.authClient
+      .send(EVENT_NAME_AUTHENTICATE, new AuthRequestEvent(jwt))
       .pipe(
         tap((user) => {
           const accesses = user?.accesses;
-          const hasFullAccess = !!accesses?.find(
-            (item: { hasFullAccess?: boolean }) => item.hasFullAccess,
+          const has_full_access = !!accesses?.find(
+            (item: { has_full_access?: boolean }) => item.has_full_access,
           );
 
-          if (!hasFullAccess) {
+          if (!has_full_access) {
             const accessList = accesses?.flatMap(
               (item: { endpoints?: any[] }) => item.endpoints,
             );
@@ -86,9 +81,5 @@ export class JwtAuthAccessGuard implements CanActivate, OnModuleInit {
     }
 
     return false;
-  }
-
-  onModuleInit() {
-    this.client.subscribeToResponseOf(EVENT_NAME_AUTHENTICATE);
   }
 }

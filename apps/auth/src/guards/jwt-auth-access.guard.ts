@@ -30,11 +30,11 @@ export class JwtAuthAccessGuard implements CanActivate {
 
     const user = request?.user;
     const accesses = user?.accesses;
-    const hasFullAccess = !!accesses?.find(
-      (item: { hasFullAccess?: boolean }) => item.hasFullAccess,
+    const has_full_access = !!accesses?.find(
+      (item: { has_full_access?: boolean }) => item.has_full_access,
     );
 
-    if (!hasFullAccess) {
+    if (!has_full_access) {
       const accessList = accesses?.flatMap(
         (item: { endpoints?: any[] }) => item.endpoints,
       );

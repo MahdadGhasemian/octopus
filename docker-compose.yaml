@@ -12,8 +12,8 @@ services:
     volumes:
       - .:/usr/src/app
     depends_on:
-      - kafka
       - postgres
+      - rabbitmq
       - redis
 
   store:
@@ -29,8 +29,8 @@ services:
     volumes:
       - .:/usr/src/app
     depends_on:
-      - kafka
       - postgres
+      - rabbitmq
       - redis
 
   storage:
@@ -56,52 +56,9 @@ services:
       - compressed_data_private:/usr/src/values/compressed_private
       - cache_images_data_private:/usr/src/values/cache_images_private
     depends_on:
-      - kafka
       - postgres
-
-  kafdrop:
-    image: obsidiandynamics/kafdrop
-    restart: 'no'
-    ports:
-      - '9020:9000'
-    environment:
-      KAFKA_BROKERCONNECT: 'kafka:9092'
-    depends_on:
-      - 'kafka'
-    logging:
-      driver: none
-
-  zookeeper:
-    image: bitnami/zookeeper:3.8
-    ports:
-      - 21181:2181
-    volumes:
-      - 'zookeeper_data:/bitnami'
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-    restart: always
-    logging:
-      driver: none
-
-  kafka:
-    image: bitnami/kafka:3.3
-    ports:
-      - 9094:9093
-    volumes:
-      - kafka_data:/bitnami
-    environment:
-      - KAFKA_BROKER_ID=1
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
-      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:9093
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
-    restart: always
-    depends_on:
-      - zookeeper
-    logging:
-      driver: none
+      - rabbitmq
+      - redis
 
   postgres:
     image: postgres
@@ -129,6 +86,15 @@ services:
     logging:
       driver: none
 
+  rabbitmq:
+    image: rabbitmq:3.10-management
+    ports:
+      - '15679:15672'
+    env_file:
+      - .env
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
   redis:
     image: bitnami/redis
     ports:
@@ -137,7 +103,7 @@ services:
       - redis_data:/data
     environment:
       ALLOW_EMPTY_PASSWORD: yes
-  
+
   redis-insight:
     image: redis/redisinsight
     restart: always
@@ -147,10 +113,9 @@ services:
       - redis_insight_data:/data
 
 volumes:
-  zookeeper_data:
-  kafka_data:
   postgres_data:
   pgadmin_data:
+  rabbitmq_data:
   redis_data:
   redis_insight_data:
   images_data:

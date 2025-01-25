@@ -5,7 +5,6 @@ import { Transport } from '@nestjs/microservices';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
-import { KAFKA_STORE_NAME } from '@app/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -27,13 +26,13 @@ async function bootstrap() {
     .build();
 
   app.connectMicroservice({
-    transport: Transport.KAFKA,
+    transport: Transport.RMQ,
     options: {
-      client: {
-        brokers: [configService.getOrThrow<string>('KAFKA_BROKER_URI')],
-      },
-      consumer: {
-        groupId: `${KAFKA_STORE_NAME}-consumer`,
+      urls: [configService.getOrThrow<string>('RABBITMQ_URI')],
+      queue: configService.getOrThrow<string>('RABBITMQ_STORE_QUEUE_NAME'),
+      noAck: false,
+      queueOptions: {
+        durable: true,
       },
     },
   });

@@ -2,9 +2,8 @@ import { Module } from '@nestjs/common';
 import {
   AUTH_SERVICE,
   HealthModule,
-  KAFKA_STORAGE_NAME,
-  KafkaModule,
   LoggerModule,
+  RabbitmqModule,
 } from '@app/common';
 import { ConfigModule } from '@nestjs/config';
 import { PublicFilesModule } from './public-files/public-files.module';
@@ -34,11 +33,7 @@ import * as Joi from 'joi';
         REDIS_CACHE_KEY_PREFIX_STORAGE: Joi.string().required(),
       }),
     }),
-    KafkaModule.forRoot(
-      AUTH_SERVICE,
-      `${KAFKA_STORAGE_NAME}`,
-      `${KAFKA_STORAGE_NAME}-consumer`,
-    ),
+    RabbitmqModule.forRoot(AUTH_SERVICE, 'RABBITMQ_AUTH_QUEUE_NAME'),
     HealthModule,
     PublicFilesModule,
     PrivateFilesModule,
