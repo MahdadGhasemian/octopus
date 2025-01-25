@@ -26,6 +26,7 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
       isGlobal: true,
       validationSchema: Joi.object({
         HTTP_PORT_STORE: Joi.number().required(),
+        REDIS_CACHE_KEY_PREFIX_STORE: Joi.string().required(),
       }),
     }),
     KafkaModule.forRoot(

@@ -31,6 +31,7 @@ import * as Joi from 'joi';
         MEDIA_PRIVATE_PATH: Joi.string().required(),
         COMPRESSED_PRIVATE_PATH: Joi.string().required(),
         CACHE_IMAGE_PRIVATE_PATH: Joi.string().required(),
+        REDIS_CACHE_KEY_PREFIX_STORAGE: Joi.string().required(),
       }),
     }),
     KafkaModule.forRoot(

@@ -28,6 +28,7 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
         HTTP_PORT_AUTH: Joi.number().required(),
         OTP_EMAIL_EXPIRATION: Joi.number().required(),
         DEFAULT_ACCESS_ID: Joi.number().required(),
+        REDIS_CACHE_KEY_PREFIX_AUTH: Joi.string().required(),
       }),
     }),
     JwtModule.registerAsync({

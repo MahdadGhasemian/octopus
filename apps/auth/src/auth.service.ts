@@ -37,15 +37,27 @@ export class AuthService {
     console.log({ otp });
 
     // Store OTP and Hashed_code in Redis with a TTL
-    const ttl = this.configService.get('OTP_EMAIL_EXPIRATION');
-    await this.cacheManager.set(getOtpDto.email, hashed_code, ttl);
+    const ttl = this.configService.get<number>('OTP_EMAIL_EXPIRATION');
+    const cache_prefix = this.configService.get<string>(
+      'REDIS_CACHE_KEY_PREFIX_AUTH',
+    );
+    await this.cacheManager.set(
+      `${cache_prefix}:${getOtpDto.email}`,
+      hashed_code,
+      ttl,
+    );
 
     return { hashed_code };
   }
 
   async confirmOtp(confirmOtpDto: ConfirmOtpDto, response: Response) {
     // Retereve hashed_code from Redis
-    const hashed_code = await this.cacheManager.get(confirmOtpDto.email);
+    const cache_prefix = this.configService.get<string>(
+      'REDIS_CACHE_KEY_PREFIX_AUTH',
+    );
+    const hashed_code = await this.cacheManager.get<string>(
+      `${cache_prefix}:${confirmOtpDto.email}`,
+    );
 
     if (!hashed_code || hashed_code !== confirmOtpDto.hashed_code) {
       throw new UnauthorizedException(
@@ -84,7 +96,7 @@ export class AuthService {
     }
 
     // Mark OTP as used by deleting it from Redis
-    await this.cacheManager.del(confirmOtpDto.email);
+    await this.cacheManager.del(`${cache_prefix}:${confirmOtpDto.email}`);
 
     await this.authenticate(user, response);
 
@@ -97,7 +109,12 @@ export class AuthService {
     user: User,
   ) {
     // Retereve hashed_code from Redis
-    const hashed_code = await this.cacheManager.get(user.email);
+    const cache_prefix = this.configService.get<string>(
+      'REDIS_CACHE_KEY_PREFIX_AUTH',
+    );
+    const hashed_code = await this.cacheManager.get(
+      `${cache_prefix}:${user.email}`,
+    );
 
     if (!hashed_code || hashed_code !== changePasswordDto.hashed_code) {
       throw new UnauthorizedException(
@@ -123,7 +140,7 @@ export class AuthService {
     await this.usersService.updatePassword(user.id, changePasswordDto.password);
 
     // Mark OTP as used by deleting it from Redis
-    await this.cacheManager.del(user.email);
+    await this.cacheManager.del(`${cache_prefix}:${user.email}`);
 
     await this.authenticate(user, response);
 
