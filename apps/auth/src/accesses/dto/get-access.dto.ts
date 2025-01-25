@@ -69,7 +69,7 @@ export class GetAccessDto {
   })
   @IsBoolean()
   @Expose()
-  hasFullAccess?: boolean;
+  has_full_access?: boolean;
 
   @ApiProperty({
     type: EndpointAccessDto,

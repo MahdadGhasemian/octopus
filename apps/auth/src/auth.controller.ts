@@ -6,6 +6,7 @@ import {
   Post,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GetOtpDto } from './dto/get-otp.dto';
@@ -14,6 +15,7 @@ import { Response } from 'express';
 import {
   CurrentUser,
   EVENT_NAME_AUTHENTICATE,
+  MessageAckInterceptor,
   NoCache,
   User,
 } from '@app/common';
@@ -115,7 +117,8 @@ export class AuthController {
 
   @MessagePattern(EVENT_NAME_AUTHENTICATE)
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(MessageAckInterceptor)
   async authenticate(@Payload() data: Partial<{ user: GetUserDto }>) {
-    return JSON.stringify(data.user);
+    return data.user;
   }
 }

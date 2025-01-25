@@ -47,7 +47,7 @@ export class CreateAccessDto {
     required: true,
   })
   @IsBoolean()
-  hasFullAccess: boolean;
+  has_full_access: boolean;
 
   @ApiProperty({
     type: EndpointAccessDto,

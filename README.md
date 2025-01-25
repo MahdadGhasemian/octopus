@@ -4,11 +4,18 @@
 
 ## Did you know?
 
-An octopus has three hearts! One heart circulates blood around the body, while the other two pump it past the gills, to pick up oxygen.
+An **octopus** has three hearts! One heart circulates blood around the body, while the other two pump it past the gills, to pick up oxygen.
 
 ## About
 
-Scalable Microservices Template with NestJS, Kafka, PostgreSQL and Redis (Docker and K8S)
+**Octopus** is a scalable microservices template built with NestJS, RabbitMQ, PostgreSQL, and Redis. It provides an efficient and developer-friendly foundation for building distributed systems, supporting both Docker and Kubernetes deployments.
+
+## Key Changes:
+
+1- Kafka → RabbitMQ Migration:
+
+- The description now mentions RabbitMQ instead of Kafka.
+- To make it easier to develop.
 
 ## Getting Started
 
@@ -18,7 +25,7 @@ git clone https://github.com/MahdadGhasemian/octopus.git
 cd octopus
 
 # Run native
-# fill proper environemnt (your external database and kafka)
+# fill proper environemnt (your external database and rabbitmq)
 npm i && npm i --prefix apps/auth && npm i --prefix apps/storage && npm i --prefix apps/store
 npm run start:dev
 
@@ -29,8 +36,47 @@ docker-compose up
 
 ## Web UI Tools
 
-1. [PgAdmin](http://localhost:8087/)
-1. [Kafka UI](http://localhost:9020/)
+Note: The following ports **(8087, 15679 and 5549)** are defined in the `docker-compose` file.
+
+### PgAdmin
+
+- URL: [http://localhost:8087/](http://localhost:8087/)
+- Authentication:
+
+```yaml
+username: test@test.com
+password: randompassword2
+connection:
+  host-name_address: postgres
+  port: 5432
+  username: postgres
+  password: randompassword
+```
+
+### Rabbitmq UI
+
+- URL: [http://localhost:15679/](http://localhost:15679/)
+- Authentication:
+
+```yaml
+username: user
+password: randompassword
+```
+
+### Redis UI
+
+- URL: [http://localhost:5549/](http://localhost:5549/)
+- Authentication:
+
+```yaml
+username: user
+password: randompassword
+connection:
+  host: redis
+  port: 6379
+  username: none
+  password: none
+```
 
 ## Project Structure
 
@@ -222,6 +268,11 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for de
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ## Change log
+
+### 1.0.0 (2025-01-25)
+
+- Migrated from Kafka to RabbitMQ.
+- Changed the 'hasFullAccess' field to 'has_full_access' in the `access` entity.
 
 ### 0.0.2 (2025-01-25)
 

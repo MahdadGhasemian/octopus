@@ -17,7 +17,7 @@ export class Access extends AbstractEntity<Access> {
   cannotBeDeleted: boolean;
 
   @Column({ default: false })
-  hasFullAccess: boolean;
+  has_full_access: boolean;
 
   @ManyToMany(() => Endpoint, { cascade: true })
   @JoinTable()

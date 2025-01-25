@@ -3,9 +3,8 @@ import {
   AUTH_SERVICE,
   HealthModule,
   HttpCacheInterceptor,
-  KAFKA_STORE_NAME,
-  KafkaModule,
   LoggerModule,
+  RabbitmqModule,
   REDIS_CACHE_KEY_PREFIX_STORE,
 } from '@app/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -29,11 +28,7 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
         REDIS_CACHE_KEY_PREFIX_STORE: Joi.string().required(),
       }),
     }),
-    KafkaModule.forRoot(
-      AUTH_SERVICE,
-      `${KAFKA_STORE_NAME}`,
-      `${KAFKA_STORE_NAME}-consumer`,
-    ),
+    RabbitmqModule.forRoot(AUTH_SERVICE, 'RABBITMQ_AUTH_QUEUE_NAME'),
     CacheModule.registerAsync<RedisClientOptions>({
       imports: [ConfigModule],
       isGlobal: true,
