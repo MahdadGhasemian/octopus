@@ -1,34 +1,34 @@
 # ============== Stage 1 ================
 FROM node:alpine As development
 
+RUN npm install -g pnpm
+
 WORKDIR /usr/src/app
 
 COPY package.json ./
 COPY package-lock.json ./
+COPY apps/storage apps/storage
+
+RUN pnpm install -r
+
+# ============== Stage 2 ================
+FROM base As builder
+
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
-
 COPY apps/storage apps/storage
 COPY libs libs
 
-RUN npm install -r
+RUN pnpm run build storage
 
-RUN npm run build storage
-
-# ============== Stage 2 ================
+# ============== Stage 3 ================
 FROM node:alpine as production
 
 ARG NODE_ENV=production
 ENV NODE=${NODE_ENV}
 
-WORKDIR /usr/src/app
-
-COPY package.json ./
-COPY package-lock.json ./
-
-RUN npm install --prod
-
 COPY --from=development /usr/src/app/dist ./dist
+COPY --from=base /usr/src/app/node_modules ./dist/apps/storage/node_modules
 
 RUN mkdir -p /usr/src/values/images
 RUN mkdir -p /usr/src/values/documents

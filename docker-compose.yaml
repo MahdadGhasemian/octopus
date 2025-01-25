@@ -1,8 +1,10 @@
+name: octopus
+
 services:
   auth:
     build:
       context: .
-      dockerfile: ./apps/auth/Dockerfile
+      dockerfile: ./apps/auth/Dockerfile.dev
       target: development
     command: npm run start:dev auth
     env_file:
@@ -19,7 +21,7 @@ services:
   store:
     build:
       context: .
-      dockerfile: ./apps/store/Dockerfile
+      dockerfile: ./apps/store/Dockerfile.dev
       target: development
     command: npm run start:dev store
     env_file:
@@ -36,7 +38,7 @@ services:
   storage:
     build:
       context: .
-      dockerfile: ./apps/storage/Dockerfile
+      dockerfile: ./apps/storage/Dockerfile.dev
       target: development
     command: npm run start:dev storage
     env_file:
@@ -85,6 +87,7 @@ services:
       - '8087:8080'
     logging:
       driver: none
+    attach: false
 
   rabbitmq:
     image: rabbitmq:3.10-management
