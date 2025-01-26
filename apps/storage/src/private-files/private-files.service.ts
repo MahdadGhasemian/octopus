@@ -1,16 +1,25 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 
 import { UploadPrivateFileDto } from './dto/upload-private-file.dto';
 import { ConfigService } from '@nestjs/config';
-import { prepareFilePath } from '../file/files.utils';
 import { PrivateFile, User } from '@app/common';
 import { PrivateFilesRepository } from './private-files.repository';
+import { MinioService } from 'nestjs-minio-client';
+import {
+  downloadFileProcess,
+  getBucketNamePrivate,
+  getBucketNamePrivateCache,
+  getObjectName,
+} from '../file/files.utils';
 
 @Injectable()
 export class PrivateFilesService {
+  protected readonly logger = new Logger(PrivateFilesService.name);
+
   constructor(
     private readonly configService: ConfigService,
     private readonly privateFilesRepository: PrivateFilesRepository,
+    private readonly minioService: MinioService,
   ) {}
 
   async uploadFile(
@@ -22,10 +31,26 @@ export class PrivateFilesService {
       throw new Error('No file uploaded');
     }
 
-    const url = `${this.configService.get('BASE_PRIVATE_URL_DOWNLOAD')}${file.filename}`;
+    const bucket_name = getBucketNamePrivate(file.mimetype);
+    const object_name = getObjectName(file.originalname);
+
+    // Upload file to MinIO
+    await this.minioService.client.putObject(
+      bucket_name,
+      object_name,
+      file.buffer,
+      file.size,
+      {
+        'Content-Type': file.mimetype,
+      },
+    );
+
+    // Generate file URL
+    const url = `${this.configService.get('BASE_PRIVATE_URL_DOWNLOAD')}${bucket_name}/${object_name}`;
 
     const privateFile = new PrivateFile({
-      file_name: file.filename,
+      object_name,
+      bucket_name,
       url,
       description: uploadFileDto.description,
       user_id: user.id,
@@ -34,7 +59,8 @@ export class PrivateFilesService {
     await this.privateFilesRepository.create(privateFile);
 
     return {
-      fileName: file.filename,
+      bucket_name,
+      object_name,
       size: file.size,
       url,
       description: uploadFileDto.description,
@@ -42,21 +68,32 @@ export class PrivateFilesService {
   }
 
   async downloadFile(
-    fileName: string,
+    bucket_name: string,
+    object_name: string,
     width: number,
     quality: number,
     user: User,
   ) {
     const file = await this.privateFilesRepository.findOne({
+      bucket_name,
+      object_name,
       user_id: user.id,
-      file_name: fileName,
     });
 
     if (!file) {
       throw new ForbiddenException('File Access Denied!');
     }
 
-    const cachePath = this.configService.get('CACHE_IMAGE_PRIVATE_PATH');
-    return prepareFilePath(fileName, width, quality, cachePath, true);
+    const bucketCacheName = getBucketNamePrivateCache();
+
+    return downloadFileProcess(
+      this.minioService.client,
+      this.logger,
+      bucketCacheName,
+      bucket_name,
+      object_name,
+      width,
+      quality,
+    );
   }
 }

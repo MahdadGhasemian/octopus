@@ -1,12 +1,15 @@
-export const IMAGE_PATH = '/usr/src/values/images';
-export const DOCUMENT_PATH = '/usr/src/values/documents';
-export const MEDIA_PATH = '/usr/src/values/media';
-export const COMPRESSED_PATH = '/usr/src/values/compressed';
+export const IMAGE_BUCKET_NAME = 'public-images';
+export const DOCUMENT_BUCKET_NAME = 'public-documents';
+export const MEDIA_BUCKET_NAME = 'public-media';
+export const COMPRESSED_BUCKET_NAME = 'public-compressed';
 
-export const IMAGE_PRIVATE_PATH = '/usr/src/values/images_private';
-export const DOCUMENT_PRIVATE_PATH = '/usr/src/values/documents_private';
-export const MEDIA_PRIVATE_PATH = '/usr/src/values/media_private';
-export const COMPRESSED_PRIVATE_PATH = '/usr/src/values/compressed_private';
+export const IMAGE_PRIVATE_BUCKET_NAME = 'private-images';
+export const DOCUMENT_PRIVATE_BUCKET_NAME = 'private-documents';
+export const MEDIA_PRIVATE_BUCKET_NAME = 'private-media';
+export const COMPRESSED_PRIVATE_BUCKET_NAME = 'private-compressed';
+
+export const IMAGE_CACHE_BUCKET_NAME = 'cache-images';
+export const IMAGE_PRIVATE_CACHE_BUCKET_NAME = 'private-cache-images';
 
 export const SUPPORTED_IMAGE_TO_RESIZE = [
   'image/jpeg', // jpg, jpeg
@@ -41,6 +44,7 @@ export const SUPPORTED_MEDIA_FILES = [
   'video/x-matroska', // mkv
 ];
 export const SUPPORTED_COMPRESSED_FILES = [
+  'application/x-zip-compressed', // zip
   'application/zip', // zip
   'application/x-rar-compressed', // rar
   'application/x-tar', // tar
@@ -74,3 +78,7 @@ export const MIME_TYPES = {
   '7z': 'application/x-7z-compressed',
   gz: 'application/gzip',
 };
+
+export const SUPPORTED_INVOICE_DOCUMENTS = [
+  'application/pdf', // pdf
+];

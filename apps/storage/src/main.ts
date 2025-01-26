@@ -6,6 +6,7 @@ import { Transport } from '@nestjs/microservices';
 import * as cookieParser from 'cookie-parser';
 import { Logger } from 'nestjs-pino';
 import { ValidationPipe } from '@nestjs/common';
+import 'multer';
 
 async function bootstrap() {
   const app = await NestFactory.create(StorageModule);
@@ -15,8 +16,8 @@ async function bootstrap() {
     .setDescription('Storage Manager')
     .setVersion('1.0')
     .addServer(
-      `http://localhost:${configService.getOrThrow<string>('HTTP_PORT_STORAGE')}`,
-      'Local environment',
+      `${configService.getOrThrow<string>('SWAGGER_SERVER_HOST')}`,
+      'Server',
     )
     .addTag('Health')
     .addTag('PublicFiles')

@@ -1,8 +1,10 @@
+name: octopus
+
 services:
   auth:
     build:
       context: .
-      dockerfile: ./apps/auth/Dockerfile
+      dockerfile: ./apps/auth/Dockerfile.dev
       target: development
     command: npm run start:dev auth
     env_file:
@@ -19,7 +21,7 @@ services:
   store:
     build:
       context: .
-      dockerfile: ./apps/store/Dockerfile
+      dockerfile: ./apps/store/Dockerfile.dev
       target: development
     command: npm run start:dev store
     env_file:
@@ -36,7 +38,7 @@ services:
   storage:
     build:
       context: .
-      dockerfile: ./apps/storage/Dockerfile
+      dockerfile: ./apps/storage/Dockerfile.dev
       target: development
     command: npm run start:dev storage
     env_file:
@@ -45,33 +47,39 @@ services:
       - '3002:3002'
     volumes:
       - .:/usr/src/app
-      - images_data:/usr/src/values/images
-      - documents_data:/usr/src/values/documents
-      - media_data:/usr/src/values/media
-      - compressed_data:/usr/src/values/compressed
-      - cache_images_data:/usr/src/values/cache_images
-      - images_data_private:/usr/src/values/images_private
-      - documents_data_private:/usr/src/values/documents_private
-      - media_data_private:/usr/src/values/media_private
-      - compressed_data_private:/usr/src/values/compressed_private
-      - cache_images_data_private:/usr/src/values/cache_images_private
     depends_on:
       - postgres
       - rabbitmq
       - redis
+      - minio
 
   postgres:
     image: postgres
     env_file:
       - .env
     environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATA: /data/postgres
+      POSTGRES_MULTIPLE_DATABASES: auth,storage,store
     volumes:
       - postgres_data:/data/postgres
     ports:
       - '5436:5432'
     logging:
       driver: none
+    entrypoint: >
+      /bin/bash -c "
+      set -e;
+      docker-entrypoint.sh postgres & 
+      sleep 5; 
+      IFS=',' read -ra DBS <<< \"$$POSTGRES_MULTIPLE_DATABASES\";
+      for db in \"$${DBS[@]}\"; do 
+        echo 'Creating database: ' $$db;
+        psql -U $$POSTGRES_USER -tc \"SELECT 1 FROM pg_database WHERE datname = '$$db'\" | grep -q 1 || psql -U $$POSTGRES_USER -c \"CREATE DATABASE $$db;\";
+      done;
+      wait
+      "
 
   pgadmin4:
     image: elestio/pgadmin
@@ -85,6 +93,9 @@ services:
       - '8087:8080'
     logging:
       driver: none
+    attach: false
+    depends_on:
+      - postgres
 
   rabbitmq:
     image: rabbitmq:3.10-management
@@ -111,6 +122,37 @@ services:
       - '5549:5540'
     volumes:
       - redis_insight_data:/data
+    depends_on:
+      - redis
+
+  minio:
+    image: bitnami/minio
+    ports:
+      - 9100:9000
+      - 9101:9001
+    env_file:
+      - .env
+    volumes:
+      - minio_data:/bitnami/minio/data
+    entrypoint: >
+      /bin/sh -c "
+      /opt/bitnami/scripts/minio/run.sh &
+      sleep 10 &&
+      mc alias set octopus http://localhost:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD} &&
+      mc admin user add octopus ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY} &&
+      mc admin policy attach octopus readwrite --user=${MINIO_ACCESS_KEY} &&
+      mc mb --ignore-existing octopus/public-images &&
+      mc mb --ignore-existing octopus/public-documents &&
+      mc mb --ignore-existing octopus/public-media &&
+      mc mb --ignore-existing octopus/public-compressed &&
+      mc mb --ignore-existing octopus/private-images &&
+      mc mb --ignore-existing octopus/private-documents &&
+      mc mb --ignore-existing octopus/private-media &&
+      mc mb --ignore-existing octopus/private-compressed &&
+      mc mb --ignore-existing octopus/cache-images &&
+      mc mb --ignore-existing octopus/private-cache-images &&
+      tail -f /dev/null
+      "
 
 volumes:
   postgres_data:
@@ -118,13 +160,4 @@ volumes:
   rabbitmq_data:
   redis_data:
   redis_insight_data:
-  images_data:
-  documents_data:
-  media_data:
-  compressed_data:
-  cache_images_data:
-  images_data_private:
-  documents_data_private:
-  media_data_private:
-  compressed_data_private:
-  cache_images_data_private:
+  minio_data:

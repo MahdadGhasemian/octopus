@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 import { IsNumber, IsString, IsUrl } from 'class-validator';
 
 export class UploadPublicFileResponseDto {
@@ -6,12 +7,21 @@ export class UploadPublicFileResponseDto {
     required: true,
   })
   @IsString()
-  fileName: string;
+  @Expose()
+  bucket_name: string;
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsString()
+  @Expose()
+  object_name: string;
 
   @ApiProperty({
     required: true,
   })
   @IsNumber()
+  @Expose()
   size: number;
 
   @ApiProperty({
@@ -19,5 +29,6 @@ export class UploadPublicFileResponseDto {
   })
   @IsString()
   @IsUrl()
+  @Expose()
   url: string;
 }

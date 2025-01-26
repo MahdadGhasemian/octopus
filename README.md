@@ -8,7 +8,7 @@ An **octopus** has three hearts! One heart circulates blood around the body, whi
 
 ## About
 
-**Octopus** is a scalable microservices template built with NestJS, RabbitMQ, PostgreSQL, and Redis. It provides an efficient and developer-friendly foundation for building distributed systems, supporting both Docker and Kubernetes deployments.
+**Octopus** is a scalable microservices template built with **NestJS**, **RabbitMQ**, **PostgreSQL**, and **Redis**. It provides an efficient and developer-friendly foundation for building distributed systems, supporting both Docker and Kubernetes deployments. The system now leverages **Minio** for object storage, offering a reliable and scalable solution for handling files across services.
 
 ## Key Changes:
 
@@ -23,15 +23,8 @@ An **octopus** has three hearts! One heart circulates blood around the body, whi
 git clone https://github.com/MahdadGhasemian/octopus.git
 
 cd octopus
-
-# Run native
-# fill proper environemnt (your external database and rabbitmq)
-npm i && npm i --prefix apps/auth && npm i --prefix apps/storage && npm i --prefix apps/store
-npm run start:dev
-
-# Run with docker-compose (Recommended)
-npm i && npm i --prefix apps/auth && npm i --prefix apps/storage && npm i --prefix apps/store
-docker-compose up
+pnpm i
+docker-compose up --build # For the first add the --build
 ```
 
 ## Web UI Tools
@@ -76,6 +69,21 @@ connection:
   port: 6379
   username: none
   password: none
+```
+
+### Minio
+
+- URL: [http://localhost:9101/](http://localhost:9101/)
+- Authentication:
+  Note: connect to minio on port 9101 and create an Access Key
+
+```yaml
+username: admin
+password: randompassword
+```
+
+```bash
+mcli alias set octopus http://localhost:9100 admin randompassword
 ```
 
 ## Project Structure
@@ -268,6 +276,10 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for de
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ## Change log
+
+### 2.0.0 (2025-01-26)
+
+- Migrated from saving files on disk to leveraing the Minio for object storage.
 
 ### 1.0.0 (2025-01-25)
 
