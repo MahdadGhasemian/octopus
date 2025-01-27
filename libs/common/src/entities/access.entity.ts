@@ -14,7 +14,7 @@ export class Access extends AbstractEntity<Access> {
   color?: string;
 
   @Column({ default: false })
-  cannotBeDeleted: boolean;
+  cannot_be_deleted: boolean;
 
   @Column({ default: false })
   has_full_access: boolean;

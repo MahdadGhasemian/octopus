@@ -184,7 +184,17 @@ octopus
 
 ## Postman
 
+### Online Link :
+
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/3450407-89d900a2-cca7-4169-907c-7659658167b2?action=collection%2Ffork&collection-url=entityId%3D3450407-89d900a2-cca7-4169-907c-7659658167b2%26entityType%3Dcollection%26workspaceId%3D035031a5-5824-405a-951d-be779a75439a)
+
+### Download json files directly:
+
+- [Collections](.postman-files/Octopus.postman_collection.json)
+- [Admin User Environment](.postman-files/Octopus1-FullAccess.postman_environment.json)
+- [Internal User Environment](.postman-files/Octopus2-InternalUser.postman_environment.json)
+- [Regular User 1 Environment](.postman-files/Octopus3-User1.postman_environment.json)
+- [Regular User 2 Environment](.postman-files/Octopus4-User2.postman_environment.json)
 
 ## Migration
 
@@ -276,6 +286,12 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for de
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ## Change log
+
+### 2.0.1 (2025-01-27)
+
+- Added database seed data during intializing (docker-compose)
+- Renamed `cannotBeDeleted` field to `cannot_be_deleted`
+- Added downloadable Postman files
 
 ### 2.0.0 (2025-01-26)
 
