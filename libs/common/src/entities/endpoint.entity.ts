@@ -3,7 +3,7 @@ import { AbstractEntity } from '../database';
 
 @Entity()
 export class Endpoint extends AbstractEntity<Endpoint> {
-  @Column()
+  @Column({ nullable: true })
   tag?: string;
 
   @Column()

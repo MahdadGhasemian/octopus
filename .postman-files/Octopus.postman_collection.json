@@ -1,0 +1,2346 @@
+{
+	"info": {
+		"_postman_id": "89d900a2-cca7-4169-907c-7659658167b2",
+		"name": "Octopus",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3450407"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Request OTP",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"",
+											"const email = pm.environment.get(\"email\");",
+											"",
+											"let body = {",
+											"    email,",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"pm.environment.set(\"hashed_code\", response.hashed_code)"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_auth}}/auth/otp",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"auth",
+										"otp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm OTP",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"",
+											"const hashed_code = pm.environment.get(\"hashed_code\");",
+											"const full_name = pm.environment.get(\"full_name\");",
+											"const email = pm.environment.get(\"email\");",
+											"const password = pm.environment.get(\"password\");",
+											"",
+											"let confirmation_code = 22885 // changeme",
+											"",
+											"let body = {",
+											"    email,",
+											"    full_name,",
+											"    password,",
+											"    confirmation_code,",
+											"    hashed_code",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const authentication = pm.cookies.get(\"Authentication\");",
+											"pm.environment.set(\"Authentication\", authentication)",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_auth}}/auth/otp/confirm",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"auth",
+										"otp",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const email = pm.environment.get(\"email\");",
+											"const password = pm.environment.get(\"password\");",
+											"",
+											"let body = {",
+											"    email,",
+											"    password",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const authentication = pm.cookies.get(\"Authentication\");",
+											"pm.environment.set(\"Authentication\", authentication)",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_auth}}/auth/login",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"Authentication\", null)",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{hostname_auth}}/auth/logout",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Info",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_auth}}/auth/info",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"auth",
+										"info"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Info",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const firstNames = [\"John\", \"Emma\", \"Michael\", \"Sophia\", \"William\", \"Olivia\", \"James\", \"Ava\", \"Alexander\", \"Isabella\"];",
+											"const lastNames = [\"Smith\", \"Johnson\", \"Williams\", \"Jones\", \"Brown\", \"Davis\", \"Miller\", \"Wilson\", \"Moore\", \"Taylor\"];",
+											"",
+											"function generateRandomFullName() {",
+											"    const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];",
+											"    const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];",
+											"    return randomFirstName + \" \" + randomLastName;",
+											"}",
+											"const random = +Math.floor(Math.random() * 9000 + 1000);",
+											"const full_name = generateRandomFullName();",
+											"",
+											"console.log({  full_name })",
+											"",
+											"let body = {",
+											"    full_name",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"pm.environment.set(\"userAddedId\", response.id)",
+											"pm.environment.set(\"userAddedFullName\", response.full_name)",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_auth}}/auth/info",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"auth",
+										"info"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change Password (Need to OTP)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const hashed_code = pm.environment.get(\"hashed_code\");",
+											"const password = pm.environment.get(\"password\");",
+											"",
+											"let confirmation_code = 79320 // changeme",
+											"",
+											"let body = {",
+											"    password,",
+											"    confirmation_code,",
+											"    hashed_code",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_auth}}/auth/change-password",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"auth",
+										"change-password"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Access",
+					"item": [
+						{
+							"name": "Get Access List",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"pm.environment.set(\"accessId\", response[0].id)",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_auth}}/accesses",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"accesses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Access",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const random = +Math.floor(Math.random() * 100);",
+											"",
+											"",
+											"let body = {",
+											"    title: `Access ${random}`,",
+											"    image: `http://www.localhost/image/${random}`,",
+											"    color: '#FFFFFF',",
+											"    has_full_access: false,",
+											"    endpoints: [",
+											"        {",
+											"            tag: 'Get users list',",
+											"            path: '/auth/users',",
+											"            method: 'GET',",
+											"        }",
+											"    ]",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"pm.environment.set(\"accessId\", response.id)",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_auth}}/accesses",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"accesses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Access",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_auth}}/accesses/{{accessId}}",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"accesses",
+										"{{accessId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Access",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const random = +Math.floor(Math.random() * 100);",
+											"",
+											"let body = {",
+											"    color: '#FFFFFE',",
+											"    endpoints: [",
+											"        {",
+											"            tag: `Get users list ${random}`,",
+											"            path: '/auth/users',",
+											"            method: 'GET',",
+											"        },",
+											"        {",
+											"            tag: `Add new user ${random}`,",
+											"            path: '/auth/users',",
+											"            method: 'POST',",
+											"        }",
+											"    ]",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_auth}}/accesses/{{accessId}}",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"accesses",
+										"{{accessId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Access",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_auth}}/accesses/{{accessId}}",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"accesses",
+										"{{accessId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "Get User List",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"pm.environment.set(\"userAddedId\", response[0].id)",
+											"pm.environment.set(\"userAddedFullName\", response[0].full_name)"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_auth}}/users",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create User",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"function generateStrongPassword(length) {",
+											"    var charset = \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}[]|:;<>,.?/~\";",
+											"    var password = \"\";",
+											"    for (var i = 0; i < length; i++) {",
+											"        var randomIndex = Math.floor(Math.random() * charset.length);",
+											"        password += charset[randomIndex];",
+											"    }",
+											"    return password;",
+											"}",
+											"",
+											"const firstNames = [\"John\", \"Emma\", \"Michael\", \"Sophia\", \"William\", \"Olivia\", \"James\", \"Ava\", \"Alexander\", \"Isabella\"];",
+											"const lastNames = [\"Smith\", \"Johnson\", \"Williams\", \"Jones\", \"Brown\", \"Davis\", \"Miller\", \"Wilson\", \"Moore\", \"Taylor\"];",
+											"",
+											"function generateRandomFullName() {",
+											"    const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];",
+											"    const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];",
+											"    return randomFirstName + \" \" + randomLastName;",
+											"}",
+											"const random = +Math.floor(Math.random() * 9000 + 1000);",
+											"const full_name = generateRandomFullName();",
+											"const email = `user-${random}@example.com`;",
+											"const password = generateStrongPassword(32);",
+											"const roles = ['admin'];",
+											"const access_ids = [3];",
+											"pm.environment.set(\"userAddedEmail\", email)",
+											"",
+											"console.log({ email, password, full_name })",
+											"",
+											"let body = {",
+											"    email,",
+											"    full_name,",
+											"    password,",
+											"    roles,",
+											"    access_ids",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"pm.environment.set(\"userAddedId\", response.id)",
+											"pm.environment.set(\"userAddedFullName\", response.full_name)",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_auth}}/users",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_auth}}/users/{{userAddedId}}",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"users",
+										"{{userAddedId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit User",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const full_name = `${pm.environment.get(\"userAddedFullName\")} - Edited`;",
+											"",
+											"let body = {",
+											"    full_name",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_auth}}/users/{{userAddedId}}",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"users",
+										"{{userAddedId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete User",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_auth}}/users/{{userAddedId}}",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"users",
+										"{{userAddedId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Store",
+			"item": [
+				{
+					"name": "Category",
+					"item": [
+						{
+							"name": "Get Category List",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"if (response?.length)",
+											"    pm.environment.set(\"categoryId\", response[0].id);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_store}}/categories",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Category",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const random = +Math.floor(Math.random() * 100);",
+											"",
+											"let body = {",
+											"    name: `Category ${random}`,",
+											"    description: `Description ${random}`,",
+											"    image: 'http://www.localhost/image1000.jpg',",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"pm.environment.set(\"categoryId\", response.id);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_store}}/categories",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Category",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_store}}/categories/{{categoryId}}",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"categories",
+										"{{categoryId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Category",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const random = +Math.floor(Math.random() * 100);",
+											"",
+											"let body = {",
+											"     name: `Category ${random}`,",
+											"    description: `Description ${random}`,",
+											"    image: 'http://www.localhost/image1000.jpg'",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_store}}/categories/{{categoryId}}",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"categories",
+										"{{categoryId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Category",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_store}}/categories/{{categoryId}}",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"categories",
+										"{{categoryId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Product",
+					"item": [
+						{
+							"name": "Get Product List",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"if (response?.length) {",
+											"    pm.environment.set(\"productId\", response[0].id);",
+											"    pm.environment.set(\"productIds\", JSON.stringify(response.slice(0, 5).map(product => product.id)));",
+											"}",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_store}}/products",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Product",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const random = +Math.floor(Math.random() * 10);",
+											"const price = +Math.floor(Math.random() * 90 + 10);",
+											"const cateogryId = pm.environment.get(\"categoryId\");",
+											"",
+											"let body = {",
+											"    name: `Product ${random}`,",
+											"    description: `Description ${random}`,",
+											"    image: 'http://www.localhost/image1000.jpg',",
+											"    category_id: cateogryId,",
+											"    price: price,",
+											"    sale_price: price - random,",
+											"    is_active: true",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"pm.environment.set(\"productId\", response.id);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_store}}/products",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Product",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_store}}/products/{{productId}}",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"products",
+										"{{productId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Product",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const random = +Math.floor(Math.random() * 100);",
+											"",
+											"let body = {",
+											"    description: `Description ${random} - Edited`",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_store}}/products/{{productId}}",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"products",
+										"{{productId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Product",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_store}}/products/{{productId}}",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"products",
+										"{{productId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Order",
+					"item": [
+						{
+							"name": "Get Order List",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"if (response?.length)",
+											"    pm.environment.set(\"orderId\", response[0].id);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_store}}/orders",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Order",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const random = +Math.floor(Math.random() * 10);",
+											"const price = +Math.floor(Math.random() * 90 + 10);",
+											"const productIds = JSON.parse(pm.environment.get(\"productIds\"));",
+											"",
+											"let body = {",
+											"    order_date: new Date().toISOString(),",
+											"    order_items:",
+											"        productIds.map(productId => {",
+											"            return {",
+											"                product_id: productId,",
+											"                quantity: +Math.floor(Math.random() * 10)",
+											"            }",
+											"        }),",
+											"    note: `Note ${random}`",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"pm.environment.set(\"orderId\", response.id);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_store}}/orders",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Order",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_store}}/orders/{{orderId}}",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"orders",
+										"{{orderId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Order",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const random = +Math.floor(Math.random() * 100);",
+											"",
+											"let body = {",
+											"    note: `Note ${random} - Edited`,",
+											"    order_status: 'pending'",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_store}}/orders/{{orderId}}",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"orders",
+										"{{orderId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Order",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_store}}/orders/{{orderId}}",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"orders",
+										"{{orderId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Clear Order Items",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_store}}/orders/{{orderId}}/clear",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"orders",
+										"{{orderId}}",
+										"clear"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cancel Order",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_store}}/orders/{{orderId}}/cancel",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"orders",
+										"{{orderId}}",
+										"cancel"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Payment",
+					"item": [
+						{
+							"name": "Get Payment List",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"if (response?.length)",
+											"    pm.environment.set(\"paymentId\", response[0].id);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_store}}/payments",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"payments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Payment Fake",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const random = +Math.floor(Math.random() * 100);",
+											"const orderId = pm.environment.get(\"orderId\")",
+											"",
+											"let body = {",
+											"    order_id: orderId,",
+											"    description: `Description ${random}`",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"pm.environment.set(\"productId\", response.id);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_store}}/payments",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"payments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Payment Status",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_store}}/payments/{{paymentId}}",
+									"host": [
+										"{{hostname_store}}"
+									],
+									"path": [
+										"payments",
+										"{{paymentId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Storage",
+			"item": [
+				{
+					"name": "Public",
+					"item": [
+						{
+							"name": "Upload (Images and File)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"if (response) {",
+											"    pm.environment.set(\"publicBucketName\", response?.bucket_name);",
+											"    pm.environment.set(\"publicObjectName\", response?.object_name);",
+											"    pm.environment.set(\"publicFileUrl\", response?.url);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/home/asus-mahdad/Music/HOPE.jpeg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hostname_storage}}/public-files",
+									"host": [
+										"{{hostname_storage}}"
+									],
+									"path": [
+										"public-files"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Download (Images and File)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_storage}}/public-files/{{publicBucketName}}/{{publicObjectName}}?width=320&quality=90",
+									"host": [
+										"{{hostname_storage}}"
+									],
+									"path": [
+										"public-files",
+										"{{publicBucketName}}",
+										"{{publicObjectName}}"
+									],
+									"query": [
+										{
+											"key": "width",
+											"value": "320"
+										},
+										{
+											"key": "quality",
+											"value": "90"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Private",
+					"item": [
+						{
+							"name": "Upload (Images and File)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();",
+											"",
+											"if (response) {",
+											"    pm.environment.set(\"privateBucketName\", response?.bucket_name);",
+											"    pm.environment.set(\"privateObjectName\", response?.object_name);",
+											"    pm.environment.set(\"privateFileUrl\", response?.url);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/home/asus-mahdad/Music/HOPE.jpeg"
+										},
+										{
+											"key": "description",
+											"value": "magic image",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{hostname_storage}}/private-files",
+									"host": [
+										"{{hostname_storage}}"
+									],
+									"path": [
+										"private-files"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Download (Images and File)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{hostname_storage}}/private-files/{{privateBucketName}}/{{privateObjectName}}?width=320&quality=80",
+									"host": [
+										"{{hostname_storage}}"
+									],
+									"path": [
+										"private-files",
+										"{{privateBucketName}}",
+										"{{privateObjectName}}"
+									],
+									"query": [
+										{
+											"key": "width",
+											"value": "320"
+										},
+										{
+											"key": "quality",
+											"value": "80"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Health Auth",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "Authentication={{Authentication}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{hostname_auth}}",
+					"host": [
+						"{{hostname_auth}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Health Store",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "Authentication={{Authentication}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{hostname_store}}",
+					"host": [
+						"{{hostname_store}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Health Storage",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "Authentication={{Authentication}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{hostname_store}}",
+					"host": [
+						"{{hostname_store}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

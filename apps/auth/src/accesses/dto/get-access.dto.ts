@@ -60,7 +60,7 @@ export class GetAccessDto {
     required: false,
   })
   @IsBoolean()
-  cannotBeDeleted?: boolean;
+  cannot_be_deleted?: boolean;
 
   @ApiProperty({
     type: Boolean,
