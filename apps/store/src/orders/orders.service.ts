@@ -1,12 +1,12 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CreateOrderDto } from './dto/create-orders.dto';
-import { UpdateOrderDto } from './dto/update-orders.dto';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order, OrderItem, OrderStatus, Product, User } from '@app/common';
 import { OrdersRepository } from './orders.repository';
-import { GetOrderDto } from './dto/get-orders.dto';
+import { GetOrderDto } from './dto/get-order.dto';
 import { OrderItemsRepository } from './order-items.repository';
 import { ProductsService } from '../products/products.service';
-import { UpdateIsPaidOrderDto } from './dto/update-paid-orders.dto';
+import { UpdateIsPaidOrderDto } from './dto/update-paid-order.dto';
 
 @Injectable()
 export class OrdersService {
