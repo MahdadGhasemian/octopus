@@ -1,9 +1,9 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CreatePaymentDto } from './dto/create-payments.dto';
-import { UpdatePaymentDto } from './dto/update-payments.dto';
+import { CreatePaymentDto } from './dto/create-payment.dto';
+import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { OrderStatus, Payment, PaymentStatus, User } from '@app/common';
 import { PaymentsRepository } from './payments.repository';
-import { GetPaymentDto } from './dto/get-payments.dto';
+import { GetPaymentDto } from './dto/get-payment.dto';
 import { OrdersService } from '../orders/orders.service';
 
 @Injectable()

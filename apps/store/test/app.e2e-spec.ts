@@ -1,24 +1,48 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { ProductsModule } from '../src/store.module';
+import { StoreModule } from '../src/store.module';
+import { ConfigModule } from '@nestjs/config';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
-describe('ProductsController (e2e)', () => {
+describe('StoreController (e2e)', () => {
   let app: INestApplication;
+  let cacheManager: Cache;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [ProductsModule],
+      imports: [
+        ConfigModule.forRoot({
+          isGlobal: true,
+        }),
+        StoreModule,
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
+
+    cacheManager = app.get<Cache>(CACHE_MANAGER);
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  afterAll(async () => {
+    await cacheManager.reset();
+    await app.close();
+  });
+
+  beforeEach(async () => {
+    // await cacheManager.reset();
+  });
+
+  describe('GET /', () => {
+    it('should return status equal to ok', async () => {
+      const response = await request(app.getHttpServer()).get('/');
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(response.body).toEqual({
+        status: 'ok',
+      });
+    });
   });
 });

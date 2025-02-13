@@ -9,8 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { CreateOrderDto } from './dto/create-orders.dto';
-import { UpdateOrderDto } from './dto/update-orders.dto';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import {
   CurrentUser,
@@ -19,7 +19,7 @@ import {
   Serialize,
   User,
 } from '@app/common';
-import { GetOrderDto } from './dto/get-orders.dto';
+import { GetOrderDto } from './dto/get-order.dto';
 
 @ApiTags('Orders')
 @Serialize(GetOrderDto)

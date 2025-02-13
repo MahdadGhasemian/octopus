@@ -248,6 +248,20 @@ npm run migration:run:production
 | Store        | payments   | not cached   | @NoCache()      |                                      |
 | Storage      |            | not cached   |                 |                                      |
 
+## Run Test
+
+### Unit
+
+```bash
+pnpm run test
+```
+
+### E2E Test
+
+```bash
+docker-compose -f ./docker-compose-test.yaml up
+```
+
 ## Roadmap
 
 - [x] App microservices
@@ -262,7 +276,7 @@ npm run migration:run:production
 - [x] Docker-compose
 - [x] Env
 - [x] Document
-  - [ ] Gitlab Readme
+  - [x] Githab Readme
   - [x] Postman
   - [x] Auto generated swagger
 - [ ] Test
@@ -286,6 +300,10 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for de
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ## Change log
+
+### 2.0.2 (2025-02-13)
+
+- Added some unit and e3e tests
 
 ### 2.0.1 (2025-01-27)
 

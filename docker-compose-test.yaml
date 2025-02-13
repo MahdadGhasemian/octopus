@@ -1,0 +1,119 @@
+name: octopus_test
+
+services:
+  auth:
+    image: node:18
+    working_dir: /usr/src/app
+    command: npm run test:e2e:auth:watch auth
+    env_file:
+      - ./.env.test
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - postgres
+      - rabbitmq
+      - redis
+  
+  storage:
+    image: node:18
+    working_dir: /usr/src/app
+    command: npm run test:e2e:storage:watch storage
+    env_file:
+      - ./.env.test
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - postgres
+      - rabbitmq
+      - redis
+      - minio
+  
+  store:
+    image: node:18
+    working_dir: /usr/src/app
+    command: npm run test:e2e:store:watch store
+    env_file:
+      - ./.env.test
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - postgres
+      - rabbitmq
+      - redis
+
+  postgres:
+    image: postgres
+    env_file:
+      - ./.env.test
+    environment:
+      PGDATA: /data/postgres
+    volumes:
+      - postgres_data:/data/postgres
+      - ./init-scripts-test:/docker-entrypoint-initdb.d
+    entrypoint: >
+      /bin/bash -c "
+      set -e;
+      docker-entrypoint.sh postgres & 
+      sleep 5; 
+      IFS=',' read -ra DBS <<< \"$$POSTGRES_MULTIPLE_DATABASES\";
+      for db in \"$${DBS[@]}\"; do 
+        echo 'Creating database: ' $$db;
+        psql -U $$POSTGRES_USER -tc \"SELECT 1 FROM pg_database WHERE datname = '$$db'\" | grep -q 1 || psql -U $$POSTGRES_USER -c \"CREATE DATABASE $$db;\";
+      done;
+      wait
+      "
+    logging:
+      driver: none
+    attach: false
+
+  rabbitmq:
+    image: rabbitmq:3.10-management
+    env_file:
+      - ./.env.test
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    logging:
+      driver: none
+    attach: false
+
+  redis:
+    image: bitnami/redis
+    volumes:
+      - redis_data:/data
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+    logging:
+      driver: none
+    attach: false
+  
+  minio:
+    image: bitnami/minio
+    env_file:
+      - ./.env.test
+    volumes:
+      - minio_data:/bitnami/minio/data
+    entrypoint: >
+      /bin/sh -c "
+      /opt/bitnami/scripts/minio/run.sh &
+      sleep 10 &&
+      mc alias set octopus http://localhost:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD} &&
+      mc admin user add octopus ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY} &&
+      mc admin policy attach octopus readwrite --user=${MINIO_ACCESS_KEY} &&
+      mc mb --ignore-existing octopus/public-images &&
+      mc mb --ignore-existing octopus/public-documents &&
+      mc mb --ignore-existing octopus/public-media &&
+      mc mb --ignore-existing octopus/public-compressed &&
+      mc mb --ignore-existing octopus/private-images &&
+      mc mb --ignore-existing octopus/private-documents &&
+      mc mb --ignore-existing octopus/private-media &&
+      mc mb --ignore-existing octopus/private-compressed &&
+      mc mb --ignore-existing octopus/cache-images &&
+      mc mb --ignore-existing octopus/private-cache-images &&
+      tail -f /dev/null
+      "
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+  redis_data:
+  minio_data:

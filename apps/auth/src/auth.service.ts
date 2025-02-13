@@ -47,6 +47,14 @@ export class AuthService {
       hashed_code,
       ttl,
     );
+    // Store OTP separately for test environment only
+    if (process.env.NODE_ENV === 'test') {
+      await this.cacheManager.set(
+        `${cache_prefix}:otp:${getOtpDto.email}`,
+        otp,
+        ttl,
+      );
+    }
 
     return { hashed_code };
   }

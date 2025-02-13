@@ -8,8 +8,8 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { CreateOrderItemDto } from './create-order-items.dto';
 import { OrderStatus } from '@app/common';
+import { GetOrderItemDto } from './get-order-items.dto';
 
 export class GetOrderDto {
   @ApiProperty({
@@ -35,9 +35,9 @@ export class GetOrderDto {
     isArray: true,
   })
   @IsString()
-  @Type(() => CreateOrderItemDto)
+  @Type(() => GetOrderItemDto)
   @Expose()
-  order_items?: CreateOrderItemDto[];
+  order_items?: GetOrderItemDto[];
 
   @ApiProperty({
     example: 49,

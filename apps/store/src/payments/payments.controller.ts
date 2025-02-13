@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
-import { CreatePaymentDto } from './dto/create-payments.dto';
+import { CreatePaymentDto } from './dto/create-payment.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import {
   CurrentUser,
@@ -9,7 +9,7 @@ import {
   Serialize,
   User,
 } from '@app/common';
-import { GetPaymentDto } from './dto/get-payments.dto';
+import { GetPaymentDto } from './dto/get-payment.dto';
 
 @ApiTags('Payments')
 @Serialize(GetPaymentDto)

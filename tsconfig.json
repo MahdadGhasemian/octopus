@@ -27,6 +27,6 @@
       "@app/store": ["libs/store/src"],
       "@app/store/*": ["libs/store/src/*"]
     },
-    "types": ["node", "Multer"]
+    "types": ["node", "Multer", "jest"]
   }
 }

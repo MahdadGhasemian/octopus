@@ -9,7 +9,7 @@ import {
   IsString,
 } from 'class-validator';
 import { Order, PaymentStatus } from '@app/common';
-import { GetOrderDto } from '../../orders/dto/get-orders.dto';
+import { GetOrderDto } from '../../orders/dto/get-order.dto';
 
 export class GetPaymentDto {
   @ApiProperty({
