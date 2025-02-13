@@ -5,5 +5,12 @@
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
-  }
+  },
+  "moduleNameMapper": {
+    "^@app/common/(.*)$": "<rootDir>/../../../libs/common/src/$1",
+    "^@app/common$": "<rootDir>/../../../libs/common/src",
+    "^@app/auth/(.*)$": "<rootDir>/../../../libs/auth/src/$1",
+    "^@app/auth$": "<rootDir>/../../../libs/auth/src"
+  },
+  "setupFiles": ["<rootDir>/setup-tests.ts"]
 }
