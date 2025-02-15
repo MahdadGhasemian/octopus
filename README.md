@@ -248,18 +248,28 @@ npm run migration:run:production
 | Store        | payments   | not cached   | @NoCache()      |                                      |
 | Storage      |            | not cached   |                 |                                      |
 
-## Run Test
+## 🧪 Run Tests
 
-### Unit
+### ✅ Unit Tests
+
+Run unit tests:
 
 ```bash
 pnpm run test
 ```
 
-### E2E Test
+### 🔄 End-to-End (E2E) Tests
+
+1️⃣ Start required services (database, Redis, etc.) in Terminal 1:
 
 ```bash
 docker-compose -f ./docker-compose-test.yaml up
+```
+
+2️⃣ Run E2E tests in Terminal 2:
+
+```bash
+pnpm run test:e2e
 ```
 
 ## Roadmap
