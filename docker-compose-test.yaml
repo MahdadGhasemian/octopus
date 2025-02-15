@@ -1,46 +1,6 @@
 name: octopus_test
 
 services:
-  auth:
-    image: node:18
-    working_dir: /usr/src/app
-    command: npm run test:e2e:auth:watch auth
-    env_file:
-      - ./.env.test
-    volumes:
-      - .:/usr/src/app
-    depends_on:
-      - postgres
-      - rabbitmq
-      - redis
-  
-  storage:
-    image: node:18
-    working_dir: /usr/src/app
-    command: npm run test:e2e:storage:watch storage
-    env_file:
-      - ./.env.test
-    volumes:
-      - .:/usr/src/app
-    depends_on:
-      - postgres
-      - rabbitmq
-      - redis
-      - minio
-  
-  store:
-    image: node:18
-    working_dir: /usr/src/app
-    command: npm run test:e2e:store:watch store
-    env_file:
-      - ./.env.test
-    volumes:
-      - .:/usr/src/app
-    depends_on:
-      - postgres
-      - rabbitmq
-      - redis
-
   postgres:
     image: postgres
     env_file:
@@ -50,6 +10,8 @@ services:
     volumes:
       - postgres_data:/data/postgres
       - ./init-scripts-test:/docker-entrypoint-initdb.d
+    ports:
+      - '5432:5432'
     entrypoint: >
       /bin/bash -c "
       set -e;
@@ -62,9 +24,9 @@ services:
       done;
       wait
       "
-    logging:
-      driver: none
-    attach: false
+    # logging:
+    #   driver: none
+    # attach: false
 
   rabbitmq:
     image: rabbitmq:3.10-management
@@ -72,9 +34,11 @@ services:
       - ./.env.test
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
-    logging:
-      driver: none
-    attach: false
+    ports:
+      - '15672:15672'
+    # logging:
+    #   driver: none
+    # attach: false
 
   redis:
     image: bitnami/redis
@@ -82,14 +46,19 @@ services:
       - redis_data:/data
     environment:
       ALLOW_EMPTY_PASSWORD: yes
-    logging:
-      driver: none
-    attach: false
-  
+    ports:
+      - 6379:6379
+    # logging:
+    #   driver: none
+    # attach: false
+
   minio:
     image: bitnami/minio
     env_file:
       - ./.env.test
+    ports:
+      - 9000:9000
+      - 9001:9001
     volumes:
       - minio_data:/bitnami/minio/data
     entrypoint: >
