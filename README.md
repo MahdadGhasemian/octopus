@@ -91,64 +91,61 @@ mcli alias set octopus http://localhost:9100 admin randompassword
 ```
 octopus
 |
-|___apps
-|   |___auth
-|   |   |___src
-|   |   |___test
-|   |   |   .evn
-|   |   |   .Dockerfile
-|   |   |   package-lock.json
-|   |   |   package.json
-|   |   |   tsconfig.app.json
-|   |
-|   |___storage
-|   |   |___src
-|   |   |___test
-|   |   |   .evn
-|   |   |   .Dockerfile
-|   |   |   package-lock.json
-|   |   |   package.json
-|   |   |   tsconfig.app.json
-|   |
-|   |___store
-|   |   |___src
-|   |   |___test
-|   |   |   .evn
-|   |   |   .Dockerfile
-|   |   |   package-lock.json
-|   |   |   package.json
-|   |   |   tsconfig.app.json
-|
-|___libs
-|   |___common
-|       |___src
-|           |___constants
-|           |___decorators
-|           |___interceptors
-|           |___validations
-|           |___modules
-|           |___enum
-|           |___events
-|           |___database
-|           |___entities
-|           |___logger
-|           |___auth
-|           |___health
-|
-|___migrations
-|   |___developoing
-|   |___stage
-|   |___production
-|
-|   .dockerignore
-|   .env
-|   docker-compose.yaml
-|   nest-cli.json
-|   packge-lock.json
-|   package.json
-|   tsconfig.build.json
-|   tsconfig.json
-|   README.md
+├── apps
+│   ├── auth
+│   │   ├── Dockerfile
+│   │   ├── Dockerfile.dev
+│   │   ├── package.json
+│   │   ├── src
+│   │   ├── test
+│   │   └── tsconfig.app.json
+│   │   └── .env
+│   ├── storage
+│   │   ├── Dockerfile
+│   │   ├── Dockerfile.dev
+│   │   ├── package.json
+│   │   ├── src
+│   │   ├── test
+│   │   └── tsconfig.app.json
+│   │   └── .env
+│   └── store
+│       ├── Dockerfile
+│       ├── Dockerfile.dev
+│       ├── package.json
+│       ├── src
+│       ├── test
+│       └── tsconfig.app.json
+│       └── .env
+├── docker-compose-test.yaml
+├── docker-compose.yaml
+├── init-scripts
+│   └── seed-data.sql
+├── init-scripts-test
+├── libs
+│   └── common
+│       ├── src
+│       └── tsconfig.lib.json
+├── migrations
+│   ├── developing
+│   │   ├── auth
+│   │   ├── storage
+│   │   └── store
+│   ├── production
+│   │   ├── auth
+│   │   ├── storage
+│   │   └── store
+│   └── stage
+│       ├── auth
+│       ├── storage
+│       └── store
+├── package.json
+├── tsconfig.build.json
+└── tsconfig.json
+└── .env
+└── .env.test
+└── .env.migration.developing
+└── .env.migration.stage
+└── .env.migration.production
 ```
 
 ## Services
