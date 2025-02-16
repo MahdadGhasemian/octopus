@@ -26,12 +26,18 @@ describe('StorageController (e2e)', () => {
   });
 
   describe('GET /', () => {
-    it('should return status equal to ok', async () => {
+    it('should return a valid health check response', async () => {
       const response = await request(app.getHttpServer()).get('/');
 
       expect(response.status).toBe(HttpStatus.OK);
-      expect(response.body).toEqual({
-        status: 'ok',
+      expect(response.body).toMatchObject({
+        status: expect.any(String),
+        rabbitmq: expect.any(String),
+        rabbitResponseTime: expect.any(String),
+        database: expect.any(String),
+        dbResponseTime: expect.any(String),
+        redis: expect.any(String),
+        redisResponseTime: expect.any(String),
       });
     });
   });

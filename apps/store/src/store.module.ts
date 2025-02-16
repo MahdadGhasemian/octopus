@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import {
   AUTH_SERVICE,
+  DatabaseModule,
   HealthModule,
   HttpCacheInterceptor,
   LoggerModule,
@@ -40,6 +41,12 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
             port: configService.getOrThrow<number>('REDIS_PORT'),
           },
         }),
+      }),
+      inject: [ConfigService],
+    }),
+    DatabaseModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        database: configService.getOrThrow('POSTGRES_DATABASE_STORE'),
       }),
       inject: [ConfigService],
     }),

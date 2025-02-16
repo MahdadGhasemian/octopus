@@ -308,6 +308,10 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Change log
 
+### 2.1.1 (2025-02-16)
+
+- Improved the Health Check API to monitor infrastructure connections, including RabbitMQ, PostgreSql and Redis.
+
 ### 2.1.0 (2025-02-16)
 
 - Moved entity files into their respective service directories.

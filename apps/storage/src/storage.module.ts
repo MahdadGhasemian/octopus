@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import {
   AUTH_SERVICE,
+  DatabaseModule,
   HealthModule,
   LoggerModule,
   RabbitmqModule,
@@ -10,6 +11,9 @@ import { PublicFilesModule } from './public-files/public-files.module';
 import { PrivateFilesModule } from './private-files/private-files.module';
 import * as Joi from 'joi';
 import { MinioModule } from 'nestjs-minio-client';
+import { RedisClientOptions } from 'redis';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 
 @Module({
   imports: [
@@ -25,6 +29,26 @@ import { MinioModule } from 'nestjs-minio-client';
       }),
     }),
     RabbitmqModule.forRoot(AUTH_SERVICE, 'RABBITMQ_AUTH_QUEUE_NAME'),
+    CacheModule.registerAsync<RedisClientOptions>({
+      imports: [ConfigModule],
+      isGlobal: true,
+      useFactory: async (configService: ConfigService) => ({
+        store: await redisStore({
+          ttl: configService.get<number>('REDIS_CACHE_TTL_GLOBAL') || 60000,
+          socket: {
+            host: configService.getOrThrow<string>('REDIS_HOST'),
+            port: configService.getOrThrow<number>('REDIS_PORT'),
+          },
+        }),
+      }),
+      inject: [ConfigService],
+    }),
+    DatabaseModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        database: configService.getOrThrow('POSTGRES_DATABASE_STORAGE'),
+      }),
+      inject: [ConfigService],
+    }),
     MinioModule.registerAsync({
       imports: [ConfigModule],
       isGlobal: true,
