@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import {
   AUTH_SERVICE,
+  DatabaseModule,
   HealthModule,
   HttpCacheInterceptor,
   LoggerModule,
@@ -43,7 +44,13 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
       }),
       inject: [ConfigService],
     }),
-    HealthModule,
+    DatabaseModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        database: configService.getOrThrow('POSTGRES_DATABASE_STORE'),
+      }),
+      inject: [ConfigService],
+    }),
+    HealthModule.forRoot('RABBITMQ_STORE_QUEUE_NAME'),
     CategoriesModule,
     ProductsModule,
     OrdersModule,

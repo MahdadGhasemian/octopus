@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import {
+  DatabaseModule,
   HealthModule,
   HttpCacheInterceptor,
   LoggerModule,
@@ -54,7 +55,13 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
       }),
       inject: [ConfigService],
     }),
-    HealthModule,
+    DatabaseModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        database: configService.getOrThrow('POSTGRES_DATABASE_AUTH'),
+      }),
+      inject: [ConfigService],
+    }),
+    HealthModule.forRoot('RABBITMQ_AUTH_QUEUE_NAME'),
     UsersModule,
     AccessesModule,
   ],

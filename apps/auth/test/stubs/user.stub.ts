@@ -1,4 +1,4 @@
-import { User } from '@app/common';
+import { User } from '../../src/libs';
 
 export const userStub = (): User => {
   return {

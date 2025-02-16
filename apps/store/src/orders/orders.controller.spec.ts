@@ -1,15 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
-import {
-  JwtAuthAccessGuard,
-  OrderItem,
-  OrderStatus,
-  Product,
-  User,
-} from '@app/common';
+import { JwtAuthAccessGuard, OrderStatus } from '@app/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrderItem, Product, User } from '../libs';
 
 describe('OrdersController', () => {
   let ordersController: OrdersController;
@@ -32,8 +27,6 @@ describe('OrdersController', () => {
   const user: User = {
     id: 1,
     email: 'user@example.com',
-    hashed_password: 'hashedpassword',
-    accesses: [],
   };
 
   const mockOrderItem = new OrderItem({

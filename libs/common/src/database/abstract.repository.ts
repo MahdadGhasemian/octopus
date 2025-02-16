@@ -13,11 +13,15 @@ export abstract class AbstractRepository<T extends AbstractEntity<T>> {
 
   constructor(
     private readonly entityRepository: Repository<T>,
-    private readonly entiryManager: EntityManager,
+    private readonly entityManager: EntityManager,
   ) {}
 
+  async save(entity: T): Promise<T> {
+    return this.entityManager.save(entity);
+  }
+
   async create(entity: T): Promise<T> {
-    return this.entiryManager.save(entity);
+    return this.entityManager.save(entity);
   }
 
   async findOneNoCheck(

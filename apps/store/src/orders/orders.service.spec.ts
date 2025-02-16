@@ -2,16 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { OrdersService } from './orders.service';
 import { OrdersRepository } from './orders.repository';
 import { CreateOrderDto } from './dto/create-order.dto';
-import {
-  Category,
-  Order,
-  OrderItem,
-  OrderStatus,
-  Product,
-  User,
-} from '@app/common';
 import { OrderItemsRepository } from './order-items.repository';
 import { ProductsService } from '../products/products.service';
+import { Category, Order, OrderItem, Product, User } from '../libs';
+import { OrderStatus } from '@app/common';
 
 describe('OrdersService', () => {
   let ordersService: OrdersService;
@@ -35,8 +29,6 @@ describe('OrdersService', () => {
   const mockUser: User = {
     id: 1,
     email: 'user@example.com',
-    hashed_password: 'hashedpassword',
-    accesses: [],
   };
 
   const mockProduct: Product = {
