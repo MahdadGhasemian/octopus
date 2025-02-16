@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { PaymentsController } from './payments.controller';
-import { Payment, DatabaseModule } from '@app/common';
+import { DatabaseModule } from '@app/common';
 import { PaymentsRepository } from './payments.repository';
 import { OrdersModule } from '../orders/orders.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Payment } from '../libs';
 
 @Module({
   imports: [

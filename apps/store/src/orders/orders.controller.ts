@@ -17,9 +17,9 @@ import {
   JwtAuthAccessGuard,
   NoCache,
   Serialize,
-  User,
 } from '@app/common';
 import { GetOrderDto } from './dto/get-order.dto';
+import { User } from '../libs';
 
 @ApiTags('Orders')
 @Serialize(GetOrderDto)

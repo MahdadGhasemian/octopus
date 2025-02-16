@@ -2,7 +2,7 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users/users.service';
 import { GetOtpDto } from './dto/get-otp.dto';
 import { ConfirmOtpDto } from './dto/confirm-otp.dto';
-import { AuthCommon, User } from '@app/common';
+import { AuthCommon } from '@app/common';
 import { Response } from 'express';
 import { TokenPayload } from './interfaces/token-payload.interface';
 import { ConfigService } from '@nestjs/config';
@@ -13,6 +13,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { randomBytes } from 'crypto';
+import { User } from './libs';
 
 @Injectable()
 export class AuthService {

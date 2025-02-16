@@ -1,4 +1,4 @@
-import { AbstractEntity } from '../database';
+import { AbstractEntity } from '@app/common';
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 import { Endpoint } from './endpoint.entity';
 

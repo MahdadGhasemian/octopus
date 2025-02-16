@@ -311,6 +311,11 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Change log
 
+### 2.1.0 (2025-02-16)
+
+- Moved entity files into their respective service directories.
+- Fixed the migration script
+
 ### 2.0.2 (2025-02-13)
 
 - Added some unit and e3e tests

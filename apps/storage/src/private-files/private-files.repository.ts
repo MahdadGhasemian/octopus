@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AbstractRepository, PrivateFile } from '@app/common';
+import { AbstractRepository } from '@app/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
+import { PrivateFile } from '../libs';
 
 @Injectable()
 export class PrivateFilesRepository extends AbstractRepository<PrivateFile> {

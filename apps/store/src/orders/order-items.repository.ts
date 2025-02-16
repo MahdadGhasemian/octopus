@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AbstractRepository, OrderItem } from '@app/common';
+import { AbstractRepository } from '@app/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
+import { OrderItem } from '../libs';
 
 @Injectable()
 export class OrderItemsRepository extends AbstractRepository<OrderItem> {
