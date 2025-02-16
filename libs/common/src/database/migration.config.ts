@@ -6,9 +6,9 @@ const env_path = `.env.migration.${process.env.MIGRATION_ENV_PATH}`;
 
 dotenvConfig({ path: env_path });
 
-const entities = String(process.env.POSTGRES_ENTITIES)
-  .split(',')
-  .map((entity) => `libs/common/src/entities/${entity}.entity{.ts,.js}`);
+const entities = [
+  `apps/${process.env.SERVICE_MIGRATION}/src/libs/entities/*.entity{.ts,.js}`,
+];
 
 const migrations = [
   `migrations/${process.env.MIGRATION_ENV_PATH}/${process.env.SERVICE_MIGRATION}/*{.ts,.js}`,

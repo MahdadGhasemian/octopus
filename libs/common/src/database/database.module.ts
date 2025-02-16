@@ -5,31 +5,6 @@ import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-clas
 
 @Module({})
 export class DatabaseModule {
-  static forRoot(): DynamicModule {
-    return {
-      module: DatabaseModule,
-      imports: [
-        TypeOrmModule.forRootAsync({
-          useFactory: (configService: ConfigService) => ({
-            type: 'postgres',
-            host: configService.getOrThrow('POSTGRES_HOST'),
-            port: configService.getOrThrow('POSTGRES_PORT'),
-            database: configService.getOrThrow('POSTGRES_DATABASE'),
-            username: configService.getOrThrow('POSTGRES_USERNAME'),
-            password: configService.getOrThrow('POSTGRES_PASSWORD'),
-            synchronize:
-              configService.getOrThrow('POSTGRES_SYNCHRONIZE') === 'true',
-            autoLoadEntities: configService.getOrThrow(
-              'POSTGRES_AUTO_LOAD_ENTITIES',
-              true,
-            ),
-          }),
-          inject: [ConfigService],
-        }),
-      ],
-    };
-  }
-
   static forRootAsync(options: {
     useFactory: (configService: ConfigService) => Promise<{ database: string }>;
     inject: any[];
