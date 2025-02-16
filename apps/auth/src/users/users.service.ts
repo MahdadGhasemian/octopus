@@ -3,9 +3,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUserDto } from './dto/get-user.dto';
 import { UsersRepository } from './users.repository';
-import { AuthCommon, User } from '@app/common';
+import { AuthCommon } from '@app/common';
 import { AccessesService } from '../accesses/accesses.service';
 import { In } from 'typeorm';
+import { User } from '../libs';
 
 @Injectable()
 export class UsersService {

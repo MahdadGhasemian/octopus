@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AccessesService } from './accesses.service';
 import { AccessesController } from './accesses.controller';
-import { Access, DatabaseModule, Endpoint } from '@app/common';
+import { DatabaseModule } from '@app/common';
 import { AccessesRepository } from './accesses.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Access, Endpoint } from '../libs';
 
 @Module({
   imports: [

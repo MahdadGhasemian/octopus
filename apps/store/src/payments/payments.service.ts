@@ -1,10 +1,11 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
-import { OrderStatus, Payment, PaymentStatus, User } from '@app/common';
+import { OrderStatus, PaymentStatus } from '@app/common';
 import { PaymentsRepository } from './payments.repository';
 import { GetPaymentDto } from './dto/get-payment.dto';
 import { OrdersService } from '../orders/orders.service';
+import { Payment, User } from '../libs';
 
 @Injectable()
 export class PaymentsService {

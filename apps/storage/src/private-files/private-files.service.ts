@@ -2,7 +2,6 @@ import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 
 import { UploadPrivateFileDto } from './dto/upload-private-file.dto';
 import { ConfigService } from '@nestjs/config';
-import { PrivateFile, User } from '@app/common';
 import { PrivateFilesRepository } from './private-files.repository';
 import { MinioService } from 'nestjs-minio-client';
 import {
@@ -11,6 +10,7 @@ import {
   getBucketNamePrivateCache,
   getObjectName,
 } from '../file/files.utils';
+import { PrivateFile, User } from '../libs';
 
 @Injectable()
 export class PrivateFilesService {

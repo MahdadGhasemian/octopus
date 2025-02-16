@@ -1,6 +1,5 @@
+import { AbstractEntity, PaymentStatus } from '@app/common';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { AbstractEntity } from '../database';
-import { PaymentStatus } from '../enum';
 import { Order } from './order.entity';
 
 @Entity()

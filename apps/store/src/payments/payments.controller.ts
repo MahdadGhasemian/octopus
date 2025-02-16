@@ -7,9 +7,9 @@ import {
   JwtAuthAccessGuard,
   NoCache,
   Serialize,
-  User,
 } from '@app/common';
 import { GetPaymentDto } from './dto/get-payment.dto';
+import { User } from '../libs';
 
 @ApiTags('Payments')
 @Serialize(GetPaymentDto)

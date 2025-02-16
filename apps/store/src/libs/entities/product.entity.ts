@@ -1,5 +1,5 @@
+import { AbstractEntity } from '@app/common';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { AbstractEntity } from '../database';
 import { Category } from './category.entity';
 import { OrderItem } from './order_item.entity';
 

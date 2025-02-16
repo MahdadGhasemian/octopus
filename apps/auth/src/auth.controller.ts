@@ -17,7 +17,6 @@ import {
   EVENT_NAME_AUTHENTICATE,
   MessageAckInterceptor,
   NoCache,
-  User,
 } from '@app/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -34,6 +33,7 @@ import { Serialize } from './users/interceptors/serialize.interceptor';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { EditInfoDto } from './dto/edit-info.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { User } from './libs';
 
 @ApiTags('Auth')
 @NoCache()

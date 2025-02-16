@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateAccessDto } from './dto/create-access.dto';
 import { UpdateAccessDto } from './dto/update-access.dto';
 import { AccessesRepository } from './accesses.repository';
-import { Access, Endpoint } from '@app/common';
 import { GetAccessDto } from './dto/get-access.dto';
+import { Access, Endpoint } from '../libs';
 
 @Injectable()
 export class AccessesService {

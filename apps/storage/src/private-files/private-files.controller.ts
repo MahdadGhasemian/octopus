@@ -19,11 +19,11 @@ import {
   CurrentUser,
   FileTypeValidationPipe,
   JwtAuthAccessGuard,
-  User,
 } from '@app/common';
 import { UploadPrivateFileDto } from './dto/upload-private-file.dto';
 import { GetPrivateFileDto } from './dto/get-private-file.dto';
 import { UploadPrivateFileResponseDto } from './dto/get-private-file-response.dto';
+import { User } from '../libs';
 
 @ApiTags('PrivateFiles')
 @Controller('private-files')

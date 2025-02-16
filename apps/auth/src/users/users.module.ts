@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { DatabaseModule, User } from '@app/common';
+import { DatabaseModule } from '@app/common';
 import { UsersRepository } from './users.repository';
 import { AccessesModule } from '../accesses/accesses.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { User } from '../libs';
 
 @Module({
   imports: [
