@@ -37,7 +37,7 @@ import { MinioModule } from 'nestjs-minio-client';
       }),
       inject: [ConfigService],
     }),
-    HealthModule,
+    HealthModule.forRoot('RABBITMQ_STORAGE_QUEUE_NAME'),
     PublicFilesModule,
     PrivateFilesModule,
   ],

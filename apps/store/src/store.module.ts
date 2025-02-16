@@ -43,7 +43,7 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
       }),
       inject: [ConfigService],
     }),
-    HealthModule,
+    HealthModule.forRoot('RABBITMQ_STORE_QUEUE_NAME'),
     CategoriesModule,
     ProductsModule,
     OrdersModule,

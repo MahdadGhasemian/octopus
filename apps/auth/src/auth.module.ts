@@ -54,7 +54,7 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
       }),
       inject: [ConfigService],
     }),
-    HealthModule,
+    HealthModule.forRoot('RABBITMQ_AUTH_QUEUE_NAME'),
     UsersModule,
     AccessesModule,
   ],
