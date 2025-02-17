@@ -23,15 +23,15 @@ export class JwtAuthAccessGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const path = `${request.originalUrl}`;
     const method = request.method;
-    const jwt =
+    const jwtToken =
       request.cookies?.Authentication || request.headers?.authentication;
 
-    if (!jwt) {
+    if (!jwtToken) {
       return false;
     }
 
     return this.authClient
-      .send(EVENT_NAME_AUTHENTICATE, new AuthRequestEvent(jwt))
+      .send(EVENT_NAME_AUTHENTICATE, new AuthRequestEvent(jwtToken))
       .pipe(
         tap((user) => {
           const accesses = user?.accesses;

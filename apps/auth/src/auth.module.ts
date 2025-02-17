@@ -27,17 +27,26 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
       isGlobal: true,
       validationSchema: Joi.object({
         HTTP_PORT_AUTH: Joi.number().required(),
+        JWT_PRIVATE_KEY: Joi.string().required(),
+        JWT_PUBLIC_KEY: Joi.string().required(),
         OTP_EMAIL_EXPIRATION: Joi.number().required(),
         DEFAULT_ACCESS_ID: Joi.number().required(),
         REDIS_CACHE_KEY_PREFIX_AUTH: Joi.string().required(),
+        POSTGRES_DATABASE_AUTH: Joi.string().required(),
       }),
     }),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
+          algorithm: 'RS256',
           expiresIn: `${configService.get('JWT_EXPIRATION')}s`,
         },
+        privateKey: configService
+          .get<string>('JWT_PRIVATE_KEY')
+          .replace(/\\n/g, '\n'),
+        publicKey: configService
+          .get<string>('JWT_PUBLIC_KEY')
+          .replace(/\\n/g, '\n'),
       }),
       inject: [ConfigService],
     }),
@@ -48,8 +57,8 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
         store: await redisStore({
           ttl: configService.get<number>('REDIS_CACHE_TTL_GLOBAL') || 60000,
           socket: {
-            host: configService.getOrThrow<string>('REDIS_HOST'),
-            port: configService.getOrThrow<number>('REDIS_PORT'),
+            host: configService.get<string>('REDIS_HOST'),
+            port: configService.get<number>('REDIS_PORT'),
           },
         }),
       }),
@@ -57,7 +66,7 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
     }),
     DatabaseModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
-        database: configService.getOrThrow('POSTGRES_DATABASE_AUTH'),
+        database: configService.get('POSTGRES_DATABASE_AUTH'),
       }),
       inject: [ConfigService],
     }),
