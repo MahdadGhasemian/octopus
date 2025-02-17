@@ -3,7 +3,8 @@
 		"_postman_id": "89d900a2-cca7-4169-907c-7659658167b2",
 		"name": "Octopus",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "3450407"
+		"_exporter_id": "3450407",
+		"_collection_link": "https://www.postman.com/dark-crescent-229322/workspace/octopus/collection/3450407-89d900a2-cca7-4169-907c-7659658167b2?action=share&source=collection_link&creator=3450407"
 	},
 	"item": [
 		{
@@ -85,7 +86,7 @@
 											"const email = pm.environment.get(\"email\");",
 											"const password = pm.environment.get(\"password\");",
 											"",
-											"let confirmation_code = 22885 // changeme",
+											"let confirmation_code = 44184 // changeme",
 											"",
 											"let body = {",
 											"    email,",
@@ -99,7 +100,8 @@
 											"",
 											"postman.setEnvironmentVariable('body', body);"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -110,7 +112,8 @@
 											"pm.environment.set(\"Authentication\", authentication)",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -409,10 +412,14 @@
 										"exec": [
 											"let response = pm.response.json();",
 											"",
-											"pm.environment.set(\"accessId\", response[0].id)",
+											"if (response?.length) {",
+											"    pm.environment.set(\"accessId\", response[0].id)",
+											"    pm.environment.set(\"accessIds\", JSON.stringify(response.slice(0, 2).map(access => access.id)));",
+											"}",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -684,12 +691,15 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"let response = pm.response.json();",
+											"const response = pm.response.json();",
 											"",
-											"pm.environment.set(\"userAddedId\", response[0].id)",
-											"pm.environment.set(\"userAddedFullName\", response[0].full_name)"
+											"if (Array.isArray(response) && response.length > 0) {",
+											"    pm.environment.set(\"userAddedId\", response[0].id)",
+											"    pm.environment.set(\"userAddedFullName\", response[0].full_name)",
+											"}"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -908,6 +918,70 @@
 									"path": [
 										"users",
 										"{{userAddedId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update User Access",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const access_ids = JSON.parse(pm.environment.get(\"accessIds\") || \"[]\")",
+											"",
+											"let body = {",
+											"\taccess_ids",
+											"}",
+											"",
+											"body = JSON.stringify(body);",
+											"",
+											"postman.setEnvironmentVariable('body', body);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "Authentication={{Authentication}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{body}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostname_auth}}/users/{{userAddedId}}/access",
+									"host": [
+										"{{hostname_auth}}"
+									],
+									"path": [
+										"users",
+										"{{userAddedId}}",
+										"access"
 									]
 								}
 							},
@@ -2049,7 +2123,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -2064,7 +2139,8 @@
 											"    pm.environment.set(\"publicFileUrl\", response?.url);",
 											"}"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2083,7 +2159,7 @@
 										{
 											"key": "file",
 											"type": "file",
-											"src": "/home/asus-mahdad/Music/HOPE.jpeg"
+											"src": "/home/asus-mahdad/Pictures/Screenshots/Screenshot from 2025-02-11 19-35-22.png"
 										}
 									]
 								},
@@ -2334,9 +2410,9 @@
 					}
 				],
 				"url": {
-					"raw": "{{hostname_store}}",
+					"raw": "{{hostname_storage}}",
 					"host": [
-						"{{hostname_store}}"
+						"{{hostname_storage}}"
 					]
 				}
 			},

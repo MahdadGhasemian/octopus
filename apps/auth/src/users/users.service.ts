@@ -7,6 +7,7 @@ import { AuthCommon } from '@app/common';
 import { AccessesService } from '../accesses/accesses.service';
 import { In } from 'typeorm';
 import { User } from '../libs';
+import { UpdateUserAccessDto } from './dto/update-user-access.dto';
 
 @Injectable()
 export class UsersService {
@@ -72,6 +73,20 @@ export class UsersService {
     );
 
     return this.findOne({ id });
+  }
+
+  async updateUserAccess(id: number, updateUserAccessDto: UpdateUserAccessDto) {
+    const accesses = await this.accessesService.readAccesses({
+      id: In(updateUserAccessDto.access_ids),
+    });
+
+    const user = await this.usersRepository.findOne({ id }, { accesses: true });
+
+    user.accesses = accesses;
+
+    await this.usersRepository.save(user);
+
+    return user;
   }
 
   async remove(id: number) {

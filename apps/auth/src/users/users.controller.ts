@@ -14,18 +14,19 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { GetUserDto } from './dto/get-user.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { Serialize } from '@app/common';
-import { JwtAuthAccessGuard } from '../guards/jwt-auth-access.guard';
+import { FoceToClearCache, Serialize } from '@app/common';
+import { JwtAccessGuard } from '../guards/jwt-access.guard';
+import { UpdateUserAccessDto } from './dto/update-user-access.dto';
 
 @ApiTags('Users')
 @Serialize(GetUserDto)
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @UseGuards(JwtAuthAccessGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAccessGuard)
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -34,8 +35,7 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(JwtAuthAccessGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAccessGuard)
   @ApiOkResponse({
     type: [GetUserDto],
   })
@@ -44,8 +44,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthAccessGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAccessGuard)
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -54,8 +53,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthAccessGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAccessGuard)
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -64,9 +62,22 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthAccessGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAccessGuard)
   async remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @Patch(':id/access')
+  @UseGuards(JwtAccessGuard)
+  @FoceToClearCache('/users')
+  @Serialize(GetUserDto)
+  @ApiOkResponse({
+    type: GetUserDto,
+  })
+  async updateUserAccess(
+    @Param('id') id: string,
+    @Body() updateUserAccessDto: UpdateUserAccessDto,
+  ) {
+    return this.usersService.updateUserAccess(+id, updateUserAccessDto);
   }
 }

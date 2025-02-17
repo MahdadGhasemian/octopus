@@ -15,7 +15,7 @@ import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Serialize } from '@app/common';
 import { GetAccessDto } from './dto/get-access.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { JwtAuthAccessGuard } from '../guards/jwt-auth-access.guard';
+import { JwtAccessGuard } from '../guards/jwt-access.guard';
 
 @ApiTags('Accesses')
 @Serialize(GetAccessDto)
@@ -25,7 +25,7 @@ export class AccessesController {
   constructor(private readonly accessesService: AccessesService) {}
 
   @Post()
-  @UseGuards(JwtAuthAccessGuard)
+  @UseGuards(JwtAccessGuard)
   @ApiOkResponse({
     type: GetAccessDto,
   })
@@ -34,7 +34,7 @@ export class AccessesController {
   }
 
   @Get()
-  @UseGuards(JwtAuthAccessGuard)
+  @UseGuards(JwtAccessGuard)
   @ApiOkResponse({
     type: [GetAccessDto],
   })
@@ -43,7 +43,7 @@ export class AccessesController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthAccessGuard)
+  @UseGuards(JwtAccessGuard)
   @ApiOkResponse({
     type: GetAccessDto,
   })
@@ -52,7 +52,7 @@ export class AccessesController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthAccessGuard)
+  @UseGuards(JwtAccessGuard)
   @ApiOkResponse({
     type: GetAccessDto,
   })
@@ -64,7 +64,7 @@ export class AccessesController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthAccessGuard)
+  @UseGuards(JwtAccessGuard)
   async remove(@Param('id') id: string) {
     return this.accessesService.remove({ id: +id });
   }

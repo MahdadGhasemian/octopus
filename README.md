@@ -308,6 +308,13 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Change log
 
+### 2.1.2 (2025-02-17)
+
+- Transition from JWT_SECRET into JWT_PUBLIC_KEY and JWT_PRIVATE_KEY
+- Fxied access guard
+- Fixed cache manager and added `FoceToClearCache` decorator
+- Added new API route to edit user access /users/{id}/access
+
 ### 2.1.1 (2025-02-16)
 
 - Improved the Health Check API to monitor infrastructure connections, including RabbitMQ, PostgreSql and Redis.
