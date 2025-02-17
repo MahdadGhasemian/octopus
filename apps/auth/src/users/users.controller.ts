@@ -14,8 +14,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { GetUserDto } from './dto/get-user.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { Serialize } from '@app/common';
+import { FoceToClearCache, Serialize } from '@app/common';
 import { JwtAccessGuard } from '../guards/jwt-access.guard';
+import { UpdateUserAccessDto } from './dto/update-user-access.dto';
 
 @ApiTags('Users')
 @Serialize(GetUserDto)
@@ -64,5 +65,19 @@ export class UsersController {
   @UseGuards(JwtAccessGuard)
   async remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @Patch(':id/access')
+  @UseGuards(JwtAccessGuard)
+  @FoceToClearCache('/users')
+  @Serialize(GetUserDto)
+  @ApiOkResponse({
+    type: GetUserDto,
+  })
+  async updateUserAccess(
+    @Param('id') id: string,
+    @Body() updateUserAccessDto: UpdateUserAccessDto,
+  ) {
+    return this.usersService.updateUserAccess(+id, updateUserAccessDto);
   }
 }
