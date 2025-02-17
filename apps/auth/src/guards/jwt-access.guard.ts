@@ -9,26 +9,34 @@ import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()
-export class JwtAuthAccessGuard implements CanActivate {
-  private readonly logger = new Logger(JwtAuthAccessGuard.name);
+export class JwtAccessGuard implements CanActivate {
+  private readonly logger = new Logger(JwtAccessGuard.name);
 
   constructor(private readonly reflector: Reflector) {}
 
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const request = context.switchToHttp().getRequest();
-    const path = `${request.originalUrl}`;
-    const method = request.method;
-    const jwt =
-      context.switchToHttp().getRequest().cookies?.Authentication ||
-      context.switchToHttp().getRequest().headers?.authentication;
+    let path: string;
+    let method: string;
+    let user: any;
 
-    if (!jwt) {
+    if (context.getType() === 'http') {
+      // Extract data from HTTP request
+      const request = context.switchToHttp().getRequest();
+      path = request.originalUrl;
+      method = request.method;
+      user = request?.user;
+    } else if (context.getType() === 'rpc') {
+      // Extract data from RabbitMQ message
+      const data = context.switchToRpc().getData();
+      path = data?.path;
+      method = data?.method;
+      user = data?.user;
+    } else {
       return false;
     }
 
-    const user = request?.user;
     const accesses = user?.accesses;
     const has_full_access = !!accesses?.find(
       (item: { has_full_access?: boolean }) => item.has_full_access,

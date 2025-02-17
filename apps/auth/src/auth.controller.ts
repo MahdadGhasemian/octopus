@@ -14,7 +14,7 @@ import { ConfirmOtpDto } from './dto/confirm-otp.dto';
 import { Response } from 'express';
 import {
   CurrentUser,
-  EVENT_NAME_AUTHENTICATE,
+  EVENT_NAME_AUTHENTICATE_AND_CHECK_ACCESS,
   MessageAckInterceptor,
   NoCache,
 } from '@app/common';
@@ -34,6 +34,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { EditInfoDto } from './dto/edit-info.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { User } from './libs';
+import { JwtAccessGuard } from './guards/jwt-access.guard';
 
 @ApiTags('Auth')
 @NoCache()
@@ -115,10 +116,12 @@ export class AuthController {
     return this.authService.editInfo(editInfoDto, user);
   }
 
-  @MessagePattern(EVENT_NAME_AUTHENTICATE)
-  @UseGuards(JwtAuthGuard)
+  @MessagePattern(EVENT_NAME_AUTHENTICATE_AND_CHECK_ACCESS)
+  @UseGuards(JwtAuthGuard, JwtAccessGuard)
   @UseInterceptors(MessageAckInterceptor)
-  async authenticate(@Payload() data: Partial<{ user: GetUserDto }>) {
+  async checkAccess(
+    @Payload() data: { user: GetUserDto; path: string; method: string },
+  ) {
     return data.user;
   }
 }
