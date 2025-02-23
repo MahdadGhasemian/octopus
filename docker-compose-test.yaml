@@ -9,7 +9,6 @@ services:
       PGDATA: /data/postgres
     volumes:
       - postgres_data:/data/postgres
-      - ./init-scripts-test:/docker-entrypoint-initdb.d
     ports:
       - '5432:5432'
     entrypoint: >

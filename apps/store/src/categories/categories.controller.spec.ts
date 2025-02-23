@@ -4,6 +4,8 @@ import { CategoriesService } from './categories.service';
 import { JwtAuthAccessGuard } from '@app/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Category } from '../libs';
+import { Paginated } from 'nestjs-paginate';
 
 describe('CategoriesController', () => {
   let categoriesController: CategoriesController;
@@ -51,7 +53,13 @@ describe('CategoriesController', () => {
         description: 'A test category',
         image: 'image-url',
       };
-      const mockCategory = { id: 1, ...createCategoryDto, products: [] };
+      const mockCategory = {
+        id: 1,
+        ...createCategoryDto,
+        products: [],
+        created_at: new Date(),
+        updated_at: new Date(),
+      };
 
       const createSpy = jest
         .spyOn(categoriesService, 'create')
@@ -66,18 +74,41 @@ describe('CategoriesController', () => {
 
   describe('findAll', () => {
     it('should return an array of categories', async () => {
-      const mockCategories = [
-        { id: 1, name: 'Category 1', products: [] },
-        { id: 2, name: 'Category 2', products: [] },
-      ];
+      const mockCategoryPagination: Paginated<Category> = {
+        data: [
+          {
+            id: 1,
+            name: 'Category 1',
+            products: [],
+          },
+          {
+            id: 2,
+            name: 'Category 2',
+            products: [],
+          },
+        ],
+        meta: {
+          itemsPerPage: 10,
+          totalItems: 100,
+          currentPage: 1,
+          totalPages: 10,
+          sortBy: [['id', 'DESC']],
+          searchBy: [],
+          search: '',
+          select: [],
+        },
+        links: {
+          current: '',
+        },
+      };
 
       const findAllSpy = jest
         .spyOn(categoriesService, 'findAll')
-        .mockResolvedValue(mockCategories);
+        .mockResolvedValue(mockCategoryPagination);
 
-      const result = await categoriesController.findAll();
+      const result = await categoriesController.findAll({ path: '' });
 
-      expect(result).toEqual(mockCategories);
+      expect(result).toEqual(mockCategoryPagination);
       expect(findAllSpy).toHaveBeenCalledTimes(1);
     });
   });
@@ -85,7 +116,11 @@ describe('CategoriesController', () => {
   describe('findOne', () => {
     it('should return a single category by ID', async () => {
       const id = '1';
-      const mockCategory = { id: 1, name: 'Test Category', products: [] };
+      const mockCategory = {
+        id: 1,
+        name: 'Test Category',
+        products: [],
+      };
 
       const findOneSpy = jest
         .spyOn(categoriesService, 'findOne')

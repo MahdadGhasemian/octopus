@@ -6,13 +6,13 @@ import {
 
 export class AbstractEntity<T> {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @CreateDateColumn({ type: 'timestamptz' })
-  created_at: Date;
+  created_at?: Date;
 
   @UpdateDateColumn({ type: 'timestamptz' })
-  updated_at: Date;
+  updated_at?: Date;
 
   constructor(entity: Partial<T>) {
     Object.assign(this, entity);
