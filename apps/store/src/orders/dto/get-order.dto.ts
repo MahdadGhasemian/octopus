@@ -8,10 +8,10 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { OrderStatus } from '@app/common';
+import { AbstractGetDto, OrderStatus } from '@app/common';
 import { GetOrderItemDto } from './get-order-items.dto';
 
-export class GetOrderDto {
+export class GetOrderDto extends AbstractGetDto {
   @ApiProperty({
     example: '1',
     required: true,

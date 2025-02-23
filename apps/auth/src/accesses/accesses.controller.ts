@@ -16,9 +16,11 @@ import { Serialize } from '@app/common';
 import { GetAccessDto } from './dto/get-access.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { JwtAccessGuard } from '../guards/jwt-access.guard';
+import { LisAccessDto } from './dto/list-access.dto';
+import { Paginate, PaginatedSwaggerDocs, PaginateQuery } from 'nestjs-paginate';
+import { ACCESS_PAGINATION_CONFIG } from './pagination-config';
 
 @ApiTags('Accesses')
-@Serialize(GetAccessDto)
 @UseGuards(JwtAuthGuard)
 @Controller('accesses')
 export class AccessesController {
@@ -26,6 +28,7 @@ export class AccessesController {
 
   @Post()
   @UseGuards(JwtAccessGuard)
+  @Serialize(GetAccessDto)
   @ApiOkResponse({
     type: GetAccessDto,
   })
@@ -35,15 +38,15 @@ export class AccessesController {
 
   @Get()
   @UseGuards(JwtAccessGuard)
-  @ApiOkResponse({
-    type: [GetAccessDto],
-  })
-  async findAll() {
-    return this.accessesService.findAll();
+  @Serialize(LisAccessDto)
+  @PaginatedSwaggerDocs(GetAccessDto, ACCESS_PAGINATION_CONFIG)
+  async findAll(@Paginate() query: PaginateQuery) {
+    return this.accessesService.findAll(query);
   }
 
   @Get(':id')
   @UseGuards(JwtAccessGuard)
+  @Serialize(GetAccessDto)
   @ApiOkResponse({
     type: GetAccessDto,
   })
@@ -53,6 +56,7 @@ export class AccessesController {
 
   @Patch(':id')
   @UseGuards(JwtAccessGuard)
+  @Serialize(GetAccessDto)
   @ApiOkResponse({
     type: GetAccessDto,
   })
@@ -65,6 +69,7 @@ export class AccessesController {
 
   @Delete(':id')
   @UseGuards(JwtAccessGuard)
+  @Serialize(GetAccessDto)
   async remove(@Param('id') id: string) {
     return this.accessesService.remove({ id: +id });
   }

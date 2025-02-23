@@ -1,8 +1,9 @@
+import { AbstractGetDto } from '@app/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
 
-export class GetCategoryDto {
+export class GetCategoryDto extends AbstractGetDto {
   @ApiProperty({
     example: '1',
     required: true,

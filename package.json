@@ -1,6 +1,6 @@
 {
   "name": "octopus",
-  "version": "2.1.2",
+  "version": "3.0.0",
   "description": "![Octopus](.images/octopus.png)",
   "author": "",
   "scripts": {
@@ -53,6 +53,7 @@
     "express": "^4.19.2",
     "joi": "^17.12.3",
     "jsonwebtoken": "^9.0.2",
+    "nestjs-paginate": "^11.0.1",
     "nestjs-pino": "^4.0.0",
     "pg": "^8.11.5",
     "pino-http": "^9.0.0",

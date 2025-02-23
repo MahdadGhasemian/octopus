@@ -284,7 +284,8 @@
 											"",
 											"postman.setEnvironmentVariable('body', body);"
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -297,7 +298,8 @@
 											"pm.environment.set(\"userAddedFullName\", response.full_name)",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -410,11 +412,12 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"let response = pm.response.json();",
+											"const response = pm.response.json();",
+											"const data = response.data;",
 											"",
-											"if (response?.length) {",
-											"    pm.environment.set(\"accessId\", response[0].id)",
-											"    pm.environment.set(\"accessIds\", JSON.stringify(response.slice(0, 2).map(access => access.id)));",
+											"if (Array.isArray(data) && data.length > 0) {",
+											"    pm.environment.set(\"accessId\", data[0].id)",
+											"    pm.environment.set(\"accessIds\", JSON.stringify(data.slice(0, 2).map(access => access.id)));",
 											"}",
 											""
 										],
@@ -433,12 +436,35 @@
 									}
 								],
 								"url": {
-									"raw": "{{hostname_auth}}/accesses",
+									"raw": "{{hostname_auth}}/accesses?page=1&limit=10&filter.title=$ilike:access&sortBy=id:DESC",
 									"host": [
 										"{{hostname_auth}}"
 									],
 									"path": [
 										"accesses"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "filter.title",
+											"value": "$ilike:access"
+										},
+										{
+											"key": "sortBy",
+											"value": "id:DESC"
+										},
+										{
+											"key": "search",
+											"value": "access",
+											"disabled": true
+										}
 									]
 								}
 							},
@@ -692,11 +718,13 @@
 									"script": {
 										"exec": [
 											"const response = pm.response.json();",
+											"const data = response.data;",
 											"",
-											"if (Array.isArray(response) && response.length > 0) {",
-											"    pm.environment.set(\"userAddedId\", response[0].id)",
-											"    pm.environment.set(\"userAddedFullName\", response[0].full_name)",
-											"}"
+											"if (Array.isArray(data) && data.length > 0) {",
+											"\tpm.environment.set(\"userAddedId\", data[0].id)",
+											"\tpm.environment.set(\"userAddedFullName\", data[0].full_name)",
+											"}",
+											""
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -713,12 +741,31 @@
 									}
 								],
 								"url": {
-									"raw": "{{hostname_auth}}/users",
+									"raw": "{{hostname_auth}}/users?page=1&limit=10&sortBy=id:DESC",
 									"host": [
 										"{{hostname_auth}}"
 									],
 									"path": [
 										"users"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "filter.email",
+											"value": "$ilike:example.com",
+											"disabled": true
+										},
+										{
+											"key": "sortBy",
+											"value": "id:DESC"
+										}
 									]
 								}
 							},
@@ -1318,22 +1365,24 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"let response = pm.response.json();",
+											"// let response = pm.response.json();",
 											"",
-											"if (response?.length) {",
-											"    pm.environment.set(\"productId\", response[0].id);",
-											"    pm.environment.set(\"productIds\", JSON.stringify(response.slice(0, 5).map(product => product.id)));",
-											"}",
+											"// if (response?.length) {",
+											"//     pm.environment.set(\"productId\", response[0].id);",
+											"//     pm.environment.set(\"productIds\", JSON.stringify(response.slice(0, 5).map(product => product.id)));",
+											"// }",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1347,12 +1396,34 @@
 									}
 								],
 								"url": {
-									"raw": "{{hostname_store}}/products",
+									"raw": "{{hostname_store}}/products?page=1&limit=10&filter.name=$ilike:product&filter.price=$gte:10&filter.category.name=$eq:Category 1",
 									"host": [
 										"{{hostname_store}}"
 									],
 									"path": [
 										"products"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "filter.name",
+											"value": "$ilike:product"
+										},
+										{
+											"key": "filter.price",
+											"value": "$gte:10"
+										},
+										{
+											"key": "filter.category.name",
+											"value": "$eq:Category 1"
+										}
 									]
 								}
 							},
@@ -1592,20 +1663,22 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"let response = pm.response.json();",
+											"// let response = pm.response.json();",
 											"",
-											"if (response?.length)",
-											"    pm.environment.set(\"orderId\", response[0].id);",
+											"// if (response?.length)",
+											"//     pm.environment.set(\"orderId\", response[0].id);",
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1619,12 +1692,22 @@
 									}
 								],
 								"url": {
-									"raw": "{{hostname_store}}/orders",
+									"raw": "{{hostname_store}}/orders?page=1&limit=10",
 									"host": [
 										"{{hostname_store}}"
 									],
 									"path": [
 										"orders"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
 									]
 								}
 							},
