@@ -4,6 +4,8 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { GetProductDto } from './dto/get-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Category, Product } from '../libs';
+import { paginate, PaginateQuery } from 'nestjs-paginate';
+import { PRODUCT_PAGINATION_CONFIG } from './pagination-config';
 
 @Injectable()
 export class ProductsService {
@@ -20,8 +22,12 @@ export class ProductsService {
     return this.findOne({ id: result.id });
   }
 
-  async findAll() {
-    return this.productsRepository.find({}, { category: true });
+  async findAll(query: PaginateQuery) {
+    return paginate(
+      query,
+      this.productsRepository.entityRepository,
+      PRODUCT_PAGINATION_CONFIG,
+    );
   }
 
   async findOne(productDto: GetProductDto) {

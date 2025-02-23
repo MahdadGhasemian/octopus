@@ -14,9 +14,11 @@ import { ProductsService } from './products.service';
 import { GetProductDto } from './dto/get-product.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ListProductDto } from './dto/list-product.dto';
+import { Paginate, PaginatedSwaggerDocs, PaginateQuery } from 'nestjs-paginate';
+import { PRODUCT_PAGINATION_CONFIG } from './pagination-config';
 
 @ApiTags('Products')
-@Serialize(GetProductDto)
 @GeneralCache()
 @Controller('products')
 export class ProductsController {
@@ -24,6 +26,7 @@ export class ProductsController {
 
   @Post()
   @UseGuards(JwtAuthAccessGuard)
+  @Serialize(GetProductDto)
   @ApiOkResponse({
     type: GetProductDto,
   })
@@ -32,14 +35,14 @@ export class ProductsController {
   }
 
   @Get()
-  @ApiOkResponse({
-    type: [GetProductDto],
-  })
-  async findAll() {
-    return this.productsService.findAll();
+  @Serialize(ListProductDto)
+  @PaginatedSwaggerDocs(GetProductDto, PRODUCT_PAGINATION_CONFIG)
+  async findAll(@Paginate() query: PaginateQuery) {
+    return this.productsService.findAll(query);
   }
 
   @Get(':id')
+  @Serialize(GetProductDto)
   @ApiOkResponse({
     type: GetProductDto,
   })
@@ -49,6 +52,7 @@ export class ProductsController {
 
   @Patch(':id')
   @UseGuards(JwtAuthAccessGuard)
+  @Serialize(GetProductDto)
   @ApiOkResponse({
     type: GetProductDto,
   })
@@ -61,6 +65,7 @@ export class ProductsController {
 
   @Delete(':id')
   @UseGuards(JwtAuthAccessGuard)
+  @Serialize(GetProductDto)
   async remove(@Param('id') id: string) {
     return this.productsService.remove(+id);
   }

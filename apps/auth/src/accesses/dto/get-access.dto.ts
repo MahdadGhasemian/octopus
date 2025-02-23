@@ -12,8 +12,9 @@ import {
 } from 'class-validator';
 import { EndpointAccessDto } from './endpoint-access.dto';
 import { Expose, Type } from 'class-transformer';
+import { AbstractGetDto } from '@app/common';
 
-export class GetAccessDto {
+export class GetAccessDto extends AbstractGetDto {
   @ApiProperty({
     example: '1',
     required: true,

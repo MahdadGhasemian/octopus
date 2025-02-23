@@ -9,8 +9,9 @@ import {
   IsUrl,
 } from 'class-validator';
 import { GetCategoryDto } from '../../categories/dto/get-category.dto';
+import { AbstractGetDto } from '@app/common';
 
-export class GetProductDto {
+export class GetProductDto extends AbstractGetDto {
   @ApiProperty({
     example: '1',
     required: true,

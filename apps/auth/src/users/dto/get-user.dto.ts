@@ -9,8 +9,9 @@ import {
   IsString,
 } from 'class-validator';
 import { GetAccessDto } from '../../accesses/dto/get-access.dto';
+import { AbstractGetDto } from '@app/common';
 
-export class GetUserDto {
+export class GetUserDto extends AbstractGetDto {
   @ApiProperty({
     example: '1',
     required: true,

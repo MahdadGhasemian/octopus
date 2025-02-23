@@ -17,9 +17,11 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { FoceToClearCache, Serialize } from '@app/common';
 import { JwtAccessGuard } from '../guards/jwt-access.guard';
 import { UpdateUserAccessDto } from './dto/update-user-access.dto';
+import { Paginate, PaginatedSwaggerDocs, PaginateQuery } from 'nestjs-paginate';
+import { USER_PAGINATION_CONFIG } from './pagination-config';
+import { ListUserDto } from './dto/list-user.dto';
 
 @ApiTags('Users')
-@Serialize(GetUserDto)
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
@@ -27,6 +29,7 @@ export class UsersController {
 
   @Post()
   @UseGuards(JwtAccessGuard)
+  @Serialize(GetUserDto)
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -36,15 +39,15 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtAccessGuard)
-  @ApiOkResponse({
-    type: [GetUserDto],
-  })
-  async findAll() {
-    return this.usersService.findAll();
+  @Serialize(ListUserDto)
+  @PaginatedSwaggerDocs(GetUserDto, USER_PAGINATION_CONFIG)
+  async findAll(@Paginate() query: PaginateQuery) {
+    return this.usersService.findAll(query);
   }
 
   @Get(':id')
   @UseGuards(JwtAccessGuard)
+  @Serialize(GetUserDto)
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -54,6 +57,7 @@ export class UsersController {
 
   @Patch(':id')
   @UseGuards(JwtAccessGuard)
+  @Serialize(GetUserDto)
   @ApiOkResponse({
     type: GetUserDto,
   })
@@ -63,12 +67,14 @@ export class UsersController {
 
   @Delete(':id')
   @UseGuards(JwtAccessGuard)
+  @Serialize(GetUserDto)
   async remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
 
   @Patch(':id/access')
   @UseGuards(JwtAccessGuard)
+  @Serialize(GetUserDto)
   @FoceToClearCache('/users')
   @Serialize(GetUserDto)
   @ApiOkResponse({

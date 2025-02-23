@@ -1,13 +1,15 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { OrderStatus } from '@app/common';
+import { getPaginationConfig, OrderStatus } from '@app/common';
 import { OrdersRepository } from './orders.repository';
 import { GetOrderDto } from './dto/get-order.dto';
 import { OrderItemsRepository } from './order-items.repository';
 import { ProductsService } from '../products/products.service';
 import { UpdateIsPaidOrderDto } from './dto/update-paid-order.dto';
 import { Order, OrderItem, Product, User } from '../libs';
+import { paginate, PaginateQuery } from 'nestjs-paginate';
+import { ORDER_PAGINATION_CONFIG } from './pagination-config';
 
 @Injectable()
 export class OrdersService {
@@ -38,8 +40,12 @@ export class OrdersService {
     return this.findOne({ id: result.id }, user);
   }
 
-  async findAll(user: User) {
-    return this.ordersRepository.find({ user_id: user.id });
+  async findAll(query: PaginateQuery, user: User) {
+    return paginate(
+      query,
+      this.ordersRepository.entityRepository,
+      getPaginationConfig(ORDER_PAGINATION_CONFIG, { user_id: user.id }),
+    );
   }
 
   async findOne(orderDto: GetOrderDto, user: User) {

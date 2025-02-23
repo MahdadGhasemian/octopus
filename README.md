@@ -155,11 +155,13 @@ octopus
 ![User Access](.images/user-access.png)
 
 - Support dynamic access (role)
+- Support auto Caching
 
 ### Storage
 
 ![Resize And Change Quality of Image](.images/routes-download-resize-quality.png)
 
+- Based on MinIO (S3 Object Storage)
 - Support multiple file formats:
   - Images: jpg, jpeg, png, bmp, tiff, gif, webp
   - Documents: doc, docx, xlsx, pdf, txt, rtf
@@ -171,7 +173,12 @@ octopus
 - Unique route to upload all files
 - Unique route to download all files (if the file is an image type, the system will automatically consider caching and editing utitlies for the file)
 
-## Store
+### Store
+
+![Store Product List](.images/store-product-list.png)
+
+- Support fully Pagination
+- Support auto Caching
 
 ## Swaggers
 
@@ -295,7 +302,7 @@ pnpm run test:e2e
 - [x] Fix Get OTP to expire its session
 - [x] full_name nullable
 - [ ] Category Tree
-- [ ] Get Lists be able to support the pagination
+- [x] Get Lists be able to support the pagination
 - [ ] Refresh Token
 
 ## Contributing
@@ -307,6 +314,11 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for de
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ## Change log
+
+### 3.0.0 (2025-02-23)
+
+- Supporting Pagination for list retrieval endpoints.
+- Sending `EVENT_NAME_USER_CREATED` and `EVENT_NAME_USER_UPDATED` from the 'auth' service to the 'store' service to update users.
 
 ### 2.1.2 (2025-02-17)
 

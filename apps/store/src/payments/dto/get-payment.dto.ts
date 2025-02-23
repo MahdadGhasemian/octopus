@@ -8,10 +8,10 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PaymentStatus } from '@app/common';
+import { AbstractGetDto, PaymentStatus } from '@app/common';
 import { GetOrderDto } from '../../orders/dto/get-order.dto';
 
-export class GetPaymentDto {
+export class GetPaymentDto extends AbstractGetDto {
   @ApiProperty({
     example: '1',
     required: true,

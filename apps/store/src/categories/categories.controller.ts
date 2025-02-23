@@ -14,9 +14,11 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { GeneralCache, JwtAuthAccessGuard, Serialize } from '@app/common';
 import { GetCategoryDto } from './dto/get-category.dto';
+import { Paginate, PaginatedSwaggerDocs, PaginateQuery } from 'nestjs-paginate';
+import { CATEGORY_PAGINATION_CONFIG } from './pagination-config';
+import { ListCategoryDto } from './dto/list-category.dto';
 
 @ApiTags('Categories')
-@Serialize(GetCategoryDto)
 @GeneralCache()
 @Controller('categories')
 export class CategoriesController {
@@ -24,6 +26,7 @@ export class CategoriesController {
 
   @Post()
   @UseGuards(JwtAuthAccessGuard)
+  @Serialize(GetCategoryDto)
   @ApiOkResponse({
     type: GetCategoryDto,
   })
@@ -32,14 +35,14 @@ export class CategoriesController {
   }
 
   @Get()
-  @ApiOkResponse({
-    type: [GetCategoryDto],
-  })
-  async findAll() {
-    return this.categoriesService.findAll();
+  @Serialize(ListCategoryDto)
+  @PaginatedSwaggerDocs(GetCategoryDto, CATEGORY_PAGINATION_CONFIG)
+  async findAll(@Paginate() query: PaginateQuery) {
+    return this.categoriesService.findAll(query);
   }
 
   @Get(':id')
+  @Serialize(GetCategoryDto)
   @ApiOkResponse({
     type: GetCategoryDto,
   })
@@ -49,6 +52,7 @@ export class CategoriesController {
 
   @Patch(':id')
   @UseGuards(JwtAuthAccessGuard)
+  @Serialize(GetCategoryDto)
   @ApiOkResponse({
     type: GetCategoryDto,
   })
@@ -61,6 +65,7 @@ export class CategoriesController {
 
   @Delete(':id')
   @UseGuards(JwtAuthAccessGuard)
+  @Serialize(GetCategoryDto)
   async remove(@Param('id') id: string) {
     return this.categoriesService.remove(+id);
   }

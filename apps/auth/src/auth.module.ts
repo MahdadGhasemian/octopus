@@ -6,7 +6,9 @@ import {
   HealthModule,
   HttpCacheInterceptor,
   LoggerModule,
+  RabbitmqModule,
   REDIS_CACHE_KEY_PREFIX_AUTH,
+  STORE_SERVICE,
 } from '@app/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
@@ -50,6 +52,7 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
       }),
       inject: [ConfigService],
     }),
+    RabbitmqModule.forRoot(STORE_SERVICE, 'RABBITMQ_STORE_QUEUE_NAME'),
     CacheModule.registerAsync<RedisClientOptions>({
       imports: [ConfigModule],
       isGlobal: true,

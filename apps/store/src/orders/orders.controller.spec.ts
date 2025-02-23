@@ -4,7 +4,8 @@ import { OrdersService } from './orders.service';
 import { JwtAuthAccessGuard, OrderStatus } from '@app/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { OrderItem, Product, User } from '../libs';
+import { Order, OrderItem, Product, User } from '../libs';
+import { Paginated } from 'nestjs-paginate';
 
 describe('OrdersController', () => {
   let ordersController: OrdersController;
@@ -27,6 +28,7 @@ describe('OrdersController', () => {
   const user: User = {
     id: 1,
     email: 'user@example.com',
+    orders: [],
   };
 
   const mockOrderItem = new OrderItem({
@@ -40,10 +42,28 @@ describe('OrdersController', () => {
     total_bill_amount: 1,
     order_status: OrderStatus.PENDING,
     user_id: user.id,
+    user,
     order_items: [mockOrderItem],
     payments: [],
     is_paid: false,
     note: '',
+  };
+
+  const mockOrderPagination: Paginated<Order> = {
+    data: [mockOrder],
+    meta: {
+      itemsPerPage: 10,
+      totalItems: 100,
+      currentPage: 1,
+      totalPages: 10,
+      sortBy: [['id', 'DESC']],
+      searchBy: [],
+      search: '',
+      select: [],
+    },
+    links: {
+      current: '',
+    },
   };
 
   beforeEach(async () => {
@@ -93,16 +113,14 @@ describe('OrdersController', () => {
 
   describe('findAll', () => {
     it('should return all orders', async () => {
-      const mockOrders = [mockOrder];
-
       const findAllSpy = jest
         .spyOn(ordersService, 'findAll')
-        .mockResolvedValue(mockOrders);
+        .mockResolvedValue(mockOrderPagination);
 
-      const result = await ordersController.findAll(user);
+      const result = await ordersController.findAll({ path: '' }, user);
 
-      expect(result).toEqual(mockOrders);
-      expect(findAllSpy).toHaveBeenCalledWith(user);
+      expect(result).toMatchObject(mockOrderPagination);
+      expect(findAllSpy).toHaveBeenCalledWith({ path: '' }, user);
     });
   });
 

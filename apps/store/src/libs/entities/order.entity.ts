@@ -1,7 +1,15 @@
 import { AbstractEntity, OrderStatus } from '@app/common';
-import { Column, Entity, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { OrderItem } from './order_item.entity';
 import { Payment } from './payment.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Order extends AbstractEntity<Order> {
@@ -9,7 +17,12 @@ export class Order extends AbstractEntity<Order> {
   order_date: Date;
 
   @Column()
+  @Index()
   user_id: number;
+
+  @ManyToOne(() => User, (user) => user.orders)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
   order_items: OrderItem[];

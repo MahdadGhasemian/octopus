@@ -7,6 +7,7 @@ import {
   LoggerModule,
   RabbitmqModule,
   REDIS_CACHE_KEY_PREFIX_STORE,
+  STORE_SERVICE,
 } from '@app/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
@@ -18,6 +19,7 @@ import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
 import { RedisClientOptions } from 'redis';
 import { redisStore } from 'cache-manager-redis-yet';
 import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -30,6 +32,7 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
       }),
     }),
     RabbitmqModule.forRoot(AUTH_SERVICE, 'RABBITMQ_AUTH_QUEUE_NAME'),
+    RabbitmqModule.forRoot(STORE_SERVICE, 'RABBITMQ_STORE_QUEUE_NAME'),
     CacheModule.registerAsync<RedisClientOptions>({
       imports: [ConfigModule],
       isGlobal: true,
@@ -51,6 +54,7 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
       inject: [ConfigService],
     }),
     HealthModule.forRoot('RABBITMQ_STORE_QUEUE_NAME'),
+    UsersModule,
     CategoriesModule,
     ProductsModule,
     OrdersModule,

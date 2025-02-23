@@ -1,5 +1,6 @@
 import { AbstractEntity } from '@app/common';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { Order } from './order.entity';
 
 @Entity()
 export class User extends AbstractEntity<User> {
@@ -8,4 +9,7 @@ export class User extends AbstractEntity<User> {
 
   @Column({ nullable: true })
   full_name?: string;
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 }
