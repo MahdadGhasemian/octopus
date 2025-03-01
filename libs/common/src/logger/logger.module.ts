@@ -9,6 +9,11 @@ import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
       useFactory: async (configService: ConfigService) => ({
         pinoHttp: {
           level: configService.get<string>('LOG_LEVEL', 'info'),
+          redact: [
+            'req.headers.cookie',
+            'req.Authentication',
+            'req.headers.authorization',
+          ],
           transport: {
             target: 'pino-pretty',
             options: {
