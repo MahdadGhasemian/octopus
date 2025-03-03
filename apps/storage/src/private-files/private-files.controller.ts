@@ -7,14 +7,12 @@ import {
   Post,
   Query,
   Res,
-  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { PrivateFilesService } from './private-files.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
+import { FastifyReply } from 'fastify';
 import {
   CurrentUser,
   FileTypeValidationPipe,
@@ -24,6 +22,11 @@ import { UploadPrivateFileDto } from './dto/upload-private-file.dto';
 import { GetPrivateFileDto } from './dto/get-private-file.dto';
 import { UploadPrivateFileResponseDto } from './dto/get-private-file-response.dto';
 import { User } from '../libs';
+import {
+  FileInterceptor,
+  MemoryStorageFile,
+  UploadedFile,
+} from '@blazity/nest-file-fastify';
 
 @ApiTags('PrivateFiles')
 @Controller('private-files')
@@ -42,8 +45,7 @@ export class PrivateFilesController {
   })
   async uploadFile(
     @CurrentUser() user: User,
-    @UploadedFile(new FileTypeValidationPipe())
-    file: Express.Multer.File,
+    @UploadedFile(new FileTypeValidationPipe()) file: MemoryStorageFile,
     @Body() uploadPrivateFileDto: UploadPrivateFileDto,
   ) {
     return this.privateFilesService.uploadFile(
@@ -60,7 +62,7 @@ export class PrivateFilesController {
     @Param('bucket_name') bucket_name: string,
     @Param('object_name') object_name: string,
     @Query() query: GetPrivateFileDto,
-    @Res() res: Response,
+    @Res() fastifyReply: FastifyReply,
   ) {
     try {
       const fileStream = await this.privateFilesService.downloadFile(
@@ -72,13 +74,13 @@ export class PrivateFilesController {
       );
 
       // Set the appropriate headers to download the file
-      res.setHeader(
+      fastifyReply.header(
         'Content-Disposition',
         `attachment; filename=${object_name}`,
       );
 
       // Pipe the stream to the response
-      fileStream.pipe(res);
+      fileStream.pipe(fastifyReply.raw);
     } catch (error) {
       throw new NotFoundException('File Not Found');
     }

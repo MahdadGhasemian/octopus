@@ -9,6 +9,10 @@ import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
 @Injectable()
 export class FileTypeValidationPipe implements PipeTransform {
   transform(file: any) {
+    if (!file || !file.mimetype) {
+      throw new BadRequestException('Invalid file type 1');
+    }
+
     const allowedMimeTypes = SUPPORTED_IMAGE.concat(
       SUPPORTED_DOCUMENTS,
       SUPPORTED_MEDIA_FILES,
@@ -16,7 +20,9 @@ export class FileTypeValidationPipe implements PipeTransform {
     );
 
     if (!allowedMimeTypes.includes(file.mimetype)) {
-      throw new BadRequestException('Invalid file type 1');
+      throw new BadRequestException(
+        `Invalid file type: ${file.mimetype}. Allowed types: ${allowedMimeTypes.join(', ')}`,
+      );
     }
     return file;
   }

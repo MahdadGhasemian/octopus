@@ -3,7 +3,6 @@ import { UsersService } from './users/users.service';
 import { GetOtpDto } from './dto/get-otp.dto';
 import { ConfirmOtpDto } from './dto/confirm-otp.dto';
 import { AuthCommon } from '@app/common';
-import { Response } from 'express';
 import { TokenPayload } from './interfaces/token-payload.interface';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -14,6 +13,7 @@ import { Cache } from 'cache-manager';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { randomBytes } from 'crypto';
 import { User } from './libs';
+import { FastifyReply } from 'fastify';
 
 @Injectable()
 export class AuthService {
@@ -60,7 +60,7 @@ export class AuthService {
     return { hashed_code };
   }
 
-  async confirmOtp(confirmOtpDto: ConfirmOtpDto, response: Response) {
+  async confirmOtp(confirmOtpDto: ConfirmOtpDto, fastifyReply: FastifyReply) {
     // Retereve hashed_code from Redis
     const cache_prefix = this.configService.get<string>(
       'REDIS_CACHE_KEY_PREFIX_AUTH',
@@ -108,14 +108,14 @@ export class AuthService {
     // Mark OTP as used by deleting it from Redis
     await this.cacheManager.del(`${cache_prefix}:${confirmOtpDto.email}`);
 
-    await this.authenticate(user, response);
+    await this.authenticate(user, fastifyReply);
 
     return user;
   }
 
   async changePassword(
     changePasswordDto: ChangePasswordDto,
-    response: Response,
+    fastifyReply: FastifyReply,
     user: User,
   ) {
     // Retereve hashed_code from Redis
@@ -152,12 +152,12 @@ export class AuthService {
     // Mark OTP as used by deleting it from Redis
     await this.cacheManager.del(`${cache_prefix}:${user.email}`);
 
-    await this.authenticate(user, response);
+    await this.authenticate(user, fastifyReply);
 
     return user;
   }
 
-  async login(loginDto: LoginDto, response: Response) {
+  async login(loginDto: LoginDto, fastifyReply: FastifyReply) {
     const user = await this.usersService.findOneNoCheck({
       email: loginDto.email,
     });
@@ -171,13 +171,13 @@ export class AuthService {
       throw new UnauthorizedException('Credentials are not valid');
     }
 
-    await this.authenticate(user, response);
+    await this.authenticate(user, fastifyReply);
 
     return user;
   }
 
-  async logout(response: Response) {
-    return this.unauthenticate(response);
+  async logout(fastifyReply: FastifyReply) {
+    return this.unauthenticate(fastifyReply);
   }
 
   async verifyUser(email: string, password: string) {
@@ -210,7 +210,10 @@ export class AuthService {
     return +otp.toString().padStart(5, '1');
   }
 
-  private async authenticate(user: User, response: Response): Promise<string> {
+  private async authenticate(
+    user: User,
+    fastifyReply: FastifyReply,
+  ): Promise<string> {
     const tokenPayload: TokenPayload = {
       userId: user.id,
     };
@@ -222,16 +225,17 @@ export class AuthService {
 
     const token = this.jwtService.sign(tokenPayload);
 
-    response.cookie('Authentication', token, {
+    fastifyReply.setCookie('Authentication', token, {
       httpOnly: true,
       expires,
+      path: '/',
     });
 
     return token;
   }
 
-  private async unauthenticate(response: Response): Promise<string> {
-    response.cookie('Authentication', null);
+  private async unauthenticate(fastifyReply: FastifyReply): Promise<string> {
+    fastifyReply.clearCookie('Authentication');
 
     return null;
   }

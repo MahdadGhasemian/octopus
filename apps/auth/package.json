@@ -12,7 +12,6 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/typeorm": "^10.0.2",
     "bcryptjs": "^2.4.3",
-    "express": "^4.19.2",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "typeorm": "^0.3.20"

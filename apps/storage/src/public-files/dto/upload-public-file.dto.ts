@@ -1,3 +1,4 @@
+import { MemoryStorageFile } from '@blazity/nest-file-fastify';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UploadPublicFileDto {
@@ -6,5 +7,5 @@ export class UploadPublicFileDto {
     format: 'binary',
     required: true,
   })
-  file: Express.Multer.File;
+  file: MemoryStorageFile;
 }

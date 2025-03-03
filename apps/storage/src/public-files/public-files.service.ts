@@ -8,6 +8,7 @@ import {
   getBucketNamePublic,
   getObjectName,
 } from '../file/files.utils';
+import { MemoryStorageFile } from '@blazity/nest-file-fastify';
 
 @Injectable()
 export class PublicFilesService {
@@ -18,13 +19,13 @@ export class PublicFilesService {
     private readonly minioService: MinioService,
   ) {}
 
-  async uploadFile(file: Express.Multer.File) {
+  async uploadFile(file: MemoryStorageFile) {
     if (!file) {
       throw new Error('No file uploaded');
     }
 
     const bucket_name = getBucketNamePublic(file.mimetype);
-    const object_name = getObjectName(file.originalname);
+    const object_name = getObjectName();
 
     // Upload file to MinIO
     await this.minioService.client.putObject(

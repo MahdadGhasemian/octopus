@@ -2,13 +2,20 @@ import { NestFactory } from '@nestjs/core';
 import { StoreModule } from './store.module';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
-import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+import * as fastifyCookie from '@fastify/cookie';
 
 async function bootstrap() {
-  const app = await NestFactory.create(StoreModule);
+  const app = await NestFactory.create<NestFastifyApplication>(
+    StoreModule,
+    new FastifyAdapter(),
+  );
   const configService = app.get(ConfigService);
   const documentOptions = new DocumentBuilder()
     .setTitle('Store App')
@@ -36,13 +43,16 @@ async function bootstrap() {
       },
     },
   });
-  app.use(cookieParser());
+  app.register(fastifyCookie);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useLogger(app.get(Logger));
 
   const document = SwaggerModule.createDocument(app, documentOptions);
   SwaggerModule.setup('docs', app, document);
   await app.startAllMicroservices();
-  await app.listen(configService.get('HTTP_PORT_STORE'));
+  await app.listen(
+    configService.get<number>('HTTP_PORT_STORE', 3000),
+    '0.0.0.0',
+  );
 }
 bootstrap();

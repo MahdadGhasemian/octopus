@@ -19,6 +19,7 @@ import { Logger, NotFoundException } from '@nestjs/common';
 import Jimp from 'jimp';
 import { MinioClient } from 'nestjs-minio-client';
 import { Stream } from 'stream';
+import { randomBytes } from 'crypto';
 
 export const cacheNamePattern = (
   imageName: string,
@@ -32,8 +33,12 @@ export const cacheNamePattern = (
   );
 };
 
-export const getObjectName = (originalname: string): string => {
-  return `${Date.now()}-${originalname}`;
+export const getObjectName = (): string => {
+  // Generate a secure random number between 1000 and 9999
+  const randomBuffer = randomBytes(2); // 2 bytes = 16 bits, enough to cover the range 0 to 65535
+  const randomNumber = (randomBuffer.readUInt16BE(0) % 9000) + 1000;
+
+  return `${Date.now()}-${randomNumber}`;
 };
 
 export const getBucketNamePublic = (mimetype: any): string => {

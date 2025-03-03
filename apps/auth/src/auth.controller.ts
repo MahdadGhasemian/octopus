@@ -11,7 +11,6 @@ import {
 import { AuthService } from './auth.service';
 import { GetOtpDto } from './dto/get-otp.dto';
 import { ConfirmOtpDto } from './dto/confirm-otp.dto';
-import { Response } from 'express';
 import {
   CurrentUser,
   EVENT_NAME_AUTHENTICATE_AND_CHECK_ACCESS,
@@ -35,6 +34,7 @@ import { EditInfoDto } from './dto/edit-info.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { User } from './libs';
 import { JwtAccessGuard } from './guards/jwt-access.guard';
+import { FastifyReply } from 'fastify';
 
 @ApiTags('Auth')
 @NoCache()
@@ -58,9 +58,9 @@ export class AuthController {
   })
   async confirmOtp(
     @Body() body: ConfirmOtpDto,
-    @Res({ passthrough: true }) response: Response,
+    @Res({ passthrough: true }) fastifyReply: FastifyReply,
   ) {
-    return this.authService.confirmOtp(body, response);
+    return this.authService.confirmOtp(body, fastifyReply);
   }
 
   @Patch('change-password')
@@ -72,9 +72,9 @@ export class AuthController {
   async changePassowrd(
     @CurrentUser() user: User,
     @Body() body: ChangePasswordDto,
-    @Res({ passthrough: true }) response: Response,
+    @Res({ passthrough: true }) fastifyReply: FastifyReply,
   ) {
-    return this.authService.changePassword(body, response, user);
+    return this.authService.changePassword(body, fastifyReply, user);
   }
 
   @Post('login')
@@ -85,15 +85,15 @@ export class AuthController {
   })
   async login(
     @Body() loginDto: LoginDto,
-    @Res({ passthrough: true }) response: Response,
+    @Res({ passthrough: true }) fastifyReply: FastifyReply,
   ) {
-    return this.authService.login(loginDto, response);
+    return this.authService.login(loginDto, fastifyReply);
   }
 
   @Post('logout')
   @UseGuards(JwtAuthGuard)
-  async logout(@Res({ passthrough: true }) response: Response) {
-    this.authService.logout(response);
+  async logout(@Res({ passthrough: true }) fastifyReply: FastifyReply) {
+    this.authService.logout(fastifyReply);
   }
 
   @Get('info')

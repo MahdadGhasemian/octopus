@@ -6,17 +6,20 @@ import {
   Post,
   Query,
   Res,
-  UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { PublicFilesService } from './public-files.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
 import { FileTypeValidationPipe } from '@app/common';
 import { UploadPublicFileDto } from './dto/upload-public-file.dto';
 import { GetPublicFileDto } from './dto/get-public-file.dto';
 import { UploadPublicFileResponseDto } from './dto/get-public-file-response.dto';
+import { FastifyReply } from 'fastify';
+import {
+  FileInterceptor,
+  MemoryStorageFile,
+  UploadedFile,
+} from '@blazity/nest-file-fastify';
 
 @ApiTags('PublicFiles')
 @Controller('public-files')
@@ -33,8 +36,7 @@ export class PublicFilesController {
     type: UploadPublicFileResponseDto,
   })
   async uploadFile(
-    @UploadedFile(new FileTypeValidationPipe())
-    file: Express.Multer.File,
+    @UploadedFile(new FileTypeValidationPipe()) file: MemoryStorageFile,
   ) {
     return this.publicFilesService.uploadFile(file);
   }
@@ -44,7 +46,7 @@ export class PublicFilesController {
     @Param('bucket_name') bucket_name: string,
     @Param('object_name') object_name: string,
     @Query() query: GetPublicFileDto,
-    @Res() res: Response,
+    @Res() fastifyReply: FastifyReply,
   ) {
     try {
       const fileStream = await this.publicFilesService.downloadFile(
@@ -55,13 +57,13 @@ export class PublicFilesController {
       );
 
       // Set the appropriate headers to download the file
-      res.setHeader(
+      fastifyReply.header(
         'Content-Disposition',
         `attachment; filename=${object_name}`,
       );
 
       // Pipe the stream to the response
-      fileStream.pipe(res);
+      fileStream.pipe(fastifyReply.raw);
     } catch (error) {
       throw new NotFoundException('File Not Found');
     }
