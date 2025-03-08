@@ -22,11 +22,20 @@ export class ProductsService {
     return this.findOne({ id: result.id });
   }
 
-  async findAll(query: PaginateQuery) {
+  async findAll(query?: PaginateQuery) {
     return paginate(
       query,
       this.productsRepository.entityRepository,
       PRODUCT_PAGINATION_CONFIG,
+    );
+  }
+
+  async findAllWithoutPagination() {
+    return this.productsRepository.find(
+      {},
+      {
+        category: true,
+      },
     );
   }
 

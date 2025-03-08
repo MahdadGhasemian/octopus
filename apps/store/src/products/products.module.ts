@@ -7,6 +7,7 @@ import * as Joi from 'joi';
 import { ProductsRepository } from './products.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from '../libs';
+import { ProductsResolver } from './products.resolver';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { Product } from '../libs';
     }),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService, ProductsRepository],
+  providers: [ProductsService, ProductsRepository, ProductsResolver],
   exports: [ProductsService],
 })
 export class ProductsModule {}

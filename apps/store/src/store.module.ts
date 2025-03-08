@@ -20,6 +20,11 @@ import { RedisClientOptions } from 'redis';
 import { redisStore } from 'cache-manager-redis-yet';
 import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
 import { UsersModule } from './users/users.module';
+import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -29,6 +34,7 @@ import { UsersModule } from './users/users.module';
       validationSchema: Joi.object({
         HTTP_PORT_STORE: Joi.number().required(),
         REDIS_CACHE_KEY_PREFIX_STORE: Joi.string().required(),
+        GRAPHQL_SCHEMA_FILE_STORE: Joi.string().optional(),
       }),
     }),
     RabbitmqModule.forRoot(AUTH_SERVICE, 'RABBITMQ_AUTH_QUEUE_NAME'),
@@ -51,6 +57,22 @@ import { UsersModule } from './users/users.module';
       useFactory: async (configService: ConfigService) => ({
         database: configService.getOrThrow('POSTGRES_DATABASE_STORE'),
       }),
+      inject: [ConfigService],
+    }),
+    GraphQLModule.forRootAsync<ApolloFederationDriverConfig>({
+      driver: ApolloFederationDriver,
+      useFactory: async (configService: ConfigService) => {
+        return {
+          autoSchemaFile: {
+            federation: 2,
+            path: configService.get<string>(
+              'GRAPHQL_SCHEMA_FILE_STORE',
+              'schema.gql',
+            ),
+            sortSchema: true,
+          },
+        } as GqlModuleOptions;
+      },
       inject: [ConfigService],
     }),
     HealthModule.forRoot('RABBITMQ_STORE_QUEUE_NAME'),

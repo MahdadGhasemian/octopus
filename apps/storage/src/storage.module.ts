@@ -14,6 +14,11 @@ import { MinioModule } from 'nestjs-minio-client';
 import { RedisClientOptions } from 'redis';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
+import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -26,6 +31,7 @@ import { redisStore } from 'cache-manager-redis-yet';
         BASE_PUBLIC_URL_DOWNLOAD: Joi.string().required(),
         BASE_PRIVATE_URL_DOWNLOAD: Joi.string().required(),
         REDIS_CACHE_KEY_PREFIX_STORAGE: Joi.string().required(),
+        GRAPHQL_SCHEMA_FILE_STORAGE: Joi.string().optional(),
       }),
     }),
     RabbitmqModule.forRoot(AUTH_SERVICE, 'RABBITMQ_AUTH_QUEUE_NAME'),
@@ -59,6 +65,22 @@ import { redisStore } from 'cache-manager-redis-yet';
         accessKey: configService.get<string>('MINIO_ACCESS_KEY'),
         secretKey: configService.get<string>('MINIO_SECRET_KEY'),
       }),
+      inject: [ConfigService],
+    }),
+    GraphQLModule.forRootAsync<ApolloFederationDriverConfig>({
+      driver: ApolloFederationDriver,
+      useFactory: async (configService: ConfigService) => {
+        return {
+          autoSchemaFile: {
+            federation: 2,
+            path: configService.get<string>(
+              'GRAPHQL_SCHEMA_FILE_STORAGE',
+              'schema.gql',
+            ),
+            sortSchema: true,
+          },
+        } as GqlModuleOptions;
+      },
       inject: [ConfigService],
     }),
     HealthModule.forRoot('RABBITMQ_STORAGE_QUEUE_NAME'),

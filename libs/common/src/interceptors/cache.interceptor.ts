@@ -30,6 +30,13 @@ export class HttpCacheInterceptor extends CacheInterceptor {
   }
 
   trackBy(context: ExecutionContext): string | undefined {
+    const type = context.getType();
+
+    // Skip cahcing for graphql requests
+    if (type !== 'http' && type !== 'rpc') {
+      return undefined;
+    }
+
     const request = context.switchToHttp().getRequest();
     const { method, url } = request;
     const jwt =
@@ -72,6 +79,13 @@ export class HttpCacheInterceptor extends CacheInterceptor {
     context: ExecutionContext,
     next: CallHandler,
   ): Promise<Observable<any>> {
+    const type = context.getType();
+
+    // Skip for graphql requests
+    if (type !== 'http' && type !== 'rpc') {
+      return super.intercept(context, next);
+    }
+
     const request = context.switchToHttp().getRequest();
     const { method, url } = request;
     const jwt =

@@ -21,6 +21,11 @@ import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
 import { RedisClientOptions } from 'redis';
 import { redisStore } from 'cache-manager-redis-yet';
 import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
+import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -35,6 +40,7 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
         DEFAULT_ACCESS_ID: Joi.number().required(),
         REDIS_CACHE_KEY_PREFIX_AUTH: Joi.string().required(),
         POSTGRES_DATABASE_AUTH: Joi.string().required(),
+        GRAPHQL_SCHEMA_FILE_AUTH: Joi.string().optional(),
       }),
     }),
     JwtModule.registerAsync({
@@ -71,6 +77,22 @@ import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
       useFactory: async (configService: ConfigService) => ({
         database: configService.get('POSTGRES_DATABASE_AUTH'),
       }),
+      inject: [ConfigService],
+    }),
+    GraphQLModule.forRootAsync<ApolloFederationDriverConfig>({
+      driver: ApolloFederationDriver,
+      useFactory: async (configService: ConfigService) => {
+        return {
+          autoSchemaFile: {
+            federation: 2,
+            path: configService.get<string>(
+              'GRAPHQL_SCHEMA_FILE_AUTH',
+              'schema.gql',
+            ),
+            sortSchema: true,
+          },
+        } as GqlModuleOptions;
+      },
       inject: [ConfigService],
     }),
     HealthModule.forRoot('RABBITMQ_AUTH_QUEUE_NAME'),
