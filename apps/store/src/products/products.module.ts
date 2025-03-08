@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
-import { LoggerModule } from '@app/common';
+import { LoggerModule, PaginateGraph } from '@app/common';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { ProductsRepository } from './products.repository';
@@ -22,7 +22,12 @@ import { ProductsResolver } from './products.resolver';
     }),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService, ProductsRepository, ProductsResolver],
+  providers: [
+    ProductsService,
+    ProductsRepository,
+    ProductsResolver,
+    PaginateGraph,
+  ],
   exports: [ProductsService],
 })
 export class ProductsModule {}

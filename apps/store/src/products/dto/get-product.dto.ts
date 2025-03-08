@@ -10,7 +10,9 @@ import {
 } from 'class-validator';
 import { GetCategoryDto } from '../../categories/dto/get-category.dto';
 import { AbstractGetDto } from '@app/common';
+import { Field, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 export class GetProductDto extends AbstractGetDto {
   @ApiProperty({
     example: '1',
@@ -19,6 +21,7 @@ export class GetProductDto extends AbstractGetDto {
   @IsNumber()
   @IsOptional()
   @Expose()
+  @Field()
   id?: number;
 
   @ApiProperty({
@@ -27,6 +30,7 @@ export class GetProductDto extends AbstractGetDto {
   })
   @IsString()
   @Expose()
+  @Field()
   name?: string;
 
   @ApiProperty({
@@ -35,6 +39,7 @@ export class GetProductDto extends AbstractGetDto {
   @IsString()
   @IsOptional()
   @Expose()
+  @Field()
   description?: string;
 
   @ApiProperty({
@@ -45,11 +50,13 @@ export class GetProductDto extends AbstractGetDto {
   @IsUrl()
   @IsOptional()
   @Expose()
+  @Field()
   image?: string;
 
   @IsNumber()
   @IsOptional()
   @Expose()
+  @Field()
   category_id?: number;
 
   @IsObject()
@@ -64,6 +71,7 @@ export class GetProductDto extends AbstractGetDto {
   })
   @IsNumber()
   @Expose()
+  @Field()
   price?: number;
 
   @ApiProperty({
@@ -72,6 +80,7 @@ export class GetProductDto extends AbstractGetDto {
   })
   @IsNumber()
   @Expose()
+  @Field()
   sale_price?: number;
 
   @ApiProperty({
@@ -79,5 +88,6 @@ export class GetProductDto extends AbstractGetDto {
   })
   @IsBoolean()
   @Expose()
+  @Field()
   is_active?: boolean;
 }

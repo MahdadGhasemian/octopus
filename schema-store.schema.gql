@@ -2,6 +2,26 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type MetaType {
+  itemsPerPage: Int!
+  totalItems: Int!
+  currentPage: Int!
+  totalPages: Int!
+  sortBy: [String!]!
+  searchBy: [String!]!
+  search: String!
+  select: [String!]!
+  filter: String
+}
+
+type LinksType {
+  first: String
+  previous: String
+  current: String!
+  next: String
+  last: String
+}
+
 type Product {
   id: Float!
   created_at: DateTime!
@@ -20,7 +40,24 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type GetProductDto {
+  id: Float!
+  name: String!
+  description: String!
+  image: String!
+  category_id: Float!
+  price: Float!
+  sale_price: Float!
+  is_active: Boolean!
+}
+
+type ListProductDto {
+  meta: MetaType!
+  links: LinksType!
+  data: [GetProductDto!]!
+}
+
 type Query {
-  products: [Product!]!
+  products(page: Int = 1, limit: Int = 10, sortBy: String, searchBy: [String!], search: String, filter: String): ListProductDto!
   product(id: String!): Product!
 }

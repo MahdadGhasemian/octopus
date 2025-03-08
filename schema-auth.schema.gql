@@ -2,3 +2,22 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type MetaType {
+  itemsPerPage: Int!
+  totalItems: Int!
+  currentPage: Int!
+  totalPages: Int!
+  sortBy: [String!]!
+  searchBy: [String!]!
+  search: String!
+  select: [String!]!
+  filter: String
+}
+
+type LinksType {
+  first: String
+  previous: String
+  current: String!
+  next: String
+  last: String
+}
