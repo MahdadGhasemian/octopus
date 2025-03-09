@@ -30,15 +30,6 @@ export class ProductsService {
     );
   }
 
-  async findAllWithoutPagination() {
-    return this.productsRepository.find(
-      {},
-      {
-        category: true,
-      },
-    );
-  }
-
   async findOne(productDto: GetProductDto) {
     return this.productsRepository.findOne(productDto, {
       category: true,

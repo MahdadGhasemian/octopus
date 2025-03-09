@@ -13,7 +13,7 @@ export class ProductsResolver {
   @Query(() => ListProductDto, { name: 'products' })
   findAll(
     @Args() _: PaginateQueryGraph,
-    @PaginateGraph({ path: 'products' }) query: PaginateQuery,
+    @PaginateGraph() query: PaginateQuery,
   ) {
     return this.productsService.findAll(query);
   }

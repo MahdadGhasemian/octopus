@@ -57,6 +57,7 @@
     "cookie-parser": "^1.4.6",
     "express": "^4.19.2",
     "graphql": "^16.10.0",
+    "graphql-type-json": "^0.3.2",
     "joi": "^17.12.3",
     "jsonwebtoken": "^9.0.2",
     "nestjs-paginate": "^11.0.1",

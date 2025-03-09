@@ -11,7 +11,7 @@ export class PaginateQueryGraph {
   @IsOptional()
   limit?: number;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => [String], { nullable: true })
   @IsOptional()
   sortBy?: string | string[];
 
@@ -23,7 +23,11 @@ export class PaginateQueryGraph {
   @IsOptional()
   search?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => [String], { nullable: true })
   @IsOptional()
-  filter?: string | { [column: string]: string | string[] };
+  filter?: string | string[];
+
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  select?: string[];
 }

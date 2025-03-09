@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Expose } from 'class-transformer';
 import { IsNumber, IsOptional } from 'class-validator';
+import { GraphQLJSONObject } from 'graphql-type-json';
 import { Column, SortBy } from 'nestjs-paginate/lib/helper';
 
 @ObjectType()
@@ -26,23 +27,23 @@ export class MetaType<T> {
   totalPages: number;
 
   @IsOptional()
-  @Field(() => [String])
-  sortBy: SortBy<T>;
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  sortBy?: SortBy<T>;
 
   @IsOptional()
-  @Field(() => [String])
-  searchBy: Column<T>[];
-
-  @IsOptional()
-  @Field(() => String)
-  search: string;
-
-  @IsOptional()
-  @Field(() => [String])
-  select: string[];
+  @Field(() => [String], { nullable: true })
+  searchBy?: Column<T>[];
 
   @IsOptional()
   @Field(() => String, { nullable: true })
+  search?: string;
+
+  @IsOptional()
+  @Field(() => [String], { nullable: true })
+  select?: string[];
+
+  @IsOptional()
+  @Field(() => GraphQLJSONObject, { nullable: true })
   filter?: string;
 }
 

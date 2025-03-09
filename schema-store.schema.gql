@@ -7,12 +7,17 @@ type MetaType {
   totalItems: Int!
   currentPage: Int!
   totalPages: Int!
-  sortBy: [String!]!
-  searchBy: [String!]!
-  search: String!
-  select: [String!]!
-  filter: String
+  sortBy: JSONObject
+  searchBy: [String!]
+  search: String
+  select: [String!]
+  filter: JSONObject
 }
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
 
 type LinksType {
   first: String
@@ -58,6 +63,6 @@ type ListProductDto {
 }
 
 type Query {
-  products(page: Int = 1, limit: Int = 10, sortBy: String, searchBy: [String!], search: String, filter: String): ListProductDto!
+  products(page: Int = 1, limit: Int = 10, sortBy: [String!], searchBy: [String!], search: String, filter: [String!], select: [String!]): ListProductDto!
   product(id: String!): Product!
 }
