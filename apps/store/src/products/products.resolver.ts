@@ -3,23 +3,19 @@ import { ProductsService } from './products.service';
 import { Product } from '../libs';
 import { NoCache, PaginateGraph, PaginateQueryGraph } from '@app/common';
 import { ListProductDto } from './dto/list-product.dto';
+import { PaginateQuery } from 'nestjs-paginate';
 
 @Resolver(() => Product)
 @NoCache()
 export class ProductsResolver {
-  constructor(
-    private readonly productsService: ProductsService,
-    private readonly paginateGraph: PaginateGraph,
-  ) {}
+  constructor(private readonly productsService: ProductsService) {}
 
   @Query(() => ListProductDto, { name: 'products' })
-  findAll(@Args() paginateQueryGraph: PaginateQueryGraph) {
-    const paginateQuery = this.paginateGraph.getPaginateQuery(
-      paginateQueryGraph,
-      'products',
-    );
-
-    return this.productsService.findAll(paginateQuery);
+  findAll(
+    @Args() _: PaginateQueryGraph,
+    @PaginateGraph({ path: 'products' }) query: PaginateQuery,
+  ) {
+    return this.productsService.findAll(query);
   }
 
   @Query(() => Product, { name: 'product' })
