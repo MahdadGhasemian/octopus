@@ -74,3 +74,15 @@ type Query {
   products(page: Int = 1, limit: Int = 10, sortBy: [String!], searchBy: [String!], search: String, filter: [String!], relations: [String!]): ListProductDto!
   product(id: String!): Product!
 }
+
+type Mutation {
+  updateProduct(id: String!, updateProductDto: UpdateProductDto!): Product!
+  deleteProduct(id: String!): Product!
+}
+
+input UpdateProductDto {
+  name: String
+  description: String
+  image: String
+  category_id: Int
+}

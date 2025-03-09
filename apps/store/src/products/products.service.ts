@@ -65,6 +65,10 @@ export class ProductsService {
   }
 
   async remove(id: number) {
-    return this.productsRepository.findOneAndDelete({ id });
+    const product = await this.findOne({ id });
+
+    await this.productsRepository.findOneAndDelete({ id });
+
+    return product;
   }
 }
