@@ -5,7 +5,11 @@ import { GetProductDto } from './dto/get-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Category, Product } from '../libs';
 import { paginate, PaginateQuery } from 'nestjs-paginate';
-import { PRODUCT_PAGINATION_CONFIG } from './pagination-config';
+import {
+  PRODUCT_PAGINATION_CONFIG,
+  PRODUCT_PAGINATION_CONFIG_WITH_RELATIONS,
+} from './pagination-config';
+import { getPaginationConfig } from '@app/common';
 
 @Injectable()
 export class ProductsService {
@@ -22,11 +26,19 @@ export class ProductsService {
     return this.findOne({ id: result.id });
   }
 
-  async findAll(query?: PaginateQuery) {
+  async findAll(query?: PaginateQuery, config?: any) {
     return paginate(
       query,
       this.productsRepository.entityRepository,
-      PRODUCT_PAGINATION_CONFIG,
+      getPaginationConfig(PRODUCT_PAGINATION_CONFIG, { config }),
+    );
+  }
+
+  async findAllWithRelations(query?: PaginateQuery) {
+    return paginate(
+      query,
+      this.productsRepository.entityRepository,
+      PRODUCT_PAGINATION_CONFIG_WITH_RELATIONS,
     );
   }
 

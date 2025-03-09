@@ -44,7 +44,9 @@ export class OrdersService {
     return paginate(
       query,
       this.ordersRepository.entityRepository,
-      getPaginationConfig(ORDER_PAGINATION_CONFIG, { user_id: user.id }),
+      getPaginationConfig(ORDER_PAGINATION_CONFIG, {
+        identifierQuery: { user_id: user.id },
+      }),
     );
   }
 

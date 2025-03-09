@@ -1,8 +1,10 @@
 import { AbstractGetDto } from '@app/common';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
 
+@ObjectType()
 export class GetCategoryDto extends AbstractGetDto {
   @ApiProperty({
     example: '1',
@@ -11,6 +13,7 @@ export class GetCategoryDto extends AbstractGetDto {
   @IsNumber()
   @IsOptional()
   @Expose()
+  @Field()
   id?: number;
 
   @ApiProperty({
@@ -19,6 +22,7 @@ export class GetCategoryDto extends AbstractGetDto {
   })
   @IsString()
   @Expose()
+  @Field()
   name?: string;
 
   @ApiProperty({
@@ -27,6 +31,7 @@ export class GetCategoryDto extends AbstractGetDto {
   @IsString()
   @IsOptional()
   @Expose()
+  @Field()
   description?: string;
 
   @ApiProperty({
@@ -37,5 +42,6 @@ export class GetCategoryDto extends AbstractGetDto {
   @IsUrl()
   @IsOptional()
   @Expose()
+  @Field()
   image?: string;
 }

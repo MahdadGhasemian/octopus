@@ -63,6 +63,7 @@ export class GetProductDto extends AbstractGetDto {
   @IsOptional()
   @Type(() => GetCategoryDto)
   @Expose()
+  @Field(() => GetCategoryDto, { nullable: true })
   category?: GetCategoryDto;
 
   @ApiProperty({

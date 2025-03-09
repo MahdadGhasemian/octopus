@@ -45,12 +45,20 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type GetCategoryDto {
+  id: Float!
+  name: String!
+  description: String!
+  image: String!
+}
+
 type GetProductDto {
   id: Float!
   name: String!
   description: String!
   image: String!
   category_id: Float!
+  category: GetCategoryDto
   price: Float!
   sale_price: Float!
   is_active: Boolean!
@@ -63,6 +71,6 @@ type ListProductDto {
 }
 
 type Query {
-  products(page: Int = 1, limit: Int = 10, sortBy: [String!], searchBy: [String!], search: String, filter: [String!], select: [String!]): ListProductDto!
+  products(page: Int = 1, limit: Int = 10, sortBy: [String!], searchBy: [String!], search: String, filter: [String!], relations: [String!]): ListProductDto!
   product(id: String!): Product!
 }

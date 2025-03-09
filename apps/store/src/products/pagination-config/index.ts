@@ -14,7 +14,7 @@ export const PRODUCT_PAGINATION_CONFIG: PaginateConfig<Product> = {
   nullSort: 'last',
   defaultSortBy: [['id', 'DESC']],
   searchableColumns: ['name', 'description'],
-  relations: ['category'],
+  // relations: ['category'],
   filterableColumns: {
     id: true,
     name: true,
@@ -25,5 +25,11 @@ export const PRODUCT_PAGINATION_CONFIG: PaginateConfig<Product> = {
     'category.id': true,
     'category.name': true,
   },
-  maxLimit: 1000,
+  maxLimit: 100,
 };
+
+export const PRODUCT_PAGINATION_CONFIG_WITH_RELATIONS: PaginateConfig<Product> =
+  {
+    ...PRODUCT_PAGINATION_CONFIG,
+    relations: ['category'],
+  };

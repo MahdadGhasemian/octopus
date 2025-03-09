@@ -1,14 +1,19 @@
+import { PaginateConfig } from 'nestjs-paginate';
 import { IdentifierQuery } from '../interfaces';
 
 export const getPaginationConfig = (
   defaultConfig,
-  identifierQuery: IdentifierQuery,
+  input: { identifierQuery?: IdentifierQuery; config?: PaginateConfig<any> },
 ) => {
   const config = { ...defaultConfig };
-  Object.assign(
-    config,
-    !!Object.keys(identifierQuery).length && { where: identifierQuery },
-  );
+
+  if (input?.identifierQuery && Object.keys(input.identifierQuery).length) {
+    Object.assign(config, { where: input.identifierQuery });
+  }
+
+  if (input?.config) {
+    Object.assign(config, { ...input.config });
+  }
 
   return config;
 };

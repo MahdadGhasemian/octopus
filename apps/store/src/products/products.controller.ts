@@ -16,7 +16,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ListProductDto } from './dto/list-product.dto';
 import { Paginate, PaginatedSwaggerDocs, PaginateQuery } from 'nestjs-paginate';
-import { PRODUCT_PAGINATION_CONFIG } from './pagination-config';
+import { PRODUCT_PAGINATION_CONFIG_WITH_RELATIONS } from './pagination-config';
 
 @ApiTags('Products')
 @GeneralCache()
@@ -36,9 +36,9 @@ export class ProductsController {
 
   @Get()
   @Serialize(ListProductDto)
-  @PaginatedSwaggerDocs(GetProductDto, PRODUCT_PAGINATION_CONFIG)
+  @PaginatedSwaggerDocs(GetProductDto, PRODUCT_PAGINATION_CONFIG_WITH_RELATIONS)
   async findAll(@Paginate() query: PaginateQuery) {
-    return this.productsService.findAll(query);
+    return this.productsService.findAllWithRelations(query);
   }
 
   @Get(':id')

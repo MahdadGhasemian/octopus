@@ -29,5 +29,5 @@ export class PaginateQueryGraph {
 
   @Field(() => [String], { nullable: true })
   @IsOptional()
-  select?: string[];
+  relations?: string[];
 }

@@ -53,11 +53,25 @@ const parseFilter = (
   return result;
 };
 
+const captureDataProperty = (query: string | null): string[] => {
+  // Capture everything inside 'data { }'
+  const dataMatch = query?.match(/data\s?{([^}]+)}/);
+  // If 'data' is found, process its fields
+  const fields = dataMatch
+    ? dataMatch[1]
+        .split('\n') // Split by lines
+        .map((item) => item.trim()) // Trim spaces
+        .filter(Boolean) // Remove empty lines
+    : [];
+
+  return fields;
+};
+
 export const PaginateGraph = createParamDecorator(
   (_data: unknown, ctx: ExecutionContext) => {
     // Access the GraphQL context
     const gqlContext = GqlExecutionContext.create(ctx);
-    const paginateQueryGraph: PaginateQueryGraph = gqlContext.getArgs();
+    const args: PaginateQueryGraph = gqlContext.getArgs();
 
     const gqlInfo = gqlContext.getInfo();
     const pathKey = gqlInfo.path.key;
@@ -65,19 +79,33 @@ export const PaginateGraph = createParamDecorator(
     // Extract HTTP request from the GraphQL context
     const req = gqlContext.getContext().req; // Express request object
 
+    // Extract Select Fields
+    const select = captureDataProperty(req.body?.query);
+
     // Extract hostname (including protocol and port if needed)
     const protocol = req.protocol; // 'http' or 'https'
     const host = req.get('host'); // Hostname with port (e.g., example.com:3000)
     const path = `${protocol}://${host}/graphql/${pathKey}`; // Combine them
 
-    const sortBy = parseSortBy(paginateQueryGraph.sortBy);
-    const filter = parseFilter(paginateQueryGraph.filter);
+    const sortBy = parseSortBy(args.sortBy);
+    const filter = parseFilter(args.filter);
+
+    const config = Object.assign(
+      {},
+      args.relations && {
+        relations: args.relations,
+      },
+      select && { select },
+    );
 
     return {
-      ...paginateQueryGraph,
-      sortBy,
-      filter,
-      path,
+      query: {
+        ...args,
+        sortBy,
+        filter,
+        path,
+      },
+      config,
     };
   },
 );
