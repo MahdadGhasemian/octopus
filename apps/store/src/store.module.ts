@@ -71,6 +71,12 @@ import {
             ),
             sortSchema: true,
           },
+          context: ({ req, res }) => ({ req, res }),
+          cors: {
+            origin: true,
+            methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+            credentials: true,
+          },
         } as GqlModuleOptions;
       },
       inject: [ConfigService],

@@ -8,10 +8,17 @@ import {
 } from '@nestjs/graphql';
 import { ProductsService } from './products.service';
 import { Category, Product } from '../libs';
-import { NoCache, PaginateGraph, PaginateQueryGraph } from '@app/common';
+import {
+  JwtAuthAccessGuard,
+  NoCache,
+  PaginateGraph,
+  PaginateQueryGraph,
+} from '@app/common';
 import { ListProductDto } from './dto/list-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CategoriesService } from '../categories/categories.service';
+import { UseGuards } from '@nestjs/common';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Resolver(() => Product)
 @NoCache()
@@ -20,6 +27,12 @@ export class ProductsResolver {
     private readonly productsService: ProductsService,
     private readonly categoriesService: CategoriesService,
   ) {}
+
+  @Mutation(() => Product, { name: 'createProduct' })
+  @UseGuards(JwtAuthAccessGuard)
+  async create(@Args('createProductDto') createProductDto: CreateProductDto) {
+    return this.productsService.create(createProductDto);
+  }
 
   @Query(() => ListProductDto, { name: 'products' })
   findAll(@Args() _: PaginateQueryGraph, @PaginateGraph() { query, config }) {
@@ -32,6 +45,7 @@ export class ProductsResolver {
   }
 
   @Mutation(() => Product, { name: 'updateProduct' })
+  @UseGuards(JwtAuthAccessGuard)
   async update(
     @Args('id') id: string,
     @Args('updateProductDto') updateProductDto: UpdateProductDto,
@@ -40,6 +54,7 @@ export class ProductsResolver {
   }
 
   @Mutation(() => Product, { name: 'deleteProduct' })
+  @UseGuards(JwtAuthAccessGuard)
   async remove(@Args('id') id: string) {
     return this.productsService.remove(+id);
   }

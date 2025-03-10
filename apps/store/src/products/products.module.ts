@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { LoggerModule } from '@app/common';
 import { ConfigModule } from '@nestjs/config';
@@ -24,7 +23,6 @@ import { CategoriesModule } from '../categories/categories.module';
     }),
     CategoriesModule,
   ],
-  controllers: [ProductsController],
   providers: [
     ProductsService,
     ProductsRepository,

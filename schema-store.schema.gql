@@ -86,8 +86,19 @@ type Query {
 }
 
 type Mutation {
+  createProduct(createProductDto: CreateProductDto!): Product!
   updateProduct(id: String!, updateProductDto: UpdateProductDto!): Product!
   deleteProduct(id: String!): Product!
+}
+
+input CreateProductDto {
+  name: String!
+  description: String!
+  image: String!
+  category_id: Float!
+  price: Float!
+  sale_price: Float!
+  is_active: Boolean!
 }
 
 input UpdateProductDto {

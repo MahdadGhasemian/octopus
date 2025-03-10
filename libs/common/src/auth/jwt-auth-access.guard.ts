@@ -13,6 +13,7 @@ import {
 } from '../constants';
 import { AuthAndCheckAccessRequestEvent } from '../events';
 import * as jwt from 'jsonwebtoken';
+import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
 export class JwtAuthAccessGuard implements CanActivate {
@@ -26,19 +27,47 @@ export class JwtAuthAccessGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const request = context.switchToHttp().getRequest();
-    const path = `${request.originalUrl}`;
-    const method = request.method;
-    const jwtToken =
-      request.cookies?.Authentication || request.headers?.authentication;
+    const type = context.getType<string>();
+    let gqlContext;
+
+    let jwtToken: string | undefined;
+    let path: string;
+    let method: string;
+    // let pathKey: string;
+
+    if (type === 'http') {
+      // Handle HTTP request
+      const request = context.switchToHttp().getRequest();
+      path = request.originalUrl;
+      method = request.method;
+      jwtToken =
+        request.cookies?.Authentication || request.headers?.authentication;
+    } else if (type === 'graphql') {
+      // Handle GraphQL request
+      const ctx = GqlExecutionContext.create(context);
+      gqlContext = ctx.getContext();
+      const gqlInfo = ctx.getInfo();
+
+      // pathKey = gqlInfo.path.key;
+      path = gqlContext.req?.url || 'graphql';
+      method = 'POST';
+      jwtToken =
+        gqlContext.req?.cookies?.Authentication ||
+        gqlContext.req?.headers?.authentication;
+    } else {
+      return false;
+    }
 
     if (!jwtToken) {
       return false;
     }
 
-    jwt.verify(jwtToken, this.publicKey, {
-      algorithms: ['RS256'],
-    });
+    try {
+      jwt.verify(jwtToken, this.publicKey, { algorithms: ['RS256'] });
+    } catch (error) {
+      this.logger.warn('JWT verification failed');
+      return false;
+    }
 
     return this.authClient
       .send(
@@ -47,7 +76,11 @@ export class JwtAuthAccessGuard implements CanActivate {
       )
       .pipe(
         tap((user) => {
-          context.switchToHttp().getRequest().user = user;
+          if (type === 'http') {
+            context.switchToHttp().getRequest().user = user;
+          } else if (type === 'graphql') {
+            gqlContext.req.user = user;
+          }
         }),
         map(() => true),
         catchError(() => of(false)),
