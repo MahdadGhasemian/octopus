@@ -2,13 +2,13 @@ import { AbstractEntity } from '@app/common';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Category } from './category.entity';
 import { OrderItem } from './order_item.entity';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 @Entity()
 @ObjectType()
 export class Product extends AbstractEntity<Product> {
   @Column()
-  @Field()
+  @Field(() => ID)
   name: string;
 
   @Column()
@@ -25,6 +25,7 @@ export class Product extends AbstractEntity<Product> {
 
   @ManyToOne(() => Category, (category) => category.products)
   @JoinColumn({ name: 'category_id' })
+  @Field(() => Category)
   category: Category;
 
   @Column()

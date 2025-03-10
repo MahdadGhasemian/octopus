@@ -27,23 +27,33 @@ type LinksType {
   last: String
 }
 
-type Product {
+type Category {
   id: Float!
   created_at: DateTime!
   updated_at: DateTime!
-  name: String!
-  description: String!
-  image: String!
-  category_id: Float!
-  price: Float!
-  sale_price: Float!
-  is_active: Boolean!
+  name: ID!
+  description: String
+  image: String
 }
 
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type Product {
+  id: Float!
+  created_at: DateTime!
+  updated_at: DateTime!
+  name: ID!
+  description: String!
+  image: String!
+  category_id: Float!
+  category: Category!
+  price: Float!
+  sale_price: Float!
+  is_active: Boolean!
+}
 
 type GetCategoryDto {
   id: Float!

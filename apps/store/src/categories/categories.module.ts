@@ -10,6 +10,6 @@ import { Category } from '../libs';
   imports: [ConfigModule, TypeOrmModule.forFeature([Category])],
   controllers: [CategoriesController],
   providers: [CategoriesService, CategoriesRepository],
-  exports: [CategoriesService],
+  exports: [CategoriesService, CategoriesRepository],
 })
 export class CategoriesModule {}

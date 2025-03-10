@@ -43,9 +43,7 @@ export class ProductsService {
   }
 
   async findOne(productDto: GetProductDto) {
-    return this.productsRepository.findOne(productDto, {
-      category: true,
-    });
+    return this.productsRepository.findOne(productDto);
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {

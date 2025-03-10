@@ -8,6 +8,8 @@ import { ProductsRepository } from './products.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from '../libs';
 import { ProductsResolver } from './products.resolver';
+import { CategoriesService } from '../categories/categories.service';
+import { CategoriesModule } from '../categories/categories.module';
 
 @Module({
   imports: [
@@ -20,9 +22,15 @@ import { ProductsResolver } from './products.resolver';
         HTTP_PORT_STORE: Joi.number().required(),
       }),
     }),
+    CategoriesModule,
   ],
   controllers: [ProductsController],
-  providers: [ProductsService, ProductsRepository, ProductsResolver],
+  providers: [
+    ProductsService,
+    ProductsRepository,
+    ProductsResolver,
+    CategoriesService,
+  ],
   exports: [ProductsService],
 })
 export class ProductsModule {}
