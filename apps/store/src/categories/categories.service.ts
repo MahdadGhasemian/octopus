@@ -6,6 +6,7 @@ import { GetCategoryDto } from './dto/get-category.dto';
 import { Category } from '../libs';
 import { CATEGORY_PAGINATION_CONFIG } from './pagination-config';
 import { paginate, PaginateQuery } from 'nestjs-paginate';
+import { getPaginationConfig } from '@app/common';
 
 @Injectable()
 export class CategoriesService {
@@ -19,11 +20,11 @@ export class CategoriesService {
     return this.categoriesRepository.create(category);
   }
 
-  async findAll(query: PaginateQuery) {
+  async findAll(query?: PaginateQuery, config?: any) {
     return paginate(
       query,
       this.categoriesRepository.entityRepository,
-      CATEGORY_PAGINATION_CONFIG,
+      getPaginationConfig(CATEGORY_PAGINATION_CONFIG, { config }),
     );
   }
 

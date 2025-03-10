@@ -62,6 +62,12 @@ type GetCategoryDto {
   image: String!
 }
 
+type ListCategoryDto {
+  meta: MetaType!
+  links: LinksType!
+  data: [GetCategoryDto!]!
+}
+
 type GetProductDto {
   id: Float!
   name: String!
@@ -81,14 +87,31 @@ type ListProductDto {
 }
 
 type Query {
+  categories(page: Int = 1, limit: Int = 10, sortBy: [String!], searchBy: [String!], search: String, filter: [String!], relations: [String!]): ListCategoryDto!
+  category(id: String!): Category!
   products(page: Int = 1, limit: Int = 10, sortBy: [String!], searchBy: [String!], search: String, filter: [String!], relations: [String!]): ListProductDto!
   product(id: String!): Product!
 }
 
 type Mutation {
+  createCategory(createCategoryDto: CreateCategoryDto!): Category!
+  updateCategory(id: String!, updateCategoryDto: UpdateCategoryDto!): Category!
+  deleteCategory(id: String!): Category!
   createProduct(createProductDto: CreateProductDto!): Product!
   updateProduct(id: String!, updateProductDto: UpdateProductDto!): Product!
   deleteProduct(id: String!): Product!
+}
+
+input CreateCategoryDto {
+  name: String!
+  description: String!
+  image: String!
+}
+
+input UpdateCategoryDto {
+  name: String
+  description: String
+  image: String
 }
 
 input CreateProductDto {
