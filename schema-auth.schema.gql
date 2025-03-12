@@ -50,6 +50,13 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type GetEndpointAccessDto {
+  id: Float!
+  tag: String!
+  path: String!
+  method: String!
+}
+
 type GetAccessDto {
   created_at: DateTime!
   updated_at: DateTime!
@@ -59,6 +66,7 @@ type GetAccessDto {
   color: String!
   cannot_be_deleted: Boolean!
   has_full_access: Boolean!
+  endpoints: [GetEndpointAccessDto!]!
 }
 
 type GetUserDto {
@@ -97,6 +105,7 @@ type Mutation {
   updateUser(id: String!, updateUserDto: UpdateUserDto!): User!
   deleteUser(id: String!): User!
   userAccess(id: String!, updateUserAccessDto: UpdateUserAccessDto!): User!
+  createAccess(createAccessDto: CreateAccessDto!): GetAccessDto!
 }
 
 input GetOtpDto {
@@ -141,4 +150,18 @@ input UpdateUserDto {
 
 input UpdateUserAccessDto {
   access_ids: [Int!]!
+}
+
+input CreateAccessDto {
+  title: String!
+  image: String!
+  color: String!
+  has_full_access: Boolean!
+  endpoints: [CreateEndpointAccessDto!]!
+}
+
+input CreateEndpointAccessDto {
+  tag: String!
+  path: String!
+  method: String!
 }

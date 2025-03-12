@@ -1,12 +1,4 @@
-import {
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-} from '@nestjs/common';
+import { Get, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { AccessesService } from './accesses.service';
 import { CreateAccessDto } from './dto/create-access.dto';
 import { UpdateAccessDto } from './dto/update-access.dto';
@@ -16,17 +8,17 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { JwtAccessGuard } from '../guards/jwt-access.guard';
 import { LisAccessDto } from './dto/list-access.dto';
 import { Paginate, PaginateQuery } from 'nestjs-paginate';
-import { Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
 @UseGuards(JwtAuthGuard)
 @Resolver()
 export class AccessesResolver {
   constructor(private readonly accessesService: AccessesService) {}
 
-  @Post()
+  @Mutation(() => GetAccessDto, { name: 'createAccess' })
   @UseGuards(JwtAccessGuard)
   @Serialize(GetAccessDto)
-  async create(@Body() createAccessDto: CreateAccessDto) {
+  async create(@Args('createAccessDto') createAccessDto: CreateAccessDto) {
     return this.accessesService.create(createAccessDto);
   }
 

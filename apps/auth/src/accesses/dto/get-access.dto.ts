@@ -9,7 +9,7 @@ import {
   IsString,
   IsUrl,
 } from 'class-validator';
-import { EndpointAccessDto } from './endpoint-access.dto';
+import { GetEndpointAccessDto } from './get-endpoint-access.dto';
 import { Expose, Type } from 'class-transformer';
 import { AbstractGetDto } from '@app/common';
 import { Field, ObjectType } from '@nestjs/graphql';
@@ -43,7 +43,8 @@ export class GetAccessDto extends AbstractGetDto {
   color?: string;
 
   @IsBoolean()
-  @Field()
+  @Expose()
+  @Field(() => Boolean)
   cannot_be_deleted?: boolean;
 
   @IsBoolean()
@@ -54,7 +55,8 @@ export class GetAccessDto extends AbstractGetDto {
   @IsArray()
   @IsObject({ each: true })
   @IsNotEmpty({ each: true })
-  @Type(() => EndpointAccessDto)
+  @Type(() => GetEndpointAccessDto)
   @Expose()
-  endpoints?: EndpointAccessDto[];
+  @Field(() => [GetEndpointAccessDto])
+  endpoints?: GetEndpointAccessDto[];
 }

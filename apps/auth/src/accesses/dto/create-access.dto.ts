@@ -8,7 +8,7 @@ import {
   IsString,
   IsUrl,
 } from 'class-validator';
-import { EndpointAccessDto } from './endpoint-access.dto';
+import { CreateEndpointAccessDto } from './create-endpoint-access.dto';
 import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
@@ -37,6 +37,6 @@ export class CreateAccessDto {
   @IsArray()
   @IsObject({ each: true })
   @IsNotEmpty({ each: true })
-  @Field(() => [EndpointAccessDto])
-  endpoints: EndpointAccessDto[];
+  @Field(() => [CreateEndpointAccessDto])
+  endpoints: CreateEndpointAccessDto[];
 }

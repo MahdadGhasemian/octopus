@@ -3,7 +3,7 @@ import { Expose } from 'class-transformer';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 @ObjectType()
-export class EndpointAccessDto {
+export class GetEndpointAccessDto {
   @IsNumber()
   @IsOptional()
   @Expose()
