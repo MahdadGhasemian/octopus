@@ -1,22 +1,15 @@
-import { UseGuards, UseInterceptors } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { GetOtpDto } from './dto/get-otp.dto';
 import { ConfirmOtpDto } from './dto/confirm-otp.dto';
-import {
-  CurrentUser,
-  EVENT_NAME_AUTHENTICATE_AND_CHECK_ACCESS,
-  MessageAckInterceptor,
-  NoCache,
-} from '@app/common';
+import { CurrentUser, NoCache } from '@app/common';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LoginDto } from './dto/login.dto';
 import { GetUserDto } from './users/dto/get-user.dto';
 import { Serialize } from './users/interceptors/serialize.interceptor';
-import { MessagePattern, Payload } from '@nestjs/microservices';
 import { EditInfoDto } from './dto/edit-info.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { User } from './libs';
-import { JwtAccessGuard } from './guards/jwt-access.guard';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GetOtpResponseDto } from './dto/get-otp.response.dto';
 
@@ -85,14 +78,5 @@ export class AuthResolver {
     @Args('editInfoDto') editInfoDto: EditInfoDto,
   ) {
     return this.authService.editInfo(editInfoDto, user);
-  }
-
-  @MessagePattern(EVENT_NAME_AUTHENTICATE_AND_CHECK_ACCESS)
-  @UseGuards(JwtAuthGuard, JwtAccessGuard)
-  @UseInterceptors(MessageAckInterceptor)
-  async checkAccess(
-    @Payload() data: { user: GetUserDto; path: string; method: string },
-  ) {
-    return data.user;
   }
 }
