@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, InputType } from '@nestjs/graphql';
 import {
   IsNotEmpty,
   IsNumber,
@@ -7,28 +7,20 @@ import {
   IsStrongPassword,
 } from 'class-validator';
 
+@InputType()
 export class ChangePasswordDto {
-  @ApiProperty({
-    example: 'YP<7(SHO@&s/Zf:;&8@Zh;!wsjNMAx6Y',
-    required: false,
-  })
   @IsStrongPassword()
   @IsOptional()
+  @Field()
   password?: string;
 
-  @ApiProperty({
-    example: '92478',
-    required: true,
-  })
   @IsNumber()
   @IsNotEmpty()
+  @Field()
   confirmation_code: number;
 
-  @ApiProperty({
-    example: 'a-long-token',
-    required: true,
-  })
   @IsString()
   @IsNotEmpty()
+  @Field()
   hashed_code: string;
 }

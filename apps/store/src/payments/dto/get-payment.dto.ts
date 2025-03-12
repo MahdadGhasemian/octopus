@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import {
   IsDateString,
@@ -10,52 +9,40 @@ import {
 } from 'class-validator';
 import { AbstractGetDto, PaymentStatus } from '@app/common';
 import { GetOrderDto } from '../../orders/dto/get-order.dto';
+import { Field, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 export class GetPaymentDto extends AbstractGetDto {
-  @ApiProperty({
-    example: '1',
-    required: true,
-  })
   @IsNumber()
   @IsOptional()
   @Expose()
+  @Field()
   id?: number;
 
-  @ApiProperty({
-    example: 49,
-    required: true,
-  })
   @IsNumber()
   @Expose()
+  @Field()
   amount?: number;
 
-  @ApiProperty({
-    type: Date,
-    required: true,
-  })
   @IsDateString()
   @Expose()
+  @Field()
   paid_date?: Date;
 
-  @ApiProperty({
-    enum: PaymentStatus,
-    default: PaymentStatus.PENDING,
-    required: true,
-  })
   @IsEnum(PaymentStatus)
   @Expose()
+  @Field()
   payment_status?: PaymentStatus;
 
   @IsObject()
   @Type(() => GetOrderDto)
   @Expose()
+  @Field()
   order?: GetOrderDto;
 
-  @ApiProperty({
-    required: false,
-  })
   @IsString()
   @IsOptional()
   @Expose()
+  @Field()
   note?: string;
 }

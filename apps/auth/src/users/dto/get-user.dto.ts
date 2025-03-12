@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import {
   IsArray,
@@ -10,40 +9,28 @@ import {
 } from 'class-validator';
 import { GetAccessDto } from '../../accesses/dto/get-access.dto';
 import { AbstractGetDto } from '@app/common';
+import { Field, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 export class GetUserDto extends AbstractGetDto {
-  @ApiProperty({
-    example: '1',
-    required: true,
-  })
   @IsNumber()
   @IsOptional()
   @Expose()
+  @Field()
   id?: number;
 
-  @ApiProperty({
-    example: 'mahdad.ghasemian@gmail.com',
-    required: true,
-  })
   @IsEmail()
   @IsOptional()
   @Expose()
+  @Field()
   email?: string;
 
-  @ApiProperty({
-    example: 'Mahdad Ghasemian',
-    required: false,
-  })
   @IsString()
   @IsOptional()
   @Expose()
+  @Field()
   full_name?: string;
 
-  @ApiProperty({
-    type: GetAccessDto,
-    required: true,
-    isArray: true,
-  })
   @IsArray()
   @IsNotEmpty({ each: true })
   @Type(() => GetAccessDto)

@@ -1,23 +1,18 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Expose } from 'class-transformer';
 import { IsDateString, IsOptional } from 'class-validator';
 
+@ObjectType()
 export class AbstractGetDto {
-  @ApiProperty({
-    type: Date,
-    required: true,
-  })
   @IsDateString()
   @IsOptional()
   @Expose()
+  @Field()
   created_at?: Date;
 
-  @ApiProperty({
-    type: Date,
-    required: true,
-  })
   @IsDateString()
   @IsOptional()
   @Expose()
+  @Field()
   updated_at?: Date;
 }

@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import {
   IsBoolean,
@@ -10,65 +9,45 @@ import {
 } from 'class-validator';
 import { AbstractGetDto, OrderStatus } from '@app/common';
 import { GetOrderItemDto } from './get-order-items.dto';
+import { Field, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 export class GetOrderDto extends AbstractGetDto {
-  @ApiProperty({
-    example: '1',
-    required: true,
-  })
   @IsNumber()
   @IsOptional()
   @Expose()
+  @Field()
   id?: number;
 
-  @ApiProperty({
-    type: Date,
-    required: true,
-  })
   @IsDateString()
   @Expose()
+  @Field()
   order_date?: Date;
 
-  @ApiProperty({
-    type: String,
-    required: true,
-    isArray: true,
-  })
   @IsString()
   @Type(() => GetOrderItemDto)
   @Expose()
+  @Field()
   order_items?: GetOrderItemDto[];
 
-  @ApiProperty({
-    example: 49,
-    required: true,
-  })
   @IsNumber()
   @Expose()
+  @Field()
   total_bill_amount?: number;
 
-  @ApiProperty({
-    enum: OrderStatus,
-    default: OrderStatus.PENDING,
-    required: true,
-  })
   @IsEnum(OrderStatus)
   @Expose()
+  @Field()
   order_status?: OrderStatus;
 
-  @ApiProperty({
-    example: true,
-    required: true,
-  })
   @IsBoolean()
   @Expose()
+  @Field()
   is_paid?: boolean;
 
-  @ApiProperty({
-    required: false,
-  })
   @IsString()
   @IsOptional()
   @Expose()
+  @Field()
   note?: string;
 }

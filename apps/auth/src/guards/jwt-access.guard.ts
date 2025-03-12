@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
 export class JwtAccessGuard implements CanActivate {
@@ -17,22 +18,31 @@ export class JwtAccessGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
+    const type = context.getType<string>();
+
     let path: string;
     let method: string;
     let user: any;
 
-    if (context.getType() === 'http') {
+    if (type === 'http') {
       // Extract data from HTTP request
       const request = context.switchToHttp().getRequest();
       path = request.originalUrl;
       method = request.method;
       user = request?.user;
-    } else if (context.getType() === 'rpc') {
+    } else if (type === 'rpc') {
       // Extract data from RabbitMQ message
       const data = context.switchToRpc().getData();
       path = data?.path;
       method = data?.method;
       user = data?.user;
+    } else if (type === 'graphql') {
+      // Handle GraphQL request
+      const ctx = GqlExecutionContext.create(context);
+      const gqlContext = ctx.getContext();
+      path = gqlContext.req?.url || 'graphql';
+      method = 'POST';
+      user = gqlContext.req?.user;
     } else {
       return false;
     }

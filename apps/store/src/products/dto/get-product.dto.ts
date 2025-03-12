@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import {
   IsBoolean,
@@ -14,38 +13,23 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class GetProductDto extends AbstractGetDto {
-  @ApiProperty({
-    example: '1',
-    required: true,
-  })
   @IsNumber()
   @IsOptional()
   @Expose()
   @Field()
   id?: number;
 
-  @ApiProperty({
-    example: 'Product 1',
-    required: true,
-  })
   @IsString()
   @Expose()
   @Field()
   name?: string;
 
-  @ApiProperty({
-    required: false,
-  })
   @IsString()
   @IsOptional()
   @Expose()
   @Field()
   description?: string;
 
-  @ApiProperty({
-    example: 'http://www.localhost/image1000.jpg',
-    required: false,
-  })
   @IsString()
   @IsUrl()
   @IsOptional()
@@ -66,27 +50,16 @@ export class GetProductDto extends AbstractGetDto {
   @Field(() => GetCategoryDto, { nullable: true })
   category?: GetCategoryDto;
 
-  @ApiProperty({
-    required: true,
-    example: 49,
-  })
   @IsNumber()
   @Expose()
   @Field()
   price?: number;
 
-  @ApiProperty({
-    required: true,
-    example: 47.5,
-  })
   @IsNumber()
   @Expose()
   @Field()
   sale_price?: number;
 
-  @ApiProperty({
-    required: false,
-  })
   @IsBoolean()
   @Expose()
   @Field()

@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { OrdersController } from './orders.controller';
 import { OrdersRepository } from './orders.repository';
 import { OrderItemsRepository } from './order-items.repository';
 import { ProductsModule } from '../products/products.module';
@@ -14,7 +13,6 @@ import { Order, OrderItem } from '../libs';
     TypeOrmModule.forFeature([Order, OrderItem]),
     ProductsModule,
   ],
-  controllers: [OrdersController],
   providers: [OrdersService, OrdersRepository, OrderItemsRepository],
   exports: [OrdersService],
 })

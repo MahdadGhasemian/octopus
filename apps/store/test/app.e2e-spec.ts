@@ -6,7 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 
-describe('StoreController (e2e)', () => {
+describe('StoreResolver (e2e)', () => {
   let app: INestApplication;
   let cacheManager: Cache;
 

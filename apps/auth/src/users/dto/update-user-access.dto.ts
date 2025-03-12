@@ -1,14 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsArray, IsNotEmpty } from 'class-validator';
 
+@InputType()
 export class UpdateUserAccessDto {
-  @ApiProperty({
-    type: Number,
-    example: [1, 2],
-    required: true,
-    isArray: true,
-  })
   @IsArray()
   @IsNotEmpty({ each: true })
+  @Field(() => [Int])
   access_ids: number[];
 }

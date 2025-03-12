@@ -1,42 +1,28 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Expose } from 'class-transformer';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
+@ObjectType()
 export class EndpointAccessDto {
-  @ApiProperty({
-    example: '1',
-    required: true,
-  })
   @IsNumber()
   @IsOptional()
   @Expose()
+  @Field()
   id?: number;
 
-  @ApiProperty({
-    type: String,
-    required: false,
-    example: 'Get users list',
-  })
   @IsString()
   @IsOptional()
   @Expose()
+  @Field()
   tag?: string;
 
-  @ApiProperty({
-    type: String,
-    required: true,
-    example: '/auth/users',
-  })
   @IsString()
   @Expose()
+  @Field()
   path: string;
 
-  @ApiProperty({
-    type: String,
-    required: true,
-    example: 'GET',
-  })
   @IsString()
   @Expose()
+  @Field()
   method: string;
 }

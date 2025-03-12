@@ -7,6 +7,7 @@ import {
   AuthCommon,
   EVENT_NAME_USER_CREATED,
   EVENT_NAME_USER_UPDATED,
+  getPaginationConfig,
   STORE_SERVICE,
   UserCreatedEvent,
   UserUpdatedEvent,
@@ -59,11 +60,11 @@ export class UsersService {
     return user;
   }
 
-  async findAll(query: PaginateQuery) {
+  async findAll(query?: PaginateQuery, config?: any) {
     return paginate(
       query,
       this.usersRepository.entityRepository,
-      USER_PAGINATION_CONFIG,
+      getPaginationConfig(USER_PAGINATION_CONFIG, { config }),
     );
   }
 

@@ -2,6 +2,16 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type GetHealthDto {
+  status: String!
+  rabbitmq: String!
+  rabbitResponseTime: String!
+  database: String!
+  dbResponseTime: String!
+  redis: String!
+  redisResponseTime: String!
+}
+
 type MetaType {
   itemsPerPage: Int!
   totalItems: Int!
@@ -25,4 +35,8 @@ type LinksType {
   current: String!
   next: String
   last: String
+}
+
+type Query {
+  healthStorage: GetHealthDto!
 }

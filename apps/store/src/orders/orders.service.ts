@@ -40,12 +40,13 @@ export class OrdersService {
     return this.findOne({ id: result.id }, user);
   }
 
-  async findAll(query: PaginateQuery, user: User) {
+  async findAll(query: PaginateQuery, config: any, user: User) {
     return paginate(
       query,
       this.ordersRepository.entityRepository,
       getPaginationConfig(ORDER_PAGINATION_CONFIG, {
         identifierQuery: { user_id: user.id },
+        config,
       }),
     );
   }

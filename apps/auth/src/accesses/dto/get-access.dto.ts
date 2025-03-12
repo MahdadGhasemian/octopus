@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsBoolean,
@@ -13,70 +12,45 @@ import {
 import { EndpointAccessDto } from './endpoint-access.dto';
 import { Expose, Type } from 'class-transformer';
 import { AbstractGetDto } from '@app/common';
+import { Field, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 export class GetAccessDto extends AbstractGetDto {
-  @ApiProperty({
-    example: '1',
-    required: true,
-  })
   @IsNumber()
   @IsOptional()
   @Expose()
+  @Field()
   id?: number;
 
-  @ApiProperty({
-    type: String,
-    example: 'Manager',
-    required: true,
-  })
   @IsString()
   @IsNotEmpty()
   @Expose()
+  @Field()
   title?: string;
 
-  @ApiProperty({
-    type: String,
-    required: false,
-  })
   @IsString()
   @IsUrl()
   @IsOptional()
   @Expose()
+  @Field()
   image?: string;
 
-  @ApiProperty({
-    type: String,
-    example: '#FFFFFF',
-    required: false,
-  })
   @IsString()
   @IsHexColor()
   @IsOptional()
   @Expose()
+  @Field()
   color?: string;
 
-  @ApiProperty({
-    type: Boolean,
-    example: false,
-    required: false,
-  })
   @IsBoolean()
+  @Field()
   cannot_be_deleted?: boolean;
 
-  @ApiProperty({
-    type: Boolean,
-    example: false,
-    required: true,
-  })
   @IsBoolean()
   @Expose()
+  @Field()
   has_full_access?: boolean;
 
-  @ApiProperty({
-    type: EndpointAccessDto,
-    required: true,
-    isArray: true,
-  })
   @IsArray()
   @IsObject({ each: true })
   @IsNotEmpty({ each: true })

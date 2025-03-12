@@ -1,6 +1,23 @@
 name: octopus
 
 services:
+  gateway:
+    build:
+      context: .
+      dockerfile: ./apps/gateway/Dockerfile.dev
+      target: development
+    command: sh -c "sleep 10 && npm run start:dev gateway"
+    env_file:
+      - ./apps/gateway/.env
+    ports:
+      - '3003:3003'
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - auth
+      - store
+      - storage
+
   auth:
     build:
       context: .
@@ -64,7 +81,7 @@ services:
       POSTGRES_MULTIPLE_DATABASES: auth,storage,store
     volumes:
       - postgres_data:/data/postgres
-      - ./init-scripts:/docker-entrypoint-initdb.d  # Mount seed data
+      - ./init-scripts:/docker-entrypoint-initdb.d # Mount seed data
     ports:
       - '5436:5432'
     logging:
@@ -72,10 +89,10 @@ services:
     # entrypoint: >
     #   /bin/bash -c "
     #   set -e;
-    #   docker-entrypoint.sh postgres & 
-    #   sleep 5; 
+    #   docker-entrypoint.sh postgres &
+    #   sleep 5;
     #   IFS=',' read -ra DBS <<< \"$$POSTGRES_MULTIPLE_DATABASES\";
-    #   for db in \"$${DBS[@]}\"; do 
+    #   for db in \"$${DBS[@]}\"; do
     #     echo 'Creating database: ' $$db;
     #     psql -U $$POSTGRES_USER -tc \"SELECT 1 FROM pg_database WHERE datname = '$$db'\" | grep -q 1 || psql -U $$POSTGRES_USER -c \"CREATE DATABASE $$db;\";
     #   done;

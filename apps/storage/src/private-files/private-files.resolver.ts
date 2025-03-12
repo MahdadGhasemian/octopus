@@ -1,6 +1,5 @@
 import {
   Body,
-  Controller,
   Get,
   NotFoundException,
   Param,
@@ -11,7 +10,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { PrivateFilesService } from './private-files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
@@ -22,24 +20,16 @@ import {
 } from '@app/common';
 import { UploadPrivateFileDto } from './dto/upload-private-file.dto';
 import { GetPrivateFileDto } from './dto/get-private-file.dto';
-import { UploadPrivateFileResponseDto } from './dto/get-private-file-response.dto';
 import { User } from '../libs';
+import { Resolver } from '@nestjs/graphql';
 
-@ApiTags('PrivateFiles')
-@Controller('private-files')
-export class PrivateFilesController {
+@Resolver()
+export class PrivateFilesResolver {
   constructor(private readonly privateFilesService: PrivateFilesService) {}
 
   @Post()
   @UseGuards(JwtAuthAccessGuard)
   @UseInterceptors(FileInterceptor('file'))
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    type: UploadPrivateFileDto,
-  })
-  @ApiOkResponse({
-    type: UploadPrivateFileResponseDto,
-  })
   async uploadFile(
     @CurrentUser() user: User,
     @UploadedFile(new FileTypeValidationPipe())

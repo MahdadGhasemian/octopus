@@ -1,5 +1,5 @@
-// import { PartialType } from '@nestjs/mapped-types';
-import { PartialType } from '@nestjs/swagger';
 import { CreateAccessDto } from './create-access.dto';
+import { InputType } from '@nestjs/graphql';
 
-export class UpdateAccessDto extends PartialType(CreateAccessDto) {}
+@InputType()
+export class UpdateAccessDto extends CreateAccessDto {}

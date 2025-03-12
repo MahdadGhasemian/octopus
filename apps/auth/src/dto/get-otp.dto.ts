@@ -1,12 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, InputType } from '@nestjs/graphql';
 import { IsEmail, IsNotEmpty } from 'class-validator';
 
+@InputType()
 export class GetOtpDto {
-  @ApiProperty({
-    example: 'mahdad.ghasemian@gmail.com',
-    required: true,
-  })
   @IsEmail()
   @IsNotEmpty()
+  @Field()
   email: string;
 }

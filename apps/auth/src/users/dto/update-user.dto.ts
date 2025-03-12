@@ -1,5 +1,27 @@
-// import { PartialType } from '@nestjs/mapped-types';
-import { PartialType } from '@nestjs/swagger';
-import { CreateUserDto } from './create-user.dto';
+import { Field, InputType, Int } from '@nestjs/graphql';
+import {
+  IsArray,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
+@InputType()
+export class UpdateUserDto {
+  @IsEmail()
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  email?: string;
+
+  @IsString()
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  full_name?: string;
+
+  @IsArray()
+  @IsNotEmpty({ each: true })
+  @IsOptional()
+  @Field(() => [Int], { nullable: true })
+  access_ids?: number[];
+}

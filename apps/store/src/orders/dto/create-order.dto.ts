@@ -1,27 +1,19 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsDateString, IsOptional, IsString } from 'class-validator';
 import { CreateOrderItemDto } from './create-order-items.dto';
+import { Field, InputType } from '@nestjs/graphql';
 
+@InputType()
 export class CreateOrderDto {
-  @ApiProperty({
-    type: Date,
-    required: true,
-  })
   @IsDateString()
+  @Field()
   order_date: Date;
 
-  @ApiProperty({
-    type: CreateOrderItemDto,
-    required: true,
-    isArray: true,
-  })
   @IsArray()
+  @Field()
   order_items: CreateOrderItemDto[];
 
-  @ApiProperty({
-    required: false,
-  })
   @IsString()
   @IsOptional()
+  @Field()
   note?: string;
 }

@@ -1,4 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  Directive,
+  Field,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
 import { Expose } from 'class-transformer';
 import { IsEnum, IsString } from 'class-validator';
 
@@ -12,60 +17,48 @@ enum ConnectionStatus {
   DISCONNECTED = 'disconnected',
 }
 
+registerEnumType(HealthStatus, {
+  name: 'OrderStatus',
+});
+registerEnumType(ConnectionStatus, {
+  name: 'OrderStatus',
+});
+
+@ObjectType()
+@Directive('@shareable')
 export class GetHealthDto {
-  @ApiProperty({
-    example: HealthStatus.OK,
-    enum: HealthStatus,
-  })
   @IsEnum(HealthStatus)
   @Expose()
+  @Field()
   status: HealthStatus;
 
-  @ApiProperty({
-    example: ConnectionStatus.CONNECTED,
-    enum: ConnectionStatus,
-  })
   @IsEnum(ConnectionStatus)
   @Expose()
+  @Field()
   rabbitmq: ConnectionStatus;
 
-  @ApiProperty({
-    example: '20ms',
-    type: String,
-  })
   @IsString()
   @Expose()
+  @Field()
   rabbitResponseTime: string;
 
-  @ApiProperty({
-    example: ConnectionStatus.CONNECTED,
-    enum: ConnectionStatus,
-  })
   @IsEnum(ConnectionStatus)
   @Expose()
+  @Field()
   database: ConnectionStatus;
 
-  @ApiProperty({
-    example: '10ms',
-    type: String,
-  })
   @IsString()
   @Expose()
+  @Field()
   dbResponseTime: string;
 
-  @ApiProperty({
-    example: ConnectionStatus.CONNECTED,
-    enum: ConnectionStatus,
-  })
   @IsEnum(ConnectionStatus)
   @Expose()
+  @Field()
   redis: ConnectionStatus;
 
-  @ApiProperty({
-    example: '1ms',
-    type: String,
-  })
   @IsString()
   @Expose()
+  @Field()
   redisResponseTime: string;
 }

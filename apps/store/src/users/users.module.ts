@@ -4,8 +4,8 @@ import { DatabaseModule } from '@app/common';
 import { UsersRepository } from './users.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UsersController } from './users.controller';
 import { User } from '../libs';
+import { UsersController } from './users.controller';
 
 @Module({
   imports: [

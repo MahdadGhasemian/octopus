@@ -1,10 +1,11 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Directive, Field, Int, ObjectType } from '@nestjs/graphql';
 import { Expose } from 'class-transformer';
 import { IsNumber, IsOptional } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Column, SortBy } from 'nestjs-paginate/lib/helper';
 
 @ObjectType()
+@Directive('@shareable')
 export class MetaType<T> {
   @IsNumber()
   @IsOptional()
@@ -48,6 +49,7 @@ export class MetaType<T> {
 }
 
 @ObjectType()
+@Directive('@shareable')
 export class LinksType {
   @IsOptional()
   @Field(() => String, { nullable: true })

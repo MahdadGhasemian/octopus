@@ -1,4 +1,5 @@
-import { PartialType } from '@nestjs/swagger';
 import { CreateOrderDto } from './create-order.dto';
+import { InputType } from '@nestjs/graphql';
 
-export class UpdateOrderDto extends PartialType(CreateOrderDto) {}
+@InputType()
+export class UpdateOrderDto extends CreateOrderDto {}

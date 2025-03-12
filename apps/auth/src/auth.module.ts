@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import {
   DatabaseModule,
@@ -26,6 +25,8 @@ import {
   ApolloFederationDriver,
   ApolloFederationDriverConfig,
 } from '@nestjs/apollo';
+import { AuthResolver } from './auth.resolver';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
@@ -101,12 +102,13 @@ import {
       },
       inject: [ConfigService],
     }),
-    HealthModule.forRoot('RABBITMQ_AUTH_QUEUE_NAME'),
+    HealthModule.forRoot('RABBITMQ_AUTH_QUEUE_NAME', 'healthAuth'),
     UsersModule,
     AccessesModule,
   ],
   controllers: [AuthController],
   providers: [
+    AuthResolver,
     AuthService,
     LocalStrategy,
     JwtStrategy,

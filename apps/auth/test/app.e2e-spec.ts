@@ -7,7 +7,7 @@ import { userStub } from './stubs/user.stub';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 
-describe('AuthController (e2e)', () => {
+describe('AuthResolver (e2e)', () => {
   let app: INestApplication;
   let configService: ConfigService;
   let cacheManager: Cache;

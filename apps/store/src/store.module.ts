@@ -81,7 +81,7 @@ import {
       },
       inject: [ConfigService],
     }),
-    HealthModule.forRoot('RABBITMQ_STORE_QUEUE_NAME'),
+    HealthModule.forRoot('RABBITMQ_STORE_QUEUE_NAME', 'healthStore'),
     UsersModule,
     CategoriesModule,
     ProductsModule,

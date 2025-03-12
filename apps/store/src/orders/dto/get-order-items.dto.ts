@@ -1,26 +1,23 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { IsNumber, IsObject } from 'class-validator';
 import { GetProductDto } from '../../products/dto/get-product.dto';
+import { Field, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 export class GetOrderItemDto {
-  @ApiProperty({
-    example: 1,
-    required: true,
-  })
   @IsNumber()
   @Expose()
+  @Field()
   product_id: number;
 
   @IsObject()
   @Type(() => GetProductDto)
   @Expose()
+  @Field()
   product: GetProductDto;
 
-  @ApiProperty({
-    required: true,
-  })
   @IsNumber()
   @Expose()
+  @Field()
   quantity: number;
 }

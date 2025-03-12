@@ -9,7 +9,7 @@ import {
   UserUpdatedEvent,
 } from '@app/common';
 
-@Controller('users')
+@Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

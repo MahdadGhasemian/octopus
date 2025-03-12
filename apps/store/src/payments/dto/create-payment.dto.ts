@@ -1,18 +1,14 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
+@InputType()
 export class CreatePaymentDto {
-  @ApiProperty({
-    type: Date,
-    required: true,
-  })
   @IsNumber()
+  @Field(() => Int)
   order_id: number;
 
-  @ApiProperty({
-    required: false,
-  })
   @IsString()
   @IsOptional()
+  @Field()
   description?: string;
 }

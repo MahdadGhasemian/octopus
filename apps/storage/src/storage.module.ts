@@ -89,10 +89,9 @@ import {
       },
       inject: [ConfigService],
     }),
-    HealthModule.forRoot('RABBITMQ_STORAGE_QUEUE_NAME'),
+    HealthModule.forRoot('RABBITMQ_STORAGE_QUEUE_NAME', 'healthStorage'),
     PublicFilesModule,
     PrivateFilesModule,
   ],
-  controllers: [],
 })
 export class StorageModule {}

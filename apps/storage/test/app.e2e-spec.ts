@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { StorageModule } from '../src/storage.module';
 import { ConfigModule } from '@nestjs/config';
 
-describe('StorageController (e2e)', () => {
+describe('StorageResolver (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {

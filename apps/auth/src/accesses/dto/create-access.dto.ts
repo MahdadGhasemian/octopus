@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsBoolean,
@@ -10,52 +9,34 @@ import {
   IsUrl,
 } from 'class-validator';
 import { EndpointAccessDto } from './endpoint-access.dto';
+import { Field, InputType } from '@nestjs/graphql';
 
+@InputType()
 export class CreateAccessDto {
-  @ApiProperty({
-    type: String,
-    example: 'Manager',
-    required: true,
-  })
   @IsString()
   @IsNotEmpty()
+  @Field()
   title: string;
 
-  @ApiProperty({
-    type: String,
-    example: 'http://www.localhost/image1000.jpg',
-    required: false,
-  })
   @IsString()
   @IsUrl()
   @IsOptional()
+  @Field()
   image?: string;
 
-  @ApiProperty({
-    type: String,
-    example: '#FFFFFF',
-    required: false,
-  })
   @IsString()
   @IsHexColor()
   @IsOptional()
+  @Field()
   color?: string;
 
-  @ApiProperty({
-    type: Boolean,
-    example: false,
-    required: true,
-  })
   @IsBoolean()
+  @Field()
   has_full_access: boolean;
 
-  @ApiProperty({
-    type: EndpointAccessDto,
-    required: true,
-    isArray: true,
-  })
   @IsArray()
   @IsObject({ each: true })
   @IsNotEmpty({ each: true })
+  @Field(() => [EndpointAccessDto])
   endpoints: EndpointAccessDto[];
 }

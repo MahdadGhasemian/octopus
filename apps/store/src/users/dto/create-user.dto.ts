@@ -1,18 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, InputType } from '@nestjs/graphql';
 import { IsOptional } from 'class-validator';
 
+@InputType()
 export class CreateUserDto {
-  @ApiProperty({
-    example: 'mahdad.ghasemian@gmail.com',
-    required: false,
-  })
   @IsOptional()
+  @Field()
   email?: string;
 
-  @ApiProperty({
-    example: 'Mahdad',
-    required: false,
-  })
   @IsOptional()
+  @Field()
   full_name?: string;
 }

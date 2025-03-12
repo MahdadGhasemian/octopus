@@ -1,13 +1,13 @@
 import { AbstractEntity } from '@app/common';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { Product } from './product.entity';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @Entity()
 @ObjectType()
 export class Category extends AbstractEntity<Category> {
   @Column()
-  @Field(() => ID)
+  @Field()
   name: string;
 
   @Column()

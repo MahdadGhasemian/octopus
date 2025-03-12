@@ -2,6 +2,16 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type GetHealthDto {
+  status: String!
+  rabbitmq: String!
+  rabbitResponseTime: String!
+  database: String!
+  dbResponseTime: String!
+  redis: String!
+  redisResponseTime: String!
+}
+
 type MetaType {
   itemsPerPage: Int!
   totalItems: Int!
@@ -28,10 +38,10 @@ type LinksType {
 }
 
 type Category {
-  id: Float!
+  id: ID!
   created_at: DateTime!
   updated_at: DateTime!
-  name: ID!
+  name: String!
   description: String
   image: String
 }
@@ -42,10 +52,10 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Product {
-  id: Float!
+  id: ID!
   created_at: DateTime!
   updated_at: DateTime!
-  name: ID!
+  name: String!
   description: String!
   image: String!
   category_id: Float!
@@ -55,7 +65,27 @@ type Product {
   is_active: Boolean!
 }
 
+type Payment {
+  id: ID!
+  created_at: DateTime!
+  updated_at: DateTime!
+  user_id: Float!
+  amount: Float!
+  paid_date: DateTime!
+  payment_status: PaymentStatus!
+  order_id: Float!
+  description: String!
+}
+
+enum PaymentStatus {
+  PENDING
+  FAILED
+  PAID
+}
+
 type GetCategoryDto {
+  created_at: DateTime!
+  updated_at: DateTime!
   id: Float!
   name: String!
   description: String!
@@ -69,6 +99,8 @@ type ListCategoryDto {
 }
 
 type GetProductDto {
+  created_at: DateTime!
+  updated_at: DateTime!
   id: Float!
   name: String!
   description: String!
@@ -87,6 +119,7 @@ type ListProductDto {
 }
 
 type Query {
+  healthStore: GetHealthDto!
   categories(page: Int = 1, limit: Int = 10, sortBy: [String!], searchBy: [String!], search: String, filter: [String!], relations: [String!]): ListCategoryDto!
   category(id: String!): Category!
   products(page: Int = 1, limit: Int = 10, sortBy: [String!], searchBy: [String!], search: String, filter: [String!], relations: [String!]): ListProductDto!
@@ -100,6 +133,7 @@ type Mutation {
   createProduct(createProductDto: CreateProductDto!): Product!
   updateProduct(id: String!, updateProductDto: UpdateProductDto!): Product!
   deleteProduct(id: String!): Product!
+  createPayment(createPaymentDto: CreatePaymentDto!): Payment!
 }
 
 input CreateCategoryDto {
@@ -129,4 +163,9 @@ input UpdateProductDto {
   description: String
   image: String
   category_id: Int
+}
+
+input CreatePaymentDto {
+  order_id: Int!
+  description: String!
 }

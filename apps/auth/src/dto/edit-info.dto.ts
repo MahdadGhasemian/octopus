@@ -1,12 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, InputType } from '@nestjs/graphql';
 import { IsOptional, IsString } from 'class-validator';
 
+@InputType()
 export class EditInfoDto {
-  @ApiProperty({
-    example: 'Mahdad Ghasemian',
-    required: false,
-  })
   @IsString()
   @IsOptional()
+  @Field()
   full_name?: string;
 }

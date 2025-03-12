@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import {
   IsArray,
   IsEmail,
@@ -8,38 +8,25 @@ import {
   IsStrongPassword,
 } from 'class-validator';
 
+@InputType()
 export class CreateUserDto {
-  @ApiProperty({
-    example: 'mahdad.ghasemian@gmail.com',
-    required: true,
-  })
   @IsEmail()
   @IsNotEmpty()
+  @Field()
   email: string;
 
-  @ApiProperty({
-    example: 'Mahdad Ghasemian',
-    required: false,
-  })
   @IsString()
   @IsOptional()
+  @Field()
   full_name?: string;
 
-  @ApiProperty({
-    example: 'YP<7(SHO@&s/Zf:;&8@Zh;!wsjNMAx6Y',
-    required: false,
-  })
   @IsStrongPassword()
   @IsOptional()
+  @Field()
   password?: string;
 
-  @ApiProperty({
-    type: Number,
-    example: [1, 2],
-    required: true,
-    isArray: true,
-  })
   @IsArray()
   @IsNotEmpty({ each: true })
+  @Field(() => [Int])
   access_ids: number[];
 }

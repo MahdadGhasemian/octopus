@@ -1,17 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, InputType } from '@nestjs/graphql';
 import { IsNumber } from 'class-validator';
 
+@InputType()
 export class CreateOrderItemDto {
-  @ApiProperty({
-    example: 1,
-    required: true,
-  })
   @IsNumber()
+  @Field()
   product_id: number;
 
-  @ApiProperty({
-    required: true,
-  })
   @IsNumber()
+  @Field()
   quantity: number;
 }

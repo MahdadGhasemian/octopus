@@ -2,6 +2,16 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type GetHealthDto {
+  status: String!
+  rabbitmq: String!
+  rabbitResponseTime: String!
+  database: String!
+  dbResponseTime: String!
+  redis: String!
+  redisResponseTime: String!
+}
+
 type MetaType {
   itemsPerPage: Int!
   totalItems: Int!
@@ -25,4 +35,110 @@ type LinksType {
   current: String!
   next: String
   last: String
+}
+
+type User {
+  id: ID!
+  created_at: DateTime!
+  updated_at: DateTime!
+  email: String!
+  full_name: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type GetAccessDto {
+  created_at: DateTime!
+  updated_at: DateTime!
+  id: Float!
+  title: String!
+  image: String!
+  color: String!
+  cannot_be_deleted: Boolean!
+  has_full_access: Boolean!
+}
+
+type GetUserDto {
+  created_at: DateTime!
+  updated_at: DateTime!
+  id: Float!
+  email: String!
+  full_name: String!
+}
+
+type ListUserDto {
+  meta: MetaType!
+  links: LinksType!
+  data: [GetUserDto!]!
+}
+
+type GetOtpResponseDto {
+  hashed_code: String!
+}
+
+type Query {
+  info: GetUserDto!
+  healthAuth: GetHealthDto!
+  users(page: Int = 1, limit: Int = 10, sortBy: [String!], searchBy: [String!], search: String, filter: [String!], relations: [String!]): ListUserDto!
+  user(id: String!): User!
+}
+
+type Mutation {
+  otp(getOtpDto: GetOtpDto!): GetOtpResponseDto!
+  confirm(confirmOtpDto: ConfirmOtpDto!): GetUserDto!
+  changePassowrd(changePasswordDto: ChangePasswordDto!): GetUserDto!
+  login(loginDto: LoginDto!): GetUserDto!
+  logout: GetUserDto
+  info(editInfoDto: EditInfoDto!): GetUserDto!
+  createUser(createUserDto: CreateUserDto!): User!
+  updateUser(id: String!, updateUserDto: UpdateUserDto!): User!
+  deleteUser(id: String!): User!
+  userAccess(id: String!, updateUserAccessDto: UpdateUserAccessDto!): User!
+}
+
+input GetOtpDto {
+  email: String!
+}
+
+input ConfirmOtpDto {
+  email: String!
+  full_name: String!
+  password: String!
+  confirmation_code: Float!
+  hashed_code: String!
+}
+
+input ChangePasswordDto {
+  password: String!
+  confirmation_code: Float!
+  hashed_code: String!
+}
+
+input LoginDto {
+  email: String!
+  password: String!
+}
+
+input EditInfoDto {
+  full_name: String!
+}
+
+input CreateUserDto {
+  email: String!
+  full_name: String!
+  password: String!
+  access_ids: [Int!]!
+}
+
+input UpdateUserDto {
+  email: String
+  full_name: String
+  access_ids: [Int!]
+}
+
+input UpdateUserAccessDto {
+  access_ids: [Int!]!
 }
