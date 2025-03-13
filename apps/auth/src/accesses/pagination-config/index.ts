@@ -6,7 +6,6 @@ export const ACCESS_PAGINATION_CONFIG: PaginateConfig<Access> = {
   nullSort: 'last',
   defaultSortBy: [['id', 'DESC']],
   searchableColumns: ['title'],
-  relations: ['endpoints'],
   filterableColumns: {
     title: true,
   },

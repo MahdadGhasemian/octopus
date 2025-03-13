@@ -5,7 +5,7 @@ import { GetAccessDto } from './get-access.dto';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class LisAccessDto extends ListDto<GetAccessDto> {
+export class ListAccessDto extends ListDto<GetAccessDto> {
   @IsArray()
   @Type(() => GetAccessDto)
   @Expose()

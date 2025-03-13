@@ -127,7 +127,7 @@ export class UsersService {
   async getUser(getUserDto: GetUserDto) {
     const user = await this.usersRepository.findOne(getUserDto, {
       accesses: {
-        endpoints: true,
+        //     endpoints: true,
       },
     });
 

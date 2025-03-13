@@ -9,9 +9,9 @@ export class AccessesRepository extends AbstractRepository<Access> {
   protected readonly logger = new Logger(AccessesRepository.name);
 
   constructor(
-    @InjectRepository(Access) accesssRepository: Repository<Access>,
+    @InjectRepository(Access) accesssesRepository: Repository<Access>,
     entityManager: EntityManager,
   ) {
-    super(accesssRepository, entityManager);
+    super(accesssesRepository, entityManager);
   }
 }

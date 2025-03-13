@@ -6,6 +6,7 @@ import { GetAccessDto } from './dto/get-access.dto';
 import { Access, Endpoint } from '../libs';
 import { paginate, PaginateQuery } from 'nestjs-paginate';
 import { ACCESS_PAGINATION_CONFIG } from './pagination-config';
+import { getPaginationConfig } from '@app/common';
 
 @Injectable()
 export class AccessesService {
@@ -22,11 +23,11 @@ export class AccessesService {
     return this.accessesRepository.create(access);
   }
 
-  async findAll(query: PaginateQuery) {
+  async findAll(query: PaginateQuery, config?: any) {
     return paginate(
       query,
       this.accessesRepository.entityRepository,
-      ACCESS_PAGINATION_CONFIG,
+      getPaginationConfig(ACCESS_PAGINATION_CONFIG, { config }),
     );
   }
 

@@ -26,7 +26,7 @@ export class ProductsService {
     return this.findOne({ id: result.id });
   }
 
-  async findAll(query?: PaginateQuery, config?: any) {
+  async findAll(query: PaginateQuery, config?: any) {
     return paginate(
       query,
       this.productsRepository.entityRepository,

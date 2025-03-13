@@ -19,5 +19,6 @@ export class User extends AbstractEntity<User> {
 
   @ManyToMany(() => Access)
   @JoinTable()
+  @Field(() => [Access])
   accesses: Access[];
 }
