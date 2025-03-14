@@ -12,24 +12,13 @@ import { GetAccessDto } from './dto/get-access.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { JwtAccessGuard } from '../guards/jwt-access.guard';
 import { ListAccessDto } from './dto/list-access.dto';
-import {
-  Args,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
-import { Access, Endpoint } from '../libs';
-import { EndpointsService } from './endpoints.service';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Access } from '../libs';
 
 @Resolver(() => Access)
 @NoCache()
 export class AccessesResolver {
-  constructor(
-    private readonly accessesService: AccessesService,
-    private readonly endpointsService: EndpointsService,
-  ) {}
+  constructor(private readonly accessesService: AccessesService) {}
 
   @Mutation(() => GetAccessDto, { name: 'createAccess' })
   @UseGuards(JwtAuthGuard, JwtAccessGuard)
@@ -70,11 +59,5 @@ export class AccessesResolver {
   @Serialize(GetAccessDto)
   async remove(@Args('id') id: string) {
     return this.accessesService.remove({ id: +id });
-  }
-
-  @ResolveField(() => [Endpoint])
-  async endpoints(@Parent() access: Access) {
-    console.log('endpoints ---------------------------');
-    return this.endpointsService.readEndpoints(access.id);
   }
 }
