@@ -13,7 +13,7 @@ export class GetOrderItemDto {
   @IsObject()
   @Type(() => GetProductDto)
   @Expose()
-  @Field()
+  @Field(() => GetProductDto)
   product: GetProductDto;
 
   @IsNumber()

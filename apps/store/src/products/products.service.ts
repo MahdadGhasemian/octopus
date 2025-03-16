@@ -46,7 +46,7 @@ export class ProductsService {
     return this.productsRepository.findOne(productDto);
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
+  async update(productDto: GetProductDto, updateProductDto: UpdateProductDto) {
     const updateData: Partial<Product> = {
       ...updateProductDto,
     };
@@ -55,18 +55,16 @@ export class ProductsService {
     }
 
     const result = await this.productsRepository.findOneAndUpdate(
-      { id },
+      { ...productDto },
       { ...updateData },
     );
 
     return this.findOne({ id: result.id });
   }
 
-  async remove(id: number) {
-    const product = await this.findOne({ id });
-
-    await this.productsRepository.findOneAndDelete({ id });
-
+  async remove(productDto: GetProductDto) {
+    const product = await this.findOne({ ...productDto });
+    await this.productsRepository.findOneAndDelete({ ...productDto });
     return product;
   }
 }

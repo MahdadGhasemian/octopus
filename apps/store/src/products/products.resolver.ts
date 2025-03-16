@@ -7,7 +7,6 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { ProductsService } from './products.service';
-import { Category, Product } from '../libs';
 import {
   JwtAuthAccessGuard,
   NoCache,
@@ -19,8 +18,10 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { CategoriesService } from '../categories/categories.service';
 import { UseGuards } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
+import { GetProductDto } from './dto/get-product.dto';
+import { GetCategoryDto } from '../categories/dto/get-category.dto';
 
-@Resolver(() => Product)
+@Resolver(() => GetProductDto)
 @NoCache()
 export class ProductsResolver {
   constructor(
@@ -28,7 +29,7 @@ export class ProductsResolver {
     private readonly categoriesService: CategoriesService,
   ) {}
 
-  @Mutation(() => Product, { name: 'createProduct' })
+  @Mutation(() => GetProductDto, { name: 'createProduct' })
   @UseGuards(JwtAuthAccessGuard)
   async create(@Args('createProductDto') createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
@@ -39,28 +40,28 @@ export class ProductsResolver {
     return this.productsService.findAll(query, config);
   }
 
-  @Query(() => Product, { name: 'product' })
+  @Query(() => GetProductDto, { name: 'product' })
   async find(@Args('id') id: string) {
     return this.productsService.findOne({ id: +id });
   }
 
-  @Mutation(() => Product, { name: 'updateProduct' })
+  @Mutation(() => GetProductDto, { name: 'updateProduct' })
   @UseGuards(JwtAuthAccessGuard)
   async update(
     @Args('id') id: string,
     @Args('updateProductDto') updateProductDto: UpdateProductDto,
   ) {
-    return this.productsService.update(+id, updateProductDto);
+    return this.productsService.update({ id: +id }, updateProductDto);
   }
 
-  @Mutation(() => Product, { name: 'deleteProduct' })
+  @Mutation(() => GetProductDto, { name: 'deleteProduct' })
   @UseGuards(JwtAuthAccessGuard)
   async remove(@Args('id') id: string) {
-    return this.productsService.remove(+id);
+    return this.productsService.remove({ id: +id });
   }
 
-  @ResolveField(() => Category, { nullable: true })
-  async category(@Parent() product: Product) {
+  @ResolveField(() => GetCategoryDto, { name: 'category', nullable: true })
+  async category(@Parent() product: GetProductDto) {
     return this.categoriesService.findOne({ id: product.category_id });
   }
 }

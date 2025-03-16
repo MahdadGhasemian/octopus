@@ -31,7 +31,7 @@ export class GetPaymentDto extends AbstractGetDto {
 
   @IsEnum(PaymentStatus)
   @Expose()
-  @Field()
+  @Field(() => PaymentStatus)
   payment_status?: PaymentStatus;
 
   @IsObject()

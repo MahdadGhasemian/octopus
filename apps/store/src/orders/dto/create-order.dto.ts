@@ -9,7 +9,7 @@ export class CreateOrderDto {
   order_date: Date;
 
   @IsArray()
-  @Field()
+  @Field(() => [CreateOrderItemDto])
   order_items: CreateOrderItemDto[];
 
   @IsString()

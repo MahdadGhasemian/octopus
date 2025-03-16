@@ -13,12 +13,6 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class GetOrderDto extends AbstractGetDto {
-  @IsNumber()
-  @IsOptional()
-  @Expose()
-  @Field()
-  id?: number;
-
   @IsDateString()
   @Expose()
   @Field()
@@ -27,7 +21,7 @@ export class GetOrderDto extends AbstractGetDto {
   @IsString()
   @Type(() => GetOrderItemDto)
   @Expose()
-  @Field()
+  @Field(() => [GetOrderItemDto])
   order_items?: GetOrderItemDto[];
 
   @IsNumber()
@@ -37,7 +31,7 @@ export class GetOrderDto extends AbstractGetDto {
 
   @IsEnum(OrderStatus)
   @Expose()
-  @Field()
+  @Field(() => OrderStatus)
   order_status?: OrderStatus;
 
   @IsBoolean()

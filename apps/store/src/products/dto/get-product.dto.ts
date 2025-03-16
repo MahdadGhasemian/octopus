@@ -13,12 +13,6 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class GetProductDto extends AbstractGetDto {
-  @IsNumber()
-  @IsOptional()
-  @Expose()
-  @Field()
-  id?: number;
-
   @IsString()
   @Expose()
   @Field()

@@ -1,5 +1,11 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Category } from '../libs';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import {
   JwtAuthAccessGuard,
   NoCache,
@@ -11,13 +17,15 @@ import { UseGuards } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { ListCategoryDto } from './dto/list-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { GetCategoryDto } from './dto/get-category.dto';
+import { GetProductDto } from '../products/dto/get-product.dto';
 
-@Resolver(() => Category)
+@Resolver(() => GetCategoryDto)
 @NoCache()
 export class CategoriesResolver {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @Mutation(() => Category, { name: 'createCategory' })
+  @Mutation(() => GetCategoryDto, { name: 'createCategory' })
   @UseGuards(JwtAuthAccessGuard)
   async create(
     @Args('createCategoryDto') createCategoryDto: CreateCategoryDto,
@@ -33,23 +41,28 @@ export class CategoriesResolver {
     return this.categoriesService.findAll(query, config);
   }
 
-  @Query(() => Category, { name: 'category' })
+  @Query(() => GetCategoryDto, { name: 'category' })
   async findOne(@Args('id') id: string) {
     return this.categoriesService.findOne({ id: +id });
   }
 
-  @Mutation(() => Category, { name: 'updateCategory' })
+  @Mutation(() => GetCategoryDto, { name: 'updateCategory' })
   @UseGuards(JwtAuthAccessGuard)
   async update(
     @Args('id') id: string,
     @Args('updateCategoryDto') updateCategoryDto: UpdateCategoryDto,
   ) {
-    return this.categoriesService.update(+id, updateCategoryDto);
+    return this.categoriesService.update({ id: +id }, updateCategoryDto);
   }
 
-  @Mutation(() => Category, { name: 'deleteCategory' })
+  @Mutation(() => GetCategoryDto, { name: 'deleteCategory' })
   @UseGuards(JwtAuthAccessGuard)
   async remove(@Args('id') id: string) {
-    return this.categoriesService.remove(+id);
+    return this.categoriesService.remove({ id: +id });
+  }
+
+  @ResolveField(() => [GetProductDto], { name: 'products', nullable: true })
+  async products(@Parent() category: GetCategoryDto) {
+    return this.categoriesService.getProductsByCatgegoryId(category.id);
   }
 }

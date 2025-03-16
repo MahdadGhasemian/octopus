@@ -29,17 +29,31 @@ export class CategoriesService {
   }
 
   async findOne(categoryDto: GetCategoryDto) {
-    return this.categoriesRepository.findOne(categoryDto);
+    return this.categoriesRepository.findOne({ ...categoryDto });
   }
 
-  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+  async update(
+    categoryDto: GetCategoryDto,
+    updateCategoryDto: UpdateCategoryDto,
+  ) {
     return this.categoriesRepository.findOneAndUpdate(
-      { id },
+      { ...categoryDto },
       { ...updateCategoryDto },
     );
   }
 
-  async remove(id: number) {
-    return this.categoriesRepository.findOneAndDelete({ id });
+  async remove(categoryDto: GetCategoryDto) {
+    const category = await this.findOne({ ...categoryDto });
+    await this.categoriesRepository.findOneAndDelete({ ...categoryDto });
+    return category;
+  }
+
+  async getProductsByCatgegoryId(category_id: number) {
+    const category = await this.categoriesRepository.findOneNoCheck(
+      { id: category_id },
+      { products: true },
+    );
+
+    return category?.products || [];
   }
 }

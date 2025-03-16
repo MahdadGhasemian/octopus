@@ -1,16 +1,11 @@
 import { AbstractGetDto } from '@app/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Expose } from 'class-transformer';
-import { IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsOptional, IsString, IsUrl } from 'class-validator';
+import { GetProductDto } from '../../products/dto/get-product.dto';
 
 @ObjectType()
 export class GetCategoryDto extends AbstractGetDto {
-  @IsNumber()
-  @IsOptional()
-  @Expose()
-  @Field()
-  id?: number;
-
   @IsString()
   @Expose()
   @Field()
@@ -28,4 +23,7 @@ export class GetCategoryDto extends AbstractGetDto {
   @Expose()
   @Field()
   image?: string;
+
+  @Field(() => [GetProductDto], { nullable: true })
+  products?: GetProductDto[];
 }

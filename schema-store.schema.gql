@@ -2,15 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Category {
-  created_at: DateTime!
-  description: String
-  id: Int!
-  image: String
-  name: String!
-  updated_at: DateTime!
-}
-
 input CreateCategoryDto {
   description: String!
   image: String!
@@ -40,9 +31,10 @@ scalar DateTime
 type GetCategoryDto {
   created_at: DateTime!
   description: String!
-  id: Float!
+  id: Int!
   image: String!
   name: String!
+  products: [GetProductDto!]
   updated_at: DateTime!
 }
 
@@ -56,12 +48,41 @@ type GetHealthDto {
   status: String!
 }
 
+type GetOrderDto {
+  created_at: DateTime!
+  id: Int!
+  is_paid: Boolean!
+  note: String!
+  order_date: DateTime!
+  order_items: [GetOrderItemDto!]!
+  order_status: OrderStatus!
+  total_bill_amount: Float!
+  updated_at: DateTime!
+}
+
+type GetOrderItemDto {
+  product: GetProductDto!
+  product_id: Float!
+  quantity: Float!
+}
+
+type GetPaymentDto {
+  amount: Float!
+  created_at: DateTime!
+  id: Float!
+  note: String!
+  order: GetOrderDto!
+  paid_date: DateTime!
+  payment_status: PaymentStatus!
+  updated_at: DateTime!
+}
+
 type GetProductDto {
   category: GetCategoryDto
   category_id: Float!
   created_at: DateTime!
   description: String!
-  id: Float!
+  id: Int!
   image: String!
   is_active: Boolean!
   name: String!
@@ -108,25 +129,21 @@ type MetaType {
 }
 
 type Mutation {
-  createCategory(createCategoryDto: CreateCategoryDto!): Category!
-  createPayment(createPaymentDto: CreatePaymentDto!): Payment!
-  createProduct(createProductDto: CreateProductDto!): Product!
-  deleteCategory(id: String!): Category!
-  deleteProduct(id: String!): Product!
-  updateCategory(id: String!, updateCategoryDto: UpdateCategoryDto!): Category!
-  updateProduct(id: String!, updateProductDto: UpdateProductDto!): Product!
+  createCategory(createCategoryDto: CreateCategoryDto!): GetCategoryDto!
+  createPayment(createPaymentDto: CreatePaymentDto!): GetPaymentDto!
+  createProduct(createProductDto: CreateProductDto!): GetProductDto!
+  deleteCategory(id: String!): GetCategoryDto!
+  deleteProduct(id: String!): GetProductDto!
+  updateCategory(id: String!, updateCategoryDto: UpdateCategoryDto!): GetCategoryDto!
+  updateProduct(id: String!, updateProductDto: UpdateProductDto!): GetProductDto!
 }
 
-type Payment {
-  amount: Float!
-  created_at: DateTime!
-  description: String!
-  id: Int!
-  order_id: Float!
-  paid_date: DateTime!
-  payment_status: PaymentStatus!
-  updated_at: DateTime!
-  user_id: Float!
+enum OrderStatus {
+  CANCELLED
+  COMPLETED
+  PAID
+  PENDING
+  PROCESSING
 }
 
 enum PaymentStatus {
@@ -135,25 +152,11 @@ enum PaymentStatus {
   PENDING
 }
 
-type Product {
-  category: Category!
-  category_id: Float!
-  created_at: DateTime!
-  description: String!
-  id: Int!
-  image: String!
-  is_active: Boolean!
-  name: String!
-  price: Float!
-  sale_price: Float!
-  updated_at: DateTime!
-}
-
 type Query {
   categories(filter: [String!], limit: Int = 10, page: Int = 1, relations: [String!], search: String, searchBy: [String!], sortBy: [String!]): ListCategoryDto!
-  category(id: String!): Category!
+  category(id: String!): GetCategoryDto!
   healthStore: GetHealthDto!
-  product(id: String!): Product!
+  product(id: String!): GetProductDto!
   products(filter: [String!], limit: Int = 10, page: Int = 1, relations: [String!], search: String, searchBy: [String!], sortBy: [String!]): ListProductDto!
 }
 
