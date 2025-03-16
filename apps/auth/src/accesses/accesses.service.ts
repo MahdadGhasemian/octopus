@@ -48,7 +48,9 @@ export class AccessesService {
   }
 
   async remove(accessDto: GetAccessDto) {
-    return this.accessesRepository.findOneAndDelete({ ...accessDto });
+    const access = await this.findOne({ ...accessDto });
+    await this.accessesRepository.findOneAndDelete({ ...accessDto });
+    return access;
   }
 
   async readAccesses(query: any) {
@@ -56,7 +58,7 @@ export class AccessesService {
   }
 
   async getEndpointsByAccessId(access_id: number) {
-    const access = await this.accessesRepository.findOne(
+    const access = await this.accessesRepository.findOneNoCheck(
       { id: access_id },
       {
         endpoints: true,
