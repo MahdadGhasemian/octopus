@@ -162,6 +162,7 @@ type Query {
 
 input UpdateAccessDto {
   color: String
+  endpoints: [CreateEndpointAccessDto!]
   has_full_access: String
   image: String
   title: String

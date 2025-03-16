@@ -38,5 +38,5 @@ export class CreateAccessDto {
   @IsObject({ each: true })
   @IsNotEmpty({ each: true })
   @Field(() => [CreateEndpointAccessDto])
-  endpoints: CreateEndpointAccessDto[];
+  endpoints?: CreateEndpointAccessDto[];
 }

@@ -70,7 +70,6 @@ export class AccessesResolver {
 
   @ResolveField(() => [GetEndpointDto], { name: 'endpoints', nullable: true })
   async endpoints(@Parent() access: GetAccessDto) {
-    console.log(' Endpoints -------------------------- ');
     return this.accessesService.getEndpointsByAccessId(access.id);
   }
 }

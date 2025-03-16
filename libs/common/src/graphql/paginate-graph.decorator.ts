@@ -1,6 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { PaginateQueryGraph } from './paginate-query-graph';
+import { FieldNode } from 'graphql';
 
 // input: 'name:DESC'
 // input: [ 'name:DESC' , 'id:ASC' ]
@@ -53,18 +54,67 @@ const parseFilter = (
   return result;
 };
 
-const captureDataProperty = (query: string | null): string[] => {
-  // Capture everything inside 'data { }'
-  const dataMatch = query?.match(/data\s?{([^}]+)}/);
-  // If 'data' is found, process its fields
-  const fields = dataMatch
-    ? dataMatch[1]
-        .split('\n') // Split by lines
-        .map((item) => item.trim()) // Trim spaces
-        .filter(Boolean) // Remove empty lines
-    : [];
+// [
+//   'field1': true,
+//   'field2': true,
+//   'field3': {
+//     'field3_1': true,
+//     'field3_2': true
+//   }
+// ]
+const getSelectedFieldsObject = (
+  fieldNode: FieldNode,
+): Record<string, any> | true => {
+  if (!fieldNode.selectionSet) return true;
 
-  return fields;
+  return fieldNode.selectionSet.selections.reduce(
+    (acc, selection) => {
+      if (selection.kind === 'Field') {
+        acc[selection.name.value] = getSelectedFieldsObject(selection);
+      }
+      return acc;
+    },
+    {} as Record<string, any>,
+  );
+};
+
+// [
+//   'field1',
+//   'field2',
+//   'field3.field3_1',
+//   'field3.field3_2'
+// ]
+const getSelectedFieldsFlat = (fieldNode: FieldNode, prefix = ''): string[] => {
+  if (!fieldNode.selectionSet) return [prefix];
+
+  return fieldNode.selectionSet.selections.flatMap((selection) => {
+    if (selection.kind === 'Field') {
+      const fieldName = prefix
+        ? `${prefix}.${selection.name.value}`
+        : selection.name.value;
+      return getSelectedFieldsFlat(selection, fieldName);
+    }
+    return [];
+  });
+};
+
+const getSelectedDataFields = (
+  gqlInfo: any,
+  format: 'object' | 'flat' = 'object',
+) => {
+  const pathKey = gqlInfo.path.key;
+  const accessesField = gqlInfo.fieldNodes.find(
+    (node) => node.name.value === pathKey,
+  );
+  const dataField = accessesField?.selectionSet?.selections.find(
+    (selection: any) => selection.name.value === 'data',
+  ) as FieldNode;
+
+  if (!dataField) return format === 'flat' ? [] : {};
+
+  return format === 'flat'
+    ? getSelectedFieldsFlat(dataField)
+    : getSelectedFieldsObject(dataField);
 };
 
 export const PaginateGraph = createParamDecorator(
@@ -79,8 +129,9 @@ export const PaginateGraph = createParamDecorator(
     // Extract HTTP request from the GraphQL context
     const req = gqlContext.getContext().req; // Express request object
 
-    // Extract Select Fields
-    const select = captureDataProperty(req.body?.query);
+    // const selectObject = getSelectedDataFields(gqlInfo, 'object');
+    // const selectFlat = getSelectedDataFields(gqlInfo, 'flat');
+    // const select = selectObject;
 
     // Extract hostname (including protocol and port if needed)
     const protocol = req.protocol; // 'http' or 'https'
@@ -95,7 +146,7 @@ export const PaginateGraph = createParamDecorator(
       args.relations && {
         relations: args.relations,
       },
-      select && { select },
+      // select && { select },
     );
 
     return {
