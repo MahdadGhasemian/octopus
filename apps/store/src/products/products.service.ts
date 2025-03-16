@@ -5,10 +5,7 @@ import { GetProductDto } from './dto/get-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Category, Product } from '../libs';
 import { paginate, PaginateQuery } from 'nestjs-paginate';
-import {
-  PRODUCT_PAGINATION_CONFIG,
-  PRODUCT_PAGINATION_CONFIG_WITH_RELATIONS,
-} from './pagination-config';
+import { PRODUCT_PAGINATION_CONFIG } from './pagination-config';
 import { getPaginationConfig } from '@app/common';
 
 @Injectable()
@@ -31,14 +28,6 @@ export class ProductsService {
       query,
       this.productsRepository.entityRepository,
       getPaginationConfig(PRODUCT_PAGINATION_CONFIG, { config }),
-    );
-  }
-
-  async findAllWithRelations(query?: PaginateQuery) {
-    return paginate(
-      query,
-      this.productsRepository.entityRepository,
-      PRODUCT_PAGINATION_CONFIG_WITH_RELATIONS,
     );
   }
 

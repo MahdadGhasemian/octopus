@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import {
   IsBoolean,
   IsNumber,
@@ -26,7 +26,7 @@ export class CreateProductDto {
 
   @IsNumber()
   @IsOptional()
-  @Field()
+  @Field(() => Int)
   category_id?: number;
 
   @IsNumber()

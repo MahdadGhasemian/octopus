@@ -14,7 +14,7 @@ input CreatePaymentDto {
 }
 
 input CreateProductDto {
-  category_id: Float!
+  category_id: Int!
   description: String!
   image: String!
   is_active: Boolean!
