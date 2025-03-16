@@ -6,7 +6,6 @@ export const USER_PAGINATION_CONFIG: PaginateConfig<User> = {
   nullSort: 'last',
   defaultSortBy: [['id', 'DESC']],
   searchableColumns: ['email', 'full_name'],
-  relations: ['accesses'],
   filterableColumns: {
     email: true,
     'accesses.title': true,

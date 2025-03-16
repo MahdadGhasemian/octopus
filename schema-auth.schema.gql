@@ -86,10 +86,11 @@ type GetOtpResponseDto {
 }
 
 type GetUserDto {
+  accesses: [GetAccessDto!]!
   created_at: DateTime!
   email: String!
   full_name: String!
-  id: Float!
+  id: Int!
   updated_at: DateTime!
 }
 
@@ -148,7 +149,7 @@ type Mutation {
   otp(getOtpDto: GetOtpDto!): GetOtpResponseDto!
   updateAccess(id: String!, updateAccessDto: UpdateAccessDto!): GetAccessDto!
   updateUser(id: String!, updateUserDto: UpdateUserDto!): GetUserDto!
-  userAccess(id: String!, updateUserAccessDto: UpdateUserAccessDto!): GetUserDto!
+  updateUserAccess(id: String!, updateUserAccessDto: UpdateUserAccessDto!): GetUserDto!
 }
 
 type Query {

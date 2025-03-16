@@ -3,7 +3,6 @@ import {
   IsArray,
   IsEmail,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -13,12 +12,6 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class GetUserDto extends AbstractGetDto {
-  @IsNumber()
-  @IsOptional()
-  @Expose()
-  @Field()
-  id?: number;
-
   @IsEmail()
   @IsOptional()
   @Expose()
@@ -35,5 +28,6 @@ export class GetUserDto extends AbstractGetDto {
   @IsNotEmpty({ each: true })
   @Type(() => GetAccessDto)
   @Expose()
+  @Field(() => [GetAccessDto])
   accesses?: GetAccessDto[];
 }

@@ -69,9 +69,7 @@ export class UsersService {
   }
 
   async findOne(getUserDto: GetUserDto) {
-    return this.usersRepository.findOne(getUserDto, {
-      accesses: true,
-    });
+    return this.usersRepository.findOne(getUserDto);
   }
 
   async findOneNoCheck(settingDto: Omit<GetUserDto, 'accesses'>) {
@@ -80,9 +78,9 @@ export class UsersService {
     });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(userDto: GetUserDto, updateUserDto: UpdateUserDto) {
     const user = await this.usersRepository.findOneAndUpdate(
-      { id },
+      { ...userDto },
       { ...updateUserDto },
     );
     delete user.hashed_password;
@@ -93,25 +91,31 @@ export class UsersService {
     return user;
   }
 
-  async updatePassword(id: number, password: string) {
+  async updatePassword(userDto: GetUserDto, password: string) {
     const hashed_password = await AuthCommon.createHash(password);
 
     await this.usersRepository.findOneAndUpdate(
-      { id },
+      { ...userDto },
       {
         hashed_password,
       },
     );
 
-    return this.findOne({ id });
+    return this.findOne({ ...userDto });
   }
 
-  async updateUserAccess(id: number, updateUserAccessDto: UpdateUserAccessDto) {
+  async updateUserAccess(
+    userDto: GetUserDto,
+    updateUserAccessDto: UpdateUserAccessDto,
+  ) {
     const accesses = await this.accessesService.readAccesses({
       id: In(updateUserAccessDto.access_ids),
     });
 
-    const user = await this.usersRepository.findOne({ id }, { accesses: true });
+    const user = await this.usersRepository.findOne(
+      { ...userDto },
+      { accesses: true },
+    );
 
     user.accesses = accesses;
 
@@ -120,8 +124,10 @@ export class UsersService {
     return user;
   }
 
-  async remove(id: number) {
-    return this.usersRepository.findOneAndDelete({ id });
+  async remove(userDto: GetUserDto) {
+    const user = await this.findOne({ ...userDto });
+    await this.usersRepository.findOneAndDelete({ ...userDto });
+    return user;
   }
 
   async getUser(getUserDto: GetUserDto) {
@@ -134,5 +140,16 @@ export class UsersService {
     delete user.hashed_password;
 
     return user;
+  }
+
+  async getAccessesByAccessId(user_id: number) {
+    const access = await this.usersRepository.findOneNoCheck(
+      { id: user_id },
+      {
+        accesses: true,
+      },
+    );
+
+    return access?.accesses || [];
   }
 }
