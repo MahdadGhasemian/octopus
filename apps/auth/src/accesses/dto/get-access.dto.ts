@@ -3,7 +3,6 @@ import {
   IsBoolean,
   IsHexColor,
   IsNotEmpty,
-  IsNumber,
   IsObject,
   IsOptional,
   IsString,
@@ -16,12 +15,6 @@ import { GetEndpointDto } from './get-endpoint.dto';
 
 @ObjectType()
 export class GetAccessDto extends AbstractGetDto {
-  @IsNumber()
-  @IsOptional()
-  @Expose()
-  @Field()
-  id?: number;
-
   @IsString()
   @IsNotEmpty()
   @Expose()

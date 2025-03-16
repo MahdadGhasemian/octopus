@@ -65,6 +65,6 @@ export class AccessesService {
       },
     );
 
-    return access.endpoints || [];
+    return access?.endpoints || [];
   }
 }

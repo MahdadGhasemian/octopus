@@ -20,14 +20,14 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { Access, Endpoint } from '../libs';
+import { GetEndpointDto } from './dto/get-endpoint.dto';
 
-@Resolver(() => Access)
+@Resolver(() => GetAccessDto)
 @NoCache()
 export class AccessesResolver {
   constructor(private readonly accessesService: AccessesService) {}
 
-  @Mutation(() => Access, { name: 'createAccess' })
+  @Mutation(() => GetAccessDto, { name: 'createAccess' })
   @UseGuards(JwtAuthGuard, JwtAccessGuard)
   @Serialize(GetAccessDto)
   async create(@Args('createAccessDto') createAccessDto: CreateAccessDto) {
@@ -44,14 +44,14 @@ export class AccessesResolver {
     return this.accessesService.findAll(query, config);
   }
 
-  @Query(() => Access, { name: 'access' })
+  @Query(() => GetAccessDto, { name: 'access' })
   @UseGuards(JwtAuthGuard, JwtAccessGuard)
   @Serialize(GetAccessDto)
   async findOne(@Args('id') id: string) {
     return this.accessesService.findOne({ id: +id });
   }
 
-  @Mutation(() => Access, { name: 'updateAccess' })
+  @Mutation(() => GetAccessDto, { name: 'updateAccess' })
   @UseGuards(JwtAuthGuard, JwtAccessGuard)
   @Serialize(GetAccessDto)
   async update(
@@ -61,15 +61,16 @@ export class AccessesResolver {
     return this.accessesService.update({ id: +id }, updateAccessDto);
   }
 
-  @Mutation(() => Access, { name: 'deleteAccess' })
+  @Mutation(() => GetAccessDto, { name: 'deleteAccess' })
   @UseGuards(JwtAuthGuard, JwtAccessGuard)
   @Serialize(GetAccessDto)
   async remove(@Args('id') id: string) {
     return this.accessesService.remove({ id: +id });
   }
 
-  @ResolveField(() => [Endpoint], { name: 'endpoints', nullable: true })
-  async endpoints(@Parent() access: Access) {
+  @ResolveField(() => [GetEndpointDto], { name: 'endpoints', nullable: true })
+  async endpoints(@Parent() access: GetAccessDto) {
+    console.log(' Endpoints -------------------------- ');
     return this.accessesService.getEndpointsByAccessId(access.id);
   }
 }

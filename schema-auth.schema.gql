@@ -2,18 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Access {
-  cannot_be_deleted: Boolean!
-  color: String!
-  created_at: DateTime!
-  endpoints: [Endpoint!]!
-  has_full_access: Boolean!
-  id: Int!
-  image: String!
-  title: String!
-  updated_at: DateTime!
-}
-
 input ChangePasswordDto {
   confirmation_code: Float!
   hashed_code: String!
@@ -58,22 +46,13 @@ input EditInfoDto {
   full_name: String!
 }
 
-type Endpoint {
-  created_at: DateTime!
-  id: Int!
-  method: String!
-  path: String!
-  tag: String!
-  updated_at: DateTime!
-}
-
 type GetAccessDto {
   cannot_be_deleted: Boolean!
   color: String!
   created_at: DateTime!
   endpoints: [GetEndpointDto!]!
   has_full_access: Boolean!
-  id: Float!
+  id: Int!
   image: String!
   title: String!
   updated_at: DateTime!
@@ -81,7 +60,7 @@ type GetAccessDto {
 
 type GetEndpointDto {
   created_at: DateTime!
-  id: Float!
+  id: Int!
   method: String!
   path: String!
   tag: String!
@@ -159,34 +138,33 @@ type MetaType {
 type Mutation {
   changePassowrd(changePasswordDto: ChangePasswordDto!): GetUserDto!
   confirm(confirmOtpDto: ConfirmOtpDto!): GetUserDto!
-  createAccess(createAccessDto: CreateAccessDto!): Access!
-  createUser(createUserDto: CreateUserDto!): User!
-  deleteAccess(id: String!): Access!
-  deleteUser(id: String!): User!
+  createAccess(createAccessDto: CreateAccessDto!): GetAccessDto!
+  createUser(createUserDto: CreateUserDto!): GetUserDto!
+  deleteAccess(id: String!): GetAccessDto!
+  deleteUser(id: String!): GetUserDto!
   info(editInfoDto: EditInfoDto!): GetUserDto!
   login(loginDto: LoginDto!): GetUserDto!
   logout: GetUserDto
   otp(getOtpDto: GetOtpDto!): GetOtpResponseDto!
-  updateAccess(id: String!, updateAccessDto: UpdateAccessDto!): Access!
-  updateUser(id: String!, updateUserDto: UpdateUserDto!): User!
-  userAccess(id: String!, updateUserAccessDto: UpdateUserAccessDto!): User!
+  updateAccess(id: String!, updateAccessDto: UpdateAccessDto!): GetAccessDto!
+  updateUser(id: String!, updateUserDto: UpdateUserDto!): GetUserDto!
+  userAccess(id: String!, updateUserAccessDto: UpdateUserAccessDto!): GetUserDto!
 }
 
 type Query {
-  access(id: String!): Access!
+  access(id: String!): GetAccessDto!
   accesses(filter: [String!], limit: Int = 10, page: Int = 1, relations: [String!], search: String, searchBy: [String!], sortBy: [String!]): ListAccessDto!
   healthAuth: GetHealthDto!
   info: GetUserDto!
-  user(id: String!): User!
+  user(id: String!): GetUserDto!
   users(filter: [String!], limit: Int = 10, page: Int = 1, relations: [String!], search: String, searchBy: [String!], sortBy: [String!]): ListUserDto!
 }
 
 input UpdateAccessDto {
-  color: String!
-  endpoints: [CreateEndpointAccessDto!]!
-  has_full_access: Boolean!
-  image: String!
-  title: String!
+  color: String
+  has_full_access: String
+  image: String
+  title: String
 }
 
 input UpdateUserAccessDto {
@@ -197,13 +175,4 @@ input UpdateUserDto {
   access_ids: [Int!]
   email: String
   full_name: String
-}
-
-type User {
-  accesses: [Access!]!
-  created_at: DateTime!
-  email: String!
-  full_name: String!
-  id: Int!
-  updated_at: DateTime!
 }

@@ -1,5 +1,4 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { User } from '../libs';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -13,13 +12,14 @@ import {
 } from '@app/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserAccessDto } from './dto/update-user-access.dto';
+import { GetUserDto } from './dto/get-user.dto';
 
-@Resolver(() => User)
+@Resolver(() => GetUserDto)
 @UseGuards(JwtAuthGuard)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
-  @Mutation(() => User, { name: 'createUser' })
+  @Mutation(() => GetUserDto, { name: 'createUser' })
   @UseGuards(JwtAccessGuard)
   async create(@Args('createUserDto') createUserDto: CreateUserDto) {
     return this.usersService.propareNewUser(createUserDto);
@@ -34,13 +34,13 @@ export class UsersResolver {
     return this.usersService.findAll(query, config);
   }
 
-  @Query(() => User, { name: 'user' })
+  @Query(() => GetUserDto, { name: 'user' })
   @UseGuards(JwtAccessGuard)
   async findOne(@Args('id') id: string) {
     return this.usersService.findOne({ id: +id });
   }
 
-  @Mutation(() => User, { name: 'updateUser' })
+  @Mutation(() => GetUserDto, { name: 'updateUser' })
   @UseGuards(JwtAccessGuard)
   async update(
     @Args('id') id: string,
@@ -49,13 +49,13 @@ export class UsersResolver {
     return this.usersService.update(+id, updateUserDto);
   }
 
-  @Mutation(() => User, { name: 'deleteUser' })
+  @Mutation(() => GetUserDto, { name: 'deleteUser' })
   @UseGuards(JwtAccessGuard)
   async remove(@Args('id') id: string) {
     return this.usersService.remove(+id);
   }
 
-  @Mutation(() => User, { name: 'userAccess' })
+  @Mutation(() => GetUserDto, { name: 'userAccess' })
   @UseGuards(JwtAccessGuard)
   @FoceToClearCache('/users')
   async updateUserAccess(
