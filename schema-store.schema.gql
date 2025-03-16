@@ -2,26 +2,72 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type GetHealthDto {
-  status: String!
-  rabbitmq: String!
-  rabbitResponseTime: String!
-  database: String!
-  dbResponseTime: String!
-  redis: String!
-  redisResponseTime: String!
+type Category {
+  created_at: DateTime!
+  description: String
+  id: Int!
+  image: String
+  name: String!
+  updated_at: DateTime!
 }
 
-type MetaType {
-  itemsPerPage: Int!
-  totalItems: Int!
-  currentPage: Int!
-  totalPages: Int!
-  sortBy: JSONObject
-  searchBy: [String!]
-  search: String
-  select: [String!]
-  filter: JSONObject
+input CreateCategoryDto {
+  description: String!
+  image: String!
+  name: String!
+}
+
+input CreatePaymentDto {
+  description: String!
+  order_id: Int!
+}
+
+input CreateProductDto {
+  category_id: Float!
+  description: String!
+  image: String!
+  is_active: Boolean!
+  name: String!
+  price: Float!
+  sale_price: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type GetCategoryDto {
+  created_at: DateTime!
+  description: String!
+  id: Float!
+  image: String!
+  name: String!
+  updated_at: DateTime!
+}
+
+type GetHealthDto {
+  database: String!
+  dbResponseTime: String!
+  rabbitResponseTime: String!
+  rabbitmq: String!
+  redis: String!
+  redisResponseTime: String!
+  status: String!
+}
+
+type GetProductDto {
+  category: GetCategoryDto
+  category_id: Float!
+  created_at: DateTime!
+  description: String!
+  id: Float!
+  image: String!
+  is_active: Boolean!
+  name: String!
+  price: Float!
+  sale_price: Float!
+  updated_at: DateTime!
 }
 
 """
@@ -30,142 +76,96 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 scalar JSONObject
 
 type LinksType {
-  first: String
-  previous: String
   current: String!
-  next: String
+  first: String
   last: String
-}
-
-type Category {
-  id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  name: String!
-  description: String
-  image: String
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type Product {
-  id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  name: String!
-  description: String!
-  image: String!
-  category_id: Float!
-  category: Category!
-  price: Float!
-  sale_price: Float!
-  is_active: Boolean!
-}
-
-type Payment {
-  id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  user_id: Float!
-  amount: Float!
-  paid_date: DateTime!
-  payment_status: PaymentStatus!
-  order_id: Float!
-  description: String!
-}
-
-enum PaymentStatus {
-  PENDING
-  FAILED
-  PAID
-}
-
-type GetCategoryDto {
-  created_at: DateTime!
-  updated_at: DateTime!
-  id: Float!
-  name: String!
-  description: String!
-  image: String!
+  next: String
+  previous: String
 }
 
 type ListCategoryDto {
-  meta: MetaType!
-  links: LinksType!
   data: [GetCategoryDto!]!
-}
-
-type GetProductDto {
-  created_at: DateTime!
-  updated_at: DateTime!
-  id: Float!
-  name: String!
-  description: String!
-  image: String!
-  category_id: Float!
-  category: GetCategoryDto
-  price: Float!
-  sale_price: Float!
-  is_active: Boolean!
+  links: LinksType!
+  meta: MetaType!
 }
 
 type ListProductDto {
-  meta: MetaType!
-  links: LinksType!
   data: [GetProductDto!]!
+  links: LinksType!
+  meta: MetaType!
 }
 
-type Query {
-  healthStore: GetHealthDto!
-  categories(page: Int = 1, limit: Int = 10, sortBy: [String!], searchBy: [String!], search: String, filter: [String!], relations: [String!]): ListCategoryDto!
-  category(id: String!): Category!
-  products(page: Int = 1, limit: Int = 10, sortBy: [String!], searchBy: [String!], search: String, filter: [String!], relations: [String!]): ListProductDto!
-  product(id: String!): Product!
+type MetaType {
+  currentPage: Int!
+  filter: JSONObject
+  itemsPerPage: Int!
+  search: String
+  searchBy: [String!]
+  select: [String!]
+  sortBy: JSONObject
+  totalItems: Int!
+  totalPages: Int!
 }
 
 type Mutation {
   createCategory(createCategoryDto: CreateCategoryDto!): Category!
-  updateCategory(id: String!, updateCategoryDto: UpdateCategoryDto!): Category!
-  deleteCategory(id: String!): Category!
-  createProduct(createProductDto: CreateProductDto!): Product!
-  updateProduct(id: String!, updateProductDto: UpdateProductDto!): Product!
-  deleteProduct(id: String!): Product!
   createPayment(createPaymentDto: CreatePaymentDto!): Payment!
+  createProduct(createProductDto: CreateProductDto!): Product!
+  deleteCategory(id: String!): Category!
+  deleteProduct(id: String!): Product!
+  updateCategory(id: String!, updateCategoryDto: UpdateCategoryDto!): Category!
+  updateProduct(id: String!, updateProductDto: UpdateProductDto!): Product!
 }
 
-input CreateCategoryDto {
-  name: String!
+type Payment {
+  amount: Float!
+  created_at: DateTime!
   description: String!
+  id: Int!
+  order_id: Float!
+  paid_date: DateTime!
+  payment_status: PaymentStatus!
+  updated_at: DateTime!
+  user_id: Float!
+}
+
+enum PaymentStatus {
+  FAILED
+  PAID
+  PENDING
+}
+
+type Product {
+  category: Category!
+  category_id: Float!
+  created_at: DateTime!
+  description: String!
+  id: Int!
   image: String!
+  is_active: Boolean!
+  name: String!
+  price: Float!
+  sale_price: Float!
+  updated_at: DateTime!
+}
+
+type Query {
+  categories(filter: [String!], limit: Int = 10, page: Int = 1, relations: [String!], search: String, searchBy: [String!], sortBy: [String!]): ListCategoryDto!
+  category(id: String!): Category!
+  healthStore: GetHealthDto!
+  product(id: String!): Product!
+  products(filter: [String!], limit: Int = 10, page: Int = 1, relations: [String!], search: String, searchBy: [String!], sortBy: [String!]): ListProductDto!
 }
 
 input UpdateCategoryDto {
-  name: String
   description: String
   image: String
-}
-
-input CreateProductDto {
-  name: String!
-  description: String!
-  image: String!
-  category_id: Float!
-  price: Float!
-  sale_price: Float!
-  is_active: Boolean!
+  name: String
 }
 
 input UpdateProductDto {
-  name: String
+  category_id: Int
   description: String
   image: String
-  category_id: Int
-}
-
-input CreatePaymentDto {
-  order_id: Int!
-  description: String!
+  name: String
 }

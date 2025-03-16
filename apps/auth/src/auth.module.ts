@@ -21,10 +21,7 @@ import { RedisClientOptions } from 'redis';
 import { redisStore } from 'cache-manager-redis-yet';
 import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
 import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
-import {
-  ApolloFederationDriver,
-  ApolloFederationDriverConfig,
-} from '@nestjs/apollo';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AuthResolver } from './auth.resolver';
 import { AuthController } from './auth.controller';
 
@@ -80,18 +77,15 @@ import { AuthController } from './auth.controller';
       }),
       inject: [ConfigService],
     }),
-    GraphQLModule.forRootAsync<ApolloFederationDriverConfig>({
-      driver: ApolloFederationDriver,
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
       useFactory: async (configService: ConfigService) => {
         return {
-          autoSchemaFile: {
-            federation: 2,
-            path: configService.get<string>(
-              'GRAPHQL_SCHEMA_FILE_AUTH',
-              'schema.gql',
-            ),
-            sortSchema: true,
-          },
+          autoSchemaFile: configService.get<string>(
+            'GRAPHQL_SCHEMA_FILE_AUTH',
+            'schema.gql',
+          ),
+          sortSchema: true,
           context: ({ req, res }) => ({ req, res }),
           cors: {
             origin: true,

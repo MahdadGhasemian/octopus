@@ -3,25 +3,13 @@
 # ------------------------------------------------------
 
 type GetHealthDto {
-  status: String!
-  rabbitmq: String!
-  rabbitResponseTime: String!
   database: String!
   dbResponseTime: String!
+  rabbitResponseTime: String!
+  rabbitmq: String!
   redis: String!
   redisResponseTime: String!
-}
-
-type MetaType {
-  itemsPerPage: Int!
-  totalItems: Int!
-  currentPage: Int!
-  totalPages: Int!
-  sortBy: JSONObject
-  searchBy: [String!]
-  search: String
-  select: [String!]
-  filter: JSONObject
+  status: String!
 }
 
 """
@@ -30,11 +18,23 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 scalar JSONObject
 
 type LinksType {
-  first: String
-  previous: String
   current: String!
-  next: String
+  first: String
   last: String
+  next: String
+  previous: String
+}
+
+type MetaType {
+  currentPage: Int!
+  filter: JSONObject
+  itemsPerPage: Int!
+  search: String
+  searchBy: [String!]
+  select: [String!]
+  sortBy: JSONObject
+  totalItems: Int!
+  totalPages: Int!
 }
 
 type Query {

@@ -2,26 +2,116 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type GetHealthDto {
-  status: String!
-  rabbitmq: String!
-  rabbitResponseTime: String!
-  database: String!
-  dbResponseTime: String!
-  redis: String!
-  redisResponseTime: String!
+type Access {
+  cannot_be_deleted: Boolean!
+  color: String!
+  created_at: DateTime!
+  endpoints: [Endpoint!]!
+  has_full_access: Boolean!
+  id: Int!
+  image: String!
+  title: String!
+  updated_at: DateTime!
 }
 
-type MetaType {
-  itemsPerPage: Int!
-  totalItems: Int!
-  currentPage: Int!
-  totalPages: Int!
-  sortBy: JSONObject
-  searchBy: [String!]
-  search: String
-  select: [String!]
-  filter: JSONObject
+input ChangePasswordDto {
+  confirmation_code: Float!
+  hashed_code: String!
+  password: String!
+}
+
+input ConfirmOtpDto {
+  confirmation_code: Float!
+  email: String!
+  full_name: String!
+  hashed_code: String!
+  password: String!
+}
+
+input CreateAccessDto {
+  color: String!
+  endpoints: [CreateEndpointAccessDto!]!
+  has_full_access: Boolean!
+  image: String!
+  title: String!
+}
+
+input CreateEndpointAccessDto {
+  method: String!
+  path: String!
+  tag: String!
+}
+
+input CreateUserDto {
+  access_ids: [Int!]!
+  email: String!
+  full_name: String!
+  password: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input EditInfoDto {
+  full_name: String!
+}
+
+type Endpoint {
+  created_at: DateTime!
+  id: Int!
+  method: String!
+  path: String!
+  tag: String!
+  updated_at: DateTime!
+}
+
+type GetAccessDto {
+  cannot_be_deleted: Boolean!
+  color: String!
+  created_at: DateTime!
+  endpoints: [GetEndpointDto!]!
+  has_full_access: Boolean!
+  id: Float!
+  image: String!
+  title: String!
+  updated_at: DateTime!
+}
+
+type GetEndpointDto {
+  created_at: DateTime!
+  id: Float!
+  method: String!
+  path: String!
+  tag: String!
+  updated_at: DateTime!
+}
+
+type GetHealthDto {
+  database: String!
+  dbResponseTime: String!
+  rabbitResponseTime: String!
+  rabbitmq: String!
+  redis: String!
+  redisResponseTime: String!
+  status: String!
+}
+
+input GetOtpDto {
+  email: String!
+}
+
+type GetOtpResponseDto {
+  hashed_code: String!
+}
+
+type GetUserDto {
+  created_at: DateTime!
+  email: String!
+  full_name: String!
+  id: Float!
+  updated_at: DateTime!
 }
 
 """
@@ -30,134 +120,23 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 scalar JSONObject
 
 type LinksType {
-  first: String
-  previous: String
   current: String!
-  next: String
+  first: String
   last: String
-}
-
-type Endpoint {
-  id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  tag: String!
-  path: String!
-  method: String!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type Access {
-  id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  title: String!
-  image: String!
-  color: String!
-  cannot_be_deleted: Boolean!
-  has_full_access: Boolean!
-  endpoints: [Endpoint!]!
-}
-
-type User {
-  id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  email: String!
-  full_name: String!
-  accesses: [Access!]!
-}
-
-type GetEndpointDto {
-  created_at: DateTime!
-  updated_at: DateTime!
-  id: Float!
-  tag: String!
-  path: String!
-  method: String!
-}
-
-type GetAccessDto {
-  created_at: DateTime!
-  updated_at: DateTime!
-  id: Float!
-  title: String!
-  image: String!
-  color: String!
-  cannot_be_deleted: Boolean!
-  has_full_access: Boolean!
-  endpoints: [GetEndpointDto!]!
+  next: String
+  previous: String
 }
 
 type ListAccessDto {
-  meta: MetaType!
-  links: LinksType!
   data: [GetAccessDto!]!
-}
-
-type GetUserDto {
-  created_at: DateTime!
-  updated_at: DateTime!
-  id: Float!
-  email: String!
-  full_name: String!
+  links: LinksType!
+  meta: MetaType!
 }
 
 type ListUserDto {
-  meta: MetaType!
-  links: LinksType!
   data: [GetUserDto!]!
-}
-
-type GetOtpResponseDto {
-  hashed_code: String!
-}
-
-type Query {
-  info: GetUserDto!
-  healthAuth: GetHealthDto!
-  users(page: Int = 1, limit: Int = 10, sortBy: [String!], searchBy: [String!], search: String, filter: [String!], relations: [String!]): ListUserDto!
-  user(id: String!): User!
-  accesses(page: Int = 1, limit: Int = 10, sortBy: [String!], searchBy: [String!], search: String, filter: [String!], relations: [String!]): ListAccessDto!
-  access(id: String!): Access!
-}
-
-type Mutation {
-  otp(getOtpDto: GetOtpDto!): GetOtpResponseDto!
-  confirm(confirmOtpDto: ConfirmOtpDto!): GetUserDto!
-  changePassowrd(changePasswordDto: ChangePasswordDto!): GetUserDto!
-  login(loginDto: LoginDto!): GetUserDto!
-  logout: GetUserDto
-  info(editInfoDto: EditInfoDto!): GetUserDto!
-  createUser(createUserDto: CreateUserDto!): User!
-  updateUser(id: String!, updateUserDto: UpdateUserDto!): User!
-  deleteUser(id: String!): User!
-  userAccess(id: String!, updateUserAccessDto: UpdateUserAccessDto!): User!
-  createAccess(createAccessDto: CreateAccessDto!): Access!
-  updateAccess(id: String!, updateAccessDto: UpdateAccessDto!): Access!
-  deleteAccess(id: String!): Access!
-}
-
-input GetOtpDto {
-  email: String!
-}
-
-input ConfirmOtpDto {
-  email: String!
-  full_name: String!
-  password: String!
-  confirmation_code: Float!
-  hashed_code: String!
-}
-
-input ChangePasswordDto {
-  password: String!
-  confirmation_code: Float!
-  hashed_code: String!
+  links: LinksType!
+  meta: MetaType!
 }
 
 input LoginDto {
@@ -165,45 +144,66 @@ input LoginDto {
   password: String!
 }
 
-input EditInfoDto {
-  full_name: String!
+type MetaType {
+  currentPage: Int!
+  filter: JSONObject
+  itemsPerPage: Int!
+  search: String
+  searchBy: [String!]
+  select: [String!]
+  sortBy: JSONObject
+  totalItems: Int!
+  totalPages: Int!
 }
 
-input CreateUserDto {
-  email: String!
-  full_name: String!
-  password: String!
-  access_ids: [Int!]!
+type Mutation {
+  changePassowrd(changePasswordDto: ChangePasswordDto!): GetUserDto!
+  confirm(confirmOtpDto: ConfirmOtpDto!): GetUserDto!
+  createAccess(createAccessDto: CreateAccessDto!): Access!
+  createUser(createUserDto: CreateUserDto!): User!
+  deleteAccess(id: String!): Access!
+  deleteUser(id: String!): User!
+  info(editInfoDto: EditInfoDto!): GetUserDto!
+  login(loginDto: LoginDto!): GetUserDto!
+  logout: GetUserDto
+  otp(getOtpDto: GetOtpDto!): GetOtpResponseDto!
+  updateAccess(id: String!, updateAccessDto: UpdateAccessDto!): Access!
+  updateUser(id: String!, updateUserDto: UpdateUserDto!): User!
+  userAccess(id: String!, updateUserAccessDto: UpdateUserAccessDto!): User!
 }
 
-input UpdateUserDto {
-  email: String
-  full_name: String
-  access_ids: [Int!]
+type Query {
+  access(id: String!): Access!
+  accesses(filter: [String!], limit: Int = 10, page: Int = 1, relations: [String!], search: String, searchBy: [String!], sortBy: [String!]): ListAccessDto!
+  healthAuth: GetHealthDto!
+  info: GetUserDto!
+  user(id: String!): User!
+  users(filter: [String!], limit: Int = 10, page: Int = 1, relations: [String!], search: String, searchBy: [String!], sortBy: [String!]): ListUserDto!
+}
+
+input UpdateAccessDto {
+  color: String!
+  endpoints: [CreateEndpointAccessDto!]!
+  has_full_access: Boolean!
+  image: String!
+  title: String!
 }
 
 input UpdateUserAccessDto {
   access_ids: [Int!]!
 }
 
-input CreateAccessDto {
-  title: String!
-  image: String!
-  color: String!
-  has_full_access: Boolean!
-  endpoints: [CreateEndpointAccessDto!]!
+input UpdateUserDto {
+  access_ids: [Int!]
+  email: String
+  full_name: String
 }
 
-input CreateEndpointAccessDto {
-  tag: String!
-  path: String!
-  method: String!
-}
-
-input UpdateAccessDto {
-  title: String!
-  image: String!
-  color: String!
-  has_full_access: Boolean!
-  endpoints: [CreateEndpointAccessDto!]!
+type User {
+  accesses: [Access!]!
+  created_at: DateTime!
+  email: String!
+  full_name: String!
+  id: Int!
+  updated_at: DateTime!
 }
