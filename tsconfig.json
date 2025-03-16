@@ -20,8 +20,6 @@
     "paths": {
       "@app/common": ["libs/common/src"],
       "@app/common/*": ["libs/common/src/*"],
-      "@app/gateway": ["libs/gateway/src"],
-      "@app/gateway/*": ["libs/gateway/src/*"],
       "@app/auth": ["libs/auth/src"],
       "@app/auth/*": ["libs/auth/src/*"],
       "@app/storage": ["libs/storage/src"],

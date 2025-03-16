@@ -1,23 +1,6 @@
 name: octopus
 
 services:
-  gateway:
-    build:
-      context: .
-      dockerfile: ./apps/gateway/Dockerfile.dev
-      target: development
-    command: sh -c "sleep 10 && npm run start:dev gateway"
-    env_file:
-      - ./apps/gateway/.env
-    ports:
-      - '3003:3003'
-    volumes:
-      - .:/usr/src/app
-    depends_on:
-      - auth
-      - store
-      - storage
-
   auth:
     build:
       context: .
