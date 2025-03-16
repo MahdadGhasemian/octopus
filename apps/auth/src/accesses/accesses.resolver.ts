@@ -12,15 +12,22 @@ import { GetAccessDto } from './dto/get-access.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { JwtAccessGuard } from '../guards/jwt-access.guard';
 import { ListAccessDto } from './dto/list-access.dto';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Access } from '../libs';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { Access, Endpoint } from '../libs';
 
 @Resolver(() => Access)
 @NoCache()
 export class AccessesResolver {
   constructor(private readonly accessesService: AccessesService) {}
 
-  @Mutation(() => GetAccessDto, { name: 'createAccess' })
+  @Mutation(() => Access, { name: 'createAccess' })
   @UseGuards(JwtAuthGuard, JwtAccessGuard)
   @Serialize(GetAccessDto)
   async create(@Args('createAccessDto') createAccessDto: CreateAccessDto) {
@@ -37,14 +44,14 @@ export class AccessesResolver {
     return this.accessesService.findAll(query, config);
   }
 
-  @Query(() => GetAccessDto, { name: 'access' })
+  @Query(() => Access, { name: 'access' })
   @UseGuards(JwtAuthGuard, JwtAccessGuard)
   @Serialize(GetAccessDto)
   async findOne(@Args('id') id: string) {
     return this.accessesService.findOne({ id: +id });
   }
 
-  @Mutation(() => GetAccessDto, { name: 'updateAccess' })
+  @Mutation(() => Access, { name: 'updateAccess' })
   @UseGuards(JwtAuthGuard, JwtAccessGuard)
   @Serialize(GetAccessDto)
   async update(
@@ -54,10 +61,15 @@ export class AccessesResolver {
     return this.accessesService.update({ id: +id }, updateAccessDto);
   }
 
-  @Mutation(() => GetAccessDto, { name: 'deleteAccess' })
+  @Mutation(() => Access, { name: 'deleteAccess' })
   @UseGuards(JwtAuthGuard, JwtAccessGuard)
   @Serialize(GetAccessDto)
   async remove(@Args('id') id: string) {
     return this.accessesService.remove({ id: +id });
+  }
+
+  @ResolveField(() => [Endpoint], { name: 'endpoints', nullable: true })
+  async endpoints(@Parent() access: Access) {
+    return this.accessesService.getEndpointsByAccessId(access.id);
   }
 }

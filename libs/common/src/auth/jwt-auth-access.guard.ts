@@ -30,8 +30,6 @@ export class JwtAuthAccessGuard implements CanActivate {
     const type = context.getType<string>();
     let gqlContext;
 
-    console.log(' here 3 -------------------------------------');
-
     let jwtToken: string | undefined;
     let path: string;
     let method: string;

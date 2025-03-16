@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
   CreateDateColumn,
   PrimaryGeneratedColumn,
@@ -8,7 +8,7 @@ import {
 @ObjectType()
 export class AbstractEntity<T> {
   @PrimaryGeneratedColumn()
-  @Field(() => ID)
+  @Field(() => Int)
   id?: number;
 
   @CreateDateColumn({ type: 'timestamptz' })

@@ -40,7 +40,7 @@ export class ProductsResolver {
   }
 
   @Query(() => Product, { name: 'product' })
-  find(@Args('id') id: string) {
+  async find(@Args('id') id: string) {
     return this.productsService.findOne({ id: +id });
   }
 

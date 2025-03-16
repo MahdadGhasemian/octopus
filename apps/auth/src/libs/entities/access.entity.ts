@@ -28,5 +28,6 @@ export class Access extends AbstractEntity<Access> {
 
   @ManyToMany(() => Endpoint, { cascade: true })
   @JoinTable()
+  @Field(() => [Endpoint])
   endpoints: Endpoint[];
 }

@@ -32,12 +32,7 @@ export class AccessesService {
   }
 
   async findOne(accessDto: GetAccessDto) {
-    return this.accessesRepository.findOne(
-      { ...accessDto },
-      {
-        endpoints: true,
-      },
-    );
+    return this.accessesRepository.findOne({ ...accessDto });
   }
 
   async update(accessDto: GetAccessDto, updateAccessDto: UpdateAccessDto) {
@@ -58,5 +53,16 @@ export class AccessesService {
 
   async readAccesses(query: any) {
     return this.accessesRepository.findBy(query);
+  }
+
+  async getEndpointsByAccessId(access_id: number) {
+    const access = await this.accessesRepository.findOne(
+      { id: access_id },
+      {
+        endpoints: true,
+      },
+    );
+
+    return access.endpoints || [];
   }
 }

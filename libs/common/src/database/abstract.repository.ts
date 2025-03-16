@@ -73,4 +73,8 @@ export abstract class AbstractRepository<T extends AbstractEntity<T>> {
   async findOneAndDelete(where: FindOptionsWhere<T>) {
     await this.entityRepository.delete(where);
   }
+
+  async runInTransaction<R>(run: () => Promise<R>): Promise<R> {
+    return this.entityManager.transaction(run);
+  }
 }

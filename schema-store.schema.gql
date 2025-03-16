@@ -38,7 +38,7 @@ type LinksType {
 }
 
 type Category {
-  id: ID!
+  id: Int!
   created_at: DateTime!
   updated_at: DateTime!
   name: String!
@@ -52,7 +52,7 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Product {
-  id: ID!
+  id: Int!
   created_at: DateTime!
   updated_at: DateTime!
   name: String!
@@ -66,7 +66,7 @@ type Product {
 }
 
 type Payment {
-  id: ID!
+  id: Int!
   created_at: DateTime!
   updated_at: DateTime!
   user_id: Float!
