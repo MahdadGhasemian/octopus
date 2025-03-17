@@ -20,7 +20,7 @@ input CreateOrderItemDto {
 }
 
 input CreatePaymentDto {
-  description: String!
+  description: String
   order_id: Int!
 }
 
@@ -83,9 +83,10 @@ type GetOrderItemDto {
 type GetPaymentDto {
   amount: Float!
   created_at: DateTime!
+  description: String
   id: Float!
-  note: String!
   order: GetOrderDto!
+  order_id: Float!
   paid_date: DateTime!
   payment_status: PaymentStatus!
   updated_at: DateTime!

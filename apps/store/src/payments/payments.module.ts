@@ -9,7 +9,12 @@ import { PaymetnsResolver } from './payments.resolver';
 
 @Module({
   imports: [ConfigModule, TypeOrmModule.forFeature([Payment]), OrdersModule],
-  providers: [PaymentsService, PaymentsRepository, PaymetnsResolver],
+  providers: [
+    PaymetnsResolver,
+    PaymentsService,
+    PaymentsRepository,
+    PaymetnsResolver,
+  ],
   exports: [PaymentsService],
 })
 export class PaymentsModule {}

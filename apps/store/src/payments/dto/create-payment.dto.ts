@@ -9,6 +9,6 @@ export class CreatePaymentDto {
 
   @IsString()
   @IsOptional()
-  @Field()
+  @Field(() => String, { nullable: true })
   description?: string;
 }

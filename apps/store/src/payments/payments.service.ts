@@ -48,9 +48,9 @@ export class PaymentsService {
   async findOne(paymentDto: GetPaymentDto, user: User) {
     return this.paymentsRepository.findOne(
       { ...paymentDto, user_id: user.id },
-      {
-        order: true,
-      },
+      // {
+      //   order: true,
+      // },
     );
   }
 
@@ -76,6 +76,17 @@ export class PaymentsService {
       ...paymentDto,
       user_id: user.id,
     });
+  }
+
+  async getOrderByOrderId(order_id: number) {
+    const payment = await this.paymentsRepository.findOneNoCheck(
+      { order_id },
+      {
+        order: true,
+      },
+    );
+
+    return payment?.order;
   }
 
   private async checkPaymentIsValidToEdit(

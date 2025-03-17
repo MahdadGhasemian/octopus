@@ -34,6 +34,11 @@ export class GetPaymentDto extends AbstractGetDto {
   @Field(() => PaymentStatus)
   payment_status?: PaymentStatus;
 
+  @IsNumber()
+  @Expose()
+  @Field()
+  order_id?: number;
+
   @IsObject()
   @Type(() => GetOrderDto)
   @Expose()
@@ -43,6 +48,6 @@ export class GetPaymentDto extends AbstractGetDto {
   @IsString()
   @IsOptional()
   @Expose()
-  @Field()
-  note?: string;
+  @Field(() => String, { nullable: true })
+  description?: string;
 }

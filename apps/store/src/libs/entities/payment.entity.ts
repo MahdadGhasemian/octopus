@@ -33,6 +33,6 @@ export class Payment extends AbstractEntity<Payment> {
   @JoinColumn({ name: 'order_id' })
   order: Order;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   description?: string;
 }
