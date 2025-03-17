@@ -147,7 +147,10 @@ export class AuthService {
     }
 
     // update password
-    await this.usersService.updatePassword(user.id, changePasswordDto.password);
+    await this.usersService.updatePassword(
+      { id: user.id },
+      changePasswordDto.password,
+    );
 
     // Mark OTP as used by deleting it from Redis
     await this.cacheManager.del(`${cache_prefix}:${user.email}`);
@@ -196,7 +199,10 @@ export class AuthService {
   }
 
   async editInfo(editInfoDto: EditInfoDto, user: User) {
-    const updatedUser = await this.usersService.update(user.id, editInfoDto);
+    const updatedUser = await this.usersService.update(
+      { id: user.id },
+      editInfoDto,
+    );
 
     return updatedUser;
   }
