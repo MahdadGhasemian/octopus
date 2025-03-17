@@ -12,6 +12,20 @@ type GetHealthDto {
   status: String!
 }
 
+type GraphqlUploadPrivateFileResponseDto {
+  bucket_name: String
+  object_name: String
+  size: Int
+  url: String
+}
+
+type GraphqlUploadPublicFileResponseDto {
+  bucket_name: String
+  object_name: String
+  size: Int
+  url: String
+}
+
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -37,6 +51,14 @@ type MetaType {
   totalPages: Int!
 }
 
+type Mutation {
+  uploadPrivateFile(description: String, file: Upload!): GraphqlUploadPrivateFileResponseDto!
+  uploadPublicFile(file: Upload!): GraphqlUploadPublicFileResponseDto!
+}
+
 type Query {
   healthStorage: GetHealthDto!
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload

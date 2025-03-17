@@ -8,6 +8,7 @@ import {
   getBucketNamePublic,
   getObjectName,
 } from '../file/files.utils';
+import { FileUpload } from 'graphql-upload-minimal';
 
 @Injectable()
 export class PublicFilesService {
@@ -18,34 +19,27 @@ export class PublicFilesService {
     private readonly minioService: MinioService,
   ) {}
 
-  async uploadFile(file: Express.Multer.File) {
+  async uploadFile(file: FileUpload) {
     if (!file) {
       throw new Error('No file uploaded');
     }
 
+    // This file is now a Promise, so wait for it to resolve
+    const { createReadStream, filename, mimetype } = await file;
+
+    // Get the file buffer using the stream
+    const fileBuffer = await this.streamToBuffer(createReadStream());
+
     const bucket_name = getBucketNamePublic(file.mimetype);
-    const object_name = getObjectName(file.originalname);
+    const object_name = getObjectName(filename);
 
-    // Upload file to MinIO
-    await this.minioService.client.putObject(
+    return this.uploadObject(
       bucket_name,
       object_name,
-      file.buffer,
-      file.size,
-      {
-        'Content-Type': file.mimetype,
-      },
+      fileBuffer,
+      fileBuffer.length,
+      mimetype,
     );
-
-    // Generate file URL
-    const url = `${this.configService.get('BASE_PUBLIC_URL_DOWNLOAD')}${bucket_name}/${object_name}`;
-
-    return {
-      bucket_name,
-      object_name,
-      size: file.size,
-      url,
-    };
   }
 
   async downloadFile(
@@ -65,5 +59,44 @@ export class PublicFilesService {
       width,
       quality,
     );
+  }
+
+  private async uploadObject(
+    bucket_name: string,
+    object_name: string,
+    fileBuffer: Buffer,
+    fileSize: number,
+    mimetype: string,
+  ) {
+    // Upload file to MinIO
+    await this.minioService.client.putObject(
+      bucket_name,
+      object_name,
+      fileBuffer,
+      fileSize,
+      {
+        'Content-Type': mimetype,
+      },
+    );
+
+    // Generate file URL
+    const url = `${this.configService.get('BASE_PUBLIC_URL_DOWNLOAD')}${bucket_name}/${object_name}`;
+
+    return {
+      bucket_name,
+      object_name,
+      size: fileSize,
+      url,
+    };
+  }
+
+  // Helper function to convert the stream to a buffer
+  private async streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
+    return new Promise((resolve, reject) => {
+      const chunks: Buffer[] = [];
+      stream.on('data', (chunk) => chunks.push(chunk));
+      stream.on('end', () => resolve(Buffer.concat(chunks)));
+      stream.on('error', reject);
+    });
   }
 }

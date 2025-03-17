@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GraphQL File Upload</title>
+  </head>
+  <body>
+    <h2>GraphQL File Public Upload Test</h2>
+    <input type="file" id="filePublicInput" />
+    <button onclick="uploadPublicFile()">Upload Public</button>
+    <pre id="result-public"></pre>
+
+    <br />
+
+    <h2>GraphQL File Private Upload Test</h2>
+    <input type="file" id="filePrivateInput" />
+    <input type="text" placeholder="Token" id="authentication"></input>
+    <button onclick="uploadPrivateFile()">Upload Private</button>
+    <pre id="result-private"></pre>
+
+    <script>
+      async function uploadPublicFile() {
+        const fileInput = document.getElementById('filePublicInput');
+
+        const file = fileInput.files[0];
+        const formData = new FormData();
+
+        const operations = JSON.stringify({
+          query: `mutation ($file: Upload!) { uploadPublicFile(file: $file) { bucket_name object_name size url } }`,
+          variables: { file: null },
+        });
+
+        const map = JSON.stringify({ 0: ['variables.file'] });
+
+        formData.append('operations', operations);
+        formData.append('map', map);
+        formData.append('0', file);
+
+        const response = await fetch('http://localhost:3002/graphql', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'x-apollo-operation-name': 'uploadPublicFile',
+          },
+        });
+
+        const result = await response.json();
+        document.getElementById('result-public').textContent = JSON.stringify(
+          result,
+          null,
+          2,
+        );
+      }
+
+      async function uploadPrivateFile() {
+        const fileInput = document.getElementById('filePrivateInput');
+        const authenticationInput = document.getElementById('authentication');
+
+        const file = fileInput.files[0];
+        const authentication = authenticationInput.value;
+
+        const formData = new FormData();
+
+        const operations = JSON.stringify({
+          query: `mutation ($file: Upload!) { uploadPrivateFile(file: $file) { bucket_name object_name size url } }`,
+          variables: { file: null },
+        });
+
+        const map = JSON.stringify({ 0: ['variables.file'] });
+
+        formData.append('operations', operations);
+        formData.append('map', map);
+        formData.append('0', file);
+
+
+        const response = await fetch('http://localhost:3002/graphql', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'x-apollo-operation-name': 'uploadPrivateFile',
+            'authentication': authentication,
+          },
+        });
+
+        const result = await response.json();
+        document.getElementById('result-private').textContent = JSON.stringify(
+          result,
+          null,
+          2,
+        );
+      }
+    </script>
+  </body>
+</html>

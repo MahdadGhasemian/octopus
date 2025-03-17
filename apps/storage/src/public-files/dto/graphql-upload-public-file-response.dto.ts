@@ -1,34 +1,27 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Expose } from 'class-transformer';
 import { IsNumber, IsString, IsUrl } from 'class-validator';
 
-export class UploadPublicFileResponseDto {
-  @ApiProperty({
-    required: true,
-  })
+@ObjectType()
+export class GraphqlUploadPublicFileResponseDto {
   @IsString()
   @Expose()
+  @Field(() => String, { nullable: true })
   bucket_name: string;
 
-  @ApiProperty({
-    required: true,
-  })
   @IsString()
   @Expose()
+  @Field(() => String, { nullable: true })
   object_name: string;
 
-  @ApiProperty({
-    required: true,
-  })
   @IsNumber()
   @Expose()
+  @Field(() => Int, { nullable: true })
   size: number;
 
-  @ApiProperty({
-    required: true,
-  })
   @IsString()
   @IsUrl()
   @Expose()
+  @Field(() => String, { nullable: true })
   url: string;
 }

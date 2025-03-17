@@ -16,6 +16,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
 import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { GraphQLUpload } from 'graphql-upload-minimal';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
             methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
             credentials: true,
           },
+          csrfPrevention: false, // Disable CSRF protection
         } as GqlModuleOptions;
       },
       inject: [ConfigService],
@@ -86,6 +88,12 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     HealthModule.forRoot('RABBITMQ_STORAGE_QUEUE_NAME', 'healthStorage'),
     PublicFilesModule,
     PrivateFilesModule,
+  ],
+  providers: [
+    {
+      provide: 'Upload',
+      useValue: GraphQLUpload,
+    },
   ],
 })
 export class StorageModule {}
