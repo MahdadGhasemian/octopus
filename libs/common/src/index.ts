@@ -13,3 +13,4 @@ export * from './dto';
 export * from './interceptors';
 export * from './utils';
 export * from './graphql';
+export * from './scalars';

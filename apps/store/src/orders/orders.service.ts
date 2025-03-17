@@ -52,16 +52,7 @@ export class OrdersService {
   }
 
   async findOne(orderDto: GetOrderDto, user: User) {
-    return this.ordersRepository.findOne(
-      { ...orderDto, user_id: user.id },
-      {
-        order_items: {
-          product: {
-            category: true,
-          },
-        },
-      },
-    );
+    return this.ordersRepository.findOne({ ...orderDto, user_id: user.id });
   }
 
   async update(
@@ -70,11 +61,19 @@ export class OrdersService {
     user: User,
   ) {
     await this.checkOrderIsValidToEdit(orderDto, user);
-    const total_bill_amount = await this.calcualteTotalAmount(updateOrderDto);
+
+    const updateData: UpdateOrderDto & { total_bill_amount?: number } = {
+      ...updateOrderDto,
+    };
+
+    if (updateOrderDto.order_items) {
+      const total_bill_amount = await this.calcualteTotalAmount(updateOrderDto);
+      updateData.total_bill_amount = total_bill_amount;
+    }
 
     const result = await this.ordersRepository.findOneAndUpdate(
       { ...orderDto, user_id: user.id },
-      { ...updateOrderDto, total_bill_amount },
+      { ...updateData },
     );
 
     return this.findOne({ id: result.id }, user);
@@ -94,10 +93,25 @@ export class OrdersService {
   async remove(orderDto: GetOrderDto, user: User) {
     await this.checkOrderIsValidToEdit(orderDto, user);
 
-    return this.ordersRepository.findOneAndDelete({
+    const order = await this.ordersRepository.findOne(
+      { ...orderDto, user_id: user.id },
+      {
+        order_items: true,
+      },
+    );
+
+    await Promise.all(
+      order.order_items?.map(async (orderItem) => {
+        await this.orderItemsRepository.findOneAndDelete({ id: orderItem.id });
+      }),
+    );
+
+    await this.ordersRepository.findOneAndDelete({
       ...orderDto,
       user_id: user.id,
     });
+
+    return order;
   }
 
   async clearItems(orderDto: GetOrderDto, user: User) {
@@ -121,7 +135,7 @@ export class OrdersService {
       { total_bill_amount: 0 },
     );
 
-    return;
+    return this.findOne({ id: order.id }, user);
   }
 
   async cancelOrder(orderDto: GetOrderDto, user: User) {
@@ -133,6 +147,17 @@ export class OrdersService {
     );
 
     return this.findOne({ id: result.id }, user);
+  }
+
+  async getOrderItemsByOrderId(order_id: number) {
+    const order = await this.ordersRepository.findOneNoCheck(
+      { id: order_id },
+      {
+        order_items: true,
+      },
+    );
+
+    return order?.order_items || [];
   }
 
   private async checkOrderIsValidToEdit(orderDto: GetOrderDto, user: User) {
@@ -153,7 +178,7 @@ export class OrdersService {
   ) {
     return (
       await Promise.all(
-        createOrderDto.order_items.map(async (item) => {
+        createOrderDto.order_items?.map(async (item) => {
           const product = await this.productsService.findOne({
             id: item.product_id,
           });

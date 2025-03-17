@@ -1,10 +1,10 @@
-import { IsArray, IsDateString, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 import { CreateOrderItemDto } from './create-order-items.dto';
 import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateOrderDto {
-  @IsDateString()
+  @IsOptional()
   @Field()
   order_date: Date;
 
@@ -14,6 +14,6 @@ export class CreateOrderDto {
 
   @IsString()
   @IsOptional()
-  @Field()
+  @Field(() => String, { nullable: true })
   note?: string;
 }

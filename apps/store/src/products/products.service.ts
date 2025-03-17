@@ -56,4 +56,8 @@ export class ProductsService {
     await this.productsRepository.findOneAndDelete({ ...productDto });
     return product;
   }
+
+  async getProduct(productDto: GetProductDto) {
+    return this.productsRepository.findOneNoCheck(productDto);
+  }
 }

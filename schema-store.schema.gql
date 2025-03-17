@@ -8,6 +8,17 @@ input CreateCategoryDto {
   name: String!
 }
 
+input CreateOrderDto {
+  note: String
+  order_date: DateTime!
+  order_items: [CreateOrderItemDto!]!
+}
+
+input CreateOrderItemDto {
+  product_id: Int!
+  quantity: Int!
+}
+
 input CreatePaymentDto {
   description: String!
   order_id: Int!
@@ -61,9 +72,12 @@ type GetOrderDto {
 }
 
 type GetOrderItemDto {
+  created_at: DateTime!
+  id: Int!
   product: GetProductDto!
   product_id: Float!
   quantity: Float!
+  updated_at: DateTime!
 }
 
 type GetPaymentDto {
@@ -110,6 +124,12 @@ type ListCategoryDto {
   meta: MetaType!
 }
 
+type ListOrderDto {
+  data: [GetOrderDto!]!
+  links: LinksType!
+  meta: MetaType!
+}
+
 type ListProductDto {
   data: [GetProductDto!]!
   links: LinksType!
@@ -129,12 +149,17 @@ type MetaType {
 }
 
 type Mutation {
+  cancelOrder(id: String!): GetOrderDto!
+  clearOrderItems(id: String!): GetOrderDto!
   createCategory(createCategoryDto: CreateCategoryDto!): GetCategoryDto!
+  createOrder(createOrderDto: CreateOrderDto!): GetOrderDto!
   createPayment(createPaymentDto: CreatePaymentDto!): GetPaymentDto!
   createProduct(createProductDto: CreateProductDto!): GetProductDto!
   deleteCategory(id: String!): GetCategoryDto!
+  deleteOrder(id: String!): GetOrderDto!
   deleteProduct(id: String!): GetProductDto!
   updateCategory(id: String!, updateCategoryDto: UpdateCategoryDto!): GetCategoryDto!
+  updateOrder(id: String!, updateOrderDto: UpdateOrderDto!): GetOrderDto!
   updateProduct(id: String!, updateProductDto: UpdateProductDto!): GetProductDto!
 }
 
@@ -156,6 +181,8 @@ type Query {
   categories(filter: [String!], limit: Int = 10, page: Int = 1, relations: [String!], search: String, searchBy: [String!], sortBy: [String!]): ListCategoryDto!
   category(id: String!): GetCategoryDto!
   healthStore: GetHealthDto!
+  order(id: String!): GetOrderDto!
+  orders(filter: [String!], limit: Int = 10, page: Int = 1, relations: [String!], search: String, searchBy: [String!], sortBy: [String!]): ListOrderDto!
   product(id: String!): GetProductDto!
   products(filter: [String!], limit: Int = 10, page: Int = 1, relations: [String!], search: String, searchBy: [String!], sortBy: [String!]): ListProductDto!
 }
@@ -164,6 +191,12 @@ input UpdateCategoryDto {
   description: String
   image: String
   name: String
+}
+
+input UpdateOrderDto {
+  note: String
+  order_date: DateTime
+  order_items: [CreateOrderItemDto!]
 }
 
 input UpdateProductDto {

@@ -1,5 +1,5 @@
 import { CreateOrderDto } from './create-order.dto';
-import { InputType } from '@nestjs/graphql';
+import { InputType, PartialType } from '@nestjs/graphql';
 
 @InputType()
-export class UpdateOrderDto extends CreateOrderDto {}
+export class UpdateOrderDto extends PartialType(CreateOrderDto) {}

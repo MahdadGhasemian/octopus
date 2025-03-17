@@ -1,4 +1,11 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { User } from '../libs';
 import { OrdersService } from './orders.service';
 import { UseGuards } from '@nestjs/common';
@@ -12,6 +19,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { ListOrderDto } from './dto/list-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { GetOrderDto } from './dto/get-order.dto';
+import { GetOrderItemDto } from './dto/get-order-items.dto';
 
 @Resolver(() => GetOrderDto)
 export class OrdersResolver {
@@ -68,5 +76,10 @@ export class OrdersResolver {
   @UseGuards(JwtAuthAccessGuard)
   async cancelOrder(@CurrentUser() user: User, @Args('id') id: string) {
     return this.ordersService.cancelOrder({ id: +id }, user);
+  }
+
+  @ResolveField(() => [GetOrderItemDto], { name: 'order_items' })
+  async orderItems(@Parent() order: GetOrderDto) {
+    return this.ordersService.getOrderItemsByOrderId(order.id);
   }
 }
