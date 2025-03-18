@@ -5,8 +5,5 @@
   "author": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "@nestjs/swagger": "^7.3.1"
   }
 }
