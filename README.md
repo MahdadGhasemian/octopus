@@ -1,4 +1,4 @@
-# Octopus
+# Octopus GraphQL
 
 ![Octopus](.images/octopus.png)
 
@@ -10,12 +10,7 @@ An **octopus** has three hearts! One heart circulates blood around the body, whi
 
 **Octopus** is a scalable microservices template built with **NestJS**, **RabbitMQ**, **PostgreSQL**, and **Redis**. It provides an efficient and developer-friendly foundation for building distributed systems, supporting both Docker and Kubernetes deployments. The system now leverages **Minio** for object storage, offering a reliable and scalable solution for handling files across services.
 
-## Key Changes:
-
-1- Kafka → RabbitMQ Migration:
-
-- The description now mentions RabbitMQ instead of Kafka.
-- To make it easier to develop.
+## GragphQL:
 
 ## Getting Started
 
@@ -86,68 +81,6 @@ password: randompassword
 mcli alias set octopus http://localhost:9100 admin randompassword
 ```
 
-## Project Structure
-
-```
-octopus
-|
-├── apps
-│   ├── auth
-│   │   ├── Dockerfile
-│   │   ├── Dockerfile.dev
-│   │   ├── package.json
-│   │   ├── src
-│   │   ├── test
-│   │   └── tsconfig.app.json
-│   │   └── .env
-│   ├── storage
-│   │   ├── Dockerfile
-│   │   ├── Dockerfile.dev
-│   │   ├── package.json
-│   │   ├── src
-│   │   ├── test
-│   │   └── tsconfig.app.json
-│   │   └── .env
-│   └── store
-│       ├── Dockerfile
-│       ├── Dockerfile.dev
-│       ├── package.json
-│       ├── src
-│       ├── test
-│       └── tsconfig.app.json
-│       └── .env
-├── docker-compose-test.yaml
-├── docker-compose.yaml
-├── init-scripts
-│   └── seed-data.sql
-├── init-scripts-test
-├── libs
-│   └── common
-│       ├── src
-│       └── tsconfig.lib.json
-├── migrations
-│   ├── developing
-│   │   ├── auth
-│   │   ├── storage
-│   │   └── store
-│   ├── production
-│   │   ├── auth
-│   │   ├── storage
-│   │   └── store
-│   └── stage
-│       ├── auth
-│       ├── storage
-│       └── store
-├── package.json
-├── tsconfig.build.json
-└── tsconfig.json
-└── .env
-└── .env.test
-└── .env.migration.developing
-└── .env.migration.stage
-└── .env.migration.production
-```
-
 ## Services
 
 ### Auth
@@ -186,19 +119,9 @@ octopus
 - Store Service: [http://localhost:3001/docs#/](http://localhost:3001/docs#/)
 - Storage Service: [http://localhost:3002/docs#/](http://localhost:3002/docs#/)
 
-## Postman
+## Postman GraphQL API
 
-### Online Link :
-
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/3450407-89d900a2-cca7-4169-907c-7659658167b2?action=collection%2Ffork&collection-url=entityId%3D3450407-89d900a2-cca7-4169-907c-7659658167b2%26entityType%3Dcollection%26workspaceId%3D035031a5-5824-405a-951d-be779a75439a)
-
-### Download json files directly:
-
-- [Collections](.postman-files/Octopus.postman_collection.json)
-- [Admin User Environment](.postman-files/Octopus1-FullAccess.postman_environment.json)
-- [Internal User Environment](.postman-files/Octopus2-InternalUser.postman_environment.json)
-- [Regular User 1 Environment](.postman-files/Octopus3-User1.postman_environment.json)
-- [Regular User 2 Environment](.postman-files/Octopus4-User2.postman_environment.json)
+You can access the API collection in our [Postman Public Workspace](https://www.postman.com/dark-crescent-229322/octopus-graphql/overview).
 
 ## Migration
 
@@ -222,16 +145,16 @@ POSTGRES_AUTO_LOAD_ENTITIES=true
 
 ```bash
 # Developing
-npm run migration:generate:developing
-npm run migration:run:developing
+pnpm run migration:generate:developing
+pnpm run migration:run:developing
 
 # Stage
-npm run migration:generate:stage
-npm run migration:run:stage
+pnpm run migration:generate:stage
+pnpm run migration:run:stage
 
 # Production
-npm run migration:generate:production
-npm run migration:run:production
+pnpm run migration:generate:production
+pnpm run migration:run:production
 ```
 
 ## Cache Manager
@@ -276,90 +199,23 @@ docker-compose -f ./docker-compose-test.yaml up
 pnpm run test:e2e
 ```
 
-## Roadmap
-
-- [x] App microservices
-- [x] Common libraries
-- [x] Logger
-- [x] Communication between microservices
-- [x] Authentication (JWT, Cookie, Passport)
-- [x] Dynamic roles (Access)
-- [x] TypeORM Postgresql
-  - [x] Entities
-  - [x] Migrations on every branch separately
-- [x] Docker-compose
-- [x] Env
-- [x] Document
-  - [x] Githab Readme
-  - [x] Postman
-  - [x] Auto generated swagger
-- [ ] Test
-- [x] Cache Manager (Redis)
-- [ ] K8S
-
 ## TODO
 
-- [x] Fix Get OTP to expire its session
-- [x] full_name nullable
-- [ ] Category Tree
-- [x] Get Lists be able to support the pagination
-- [ ] Refresh Token
+- [x] REST To Graphql
+- [ ] Validations and Transforms
+- [ ] Checking cache system
+- [ ] Test
 
 ## Contributing
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
+Contributions are welcome!
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License.
 
 ## Change log
 
-### 3.0.0 (2025-02-23)
+### 0.0.1 (2025-03-18)
 
-- Supporting Pagination for list retrieval endpoints.
-- Sending `EVENT_NAME_USER_CREATED` and `EVENT_NAME_USER_UPDATED` from the 'auth' service to the 'store' service to update users.
-
-### 2.1.2 (2025-02-17)
-
-- Transition from JWT_SECRET into JWT_PUBLIC_KEY and JWT_PRIVATE_KEY
-- Fxied access guard
-- Fixed cache manager and added `FoceToClearCache` decorator
-- Added new API route to edit user access /users/{id}/access
-
-### 2.1.1 (2025-02-16)
-
-- Improved the Health Check API to monitor infrastructure connections, including RabbitMQ, PostgreSql and Redis.
-
-### 2.1.0 (2025-02-16)
-
-- Moved entity files into their respective service directories.
-- Fixed the migration script
-
-### 2.0.2 (2025-02-13)
-
-- Added some unit and e3e tests
-
-### 2.0.1 (2025-01-27)
-
-- Added database seed data during intializing (docker-compose)
-- Renamed `cannotBeDeleted` field to `cannot_be_deleted`
-- Added downloadable Postman files
-
-### 2.0.0 (2025-01-26)
-
-- Migrated from saving files on disk to leveraing the Minio for object storage.
-
-### 1.0.0 (2025-01-25)
-
-- Migrated from Kafka to RabbitMQ.
-- Changed the 'hasFullAccess' field to 'has_full_access' in the `access` entity.
-
-### 0.0.2 (2025-01-25)
-
-- Added a caching prefix to support separation of multiple branches in production.
-- Added Redis Insight to the docker-compose file to provide a GUI for Redis.
-
-### 0.0.1 (2024-06-04)
-
-- Initial release.
+- Converted REST API to support GraphQL.
