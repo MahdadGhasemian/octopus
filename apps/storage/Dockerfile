@@ -1,5 +1,5 @@
 # ============== Stage 1 ================
-FROM node:alpine As development
+FROM node:alpine As base
 
 RUN npm install -g pnpm
 
