@@ -202,6 +202,10 @@ pnpm run test:e2e
 ## TODO
 
 - [x] REST To Graphql
+- [ ] Document
+  - [ ] Githab Readme
+  - [x] Postman Graphql
+  - [x] Auto generated swagger (only for storage download api)
 - [ ] Validations and Transforms
 - [ ] Checking cache system
 - [ ] Test
