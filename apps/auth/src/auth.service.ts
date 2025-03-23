@@ -7,7 +7,6 @@ import { Response } from 'express';
 import { TokenPayload } from './interfaces/token-payload.interface';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { LoginDto } from './dto/login.dto';
 import { EditInfoDto } from './dto/edit-info.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
@@ -157,20 +156,7 @@ export class AuthService {
     return user;
   }
 
-  async login(loginDto: LoginDto, response: Response) {
-    const user = await this.usersService.findOneNoCheck({
-      email: loginDto.email,
-    });
-
-    const isEqual = await AuthCommon.compareHash(
-      user.hashed_password,
-      loginDto.password,
-    );
-
-    if (!isEqual) {
-      throw new UnauthorizedException('Credentials are not valid');
-    }
-
+  async login(user: User, response: Response) {
     await this.authenticate(user, response);
 
     return user;
@@ -181,7 +167,7 @@ export class AuthService {
   }
 
   async verifyUser(email: string, password: string) {
-    const user = await this.usersService.findOne({ email });
+    const user = await this.usersService.findOneNoCheck({ email });
 
     const isEqual = await AuthCommon.compareHash(
       user.hashed_password,

@@ -4,6 +4,7 @@ import {
   Get,
   Patch,
   Post,
+  Request,
   Res,
   UseGuards,
   UseInterceptors,
@@ -26,7 +27,6 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { LoginDto } from './dto/login.dto';
 import { GetOtpResponseDto } from './dto/get-otp.response.dto';
 import { GetUserDto } from './users/dto/get-user.dto';
 import { Serialize } from './users/interceptors/serialize.interceptor';
@@ -83,11 +83,8 @@ export class AuthController {
   @ApiOkResponse({
     type: GetUserDto,
   })
-  async login(
-    @Body() loginDto: LoginDto,
-    @Res({ passthrough: true }) response: Response,
-  ) {
-    return this.authService.login(loginDto, response);
+  async login(@Request() req, @Res({ passthrough: true }) response: Response) {
+    return this.authService.login(req.user, response);
   }
 
   @Post('logout')
