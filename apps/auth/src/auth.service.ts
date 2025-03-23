@@ -109,6 +109,8 @@ export class AuthService {
 
     await this.authenticate(user, response);
 
+    delete user.hashed_password;
+
     return user;
   }
 
@@ -153,11 +155,15 @@ export class AuthService {
 
     await this.authenticate(user, response);
 
+    delete user.hashed_password;
+
     return user;
   }
 
   async login(user: User, response: Response) {
     await this.authenticate(user, response);
+
+    delete user.hashed_password;
 
     return user;
   }
@@ -177,6 +183,8 @@ export class AuthService {
     if (!isEqual) {
       throw new UnauthorizedException('Credentials are not valid');
     }
+
+    delete user.hashed_password;
 
     return user;
   }
