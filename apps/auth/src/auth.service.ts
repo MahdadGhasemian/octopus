@@ -21,7 +21,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
-  ) {}
+  ) { }
 
   async getOtp(getOtpDto: GetOtpDto) {
     const otp = this.generateUniqCode();
@@ -209,23 +209,27 @@ export class AuthService {
       userId: user.id,
     };
 
+    const expiration_in_seconds = this.configService.get('JWT_EXPIRATION');
     const expires = new Date();
-    expires.setSeconds(
-      expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
-    );
+    expires.setSeconds(expires.getSeconds() + expiration_in_seconds);
 
     const token = this.jwtService.sign(tokenPayload);
 
     response.cookie('Authentication', token, {
       httpOnly: true,
       expires,
+      maxAge: expiration_in_seconds * 1000,
     });
 
     return token;
   }
 
   private async unauthenticate(response: Response): Promise<string> {
-    response.cookie('Authentication', null);
+    response.cookie('Authentication', '', {
+      httpOnly: true,
+      expires: new Date(),
+      maxAge: 0,
+    });
 
     return null;
   }
