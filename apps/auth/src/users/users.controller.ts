@@ -1,4 +1,3 @@
-import { ForceToClearCache, Serialize } from '@app/common';
 import {
   Controller,
   Get,
@@ -15,7 +14,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { GetUserDto } from './dto/get-user.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { FoceToClearCache, Serialize } from '@app/common';
+import { ForceToClearCache, Serialize } from '@app/common';
 import { JwtAccessGuard } from '../guards/jwt-access.guard';
 import { UpdateUserAccessDto } from './dto/update-user-access.dto';
 import { Paginate, PaginatedSwaggerDocs, PaginateQuery } from 'nestjs-paginate';

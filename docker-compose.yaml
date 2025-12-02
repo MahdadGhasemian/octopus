@@ -126,17 +126,19 @@ services:
       - redis
 
   minio:
-    image: bitnami/minio
+    image: minio/minio
     ports:
       - 9100:9000
       - 9101:9001
     env_file:
       - .env
+    environment:
+      - MINIO_CONSOLE_ADDRESS=:9001
     volumes:
-      - minio_data:/bitnami/minio/data
+      - minio_data:/data
     entrypoint: >
       /bin/sh -c "
-      /opt/bitnami/scripts/minio/run.sh &
+      /usr/bin/minio server /data &
       sleep 10 &&
       mc alias set octopus http://localhost:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD} &&
       mc admin user add octopus ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY} &&
