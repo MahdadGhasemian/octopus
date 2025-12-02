@@ -324,7 +324,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 - Transition from JWT_SECRET into JWT_PUBLIC_KEY and JWT_PRIVATE_KEY
 - Fxied access guard
-- Fixed cache manager and added `FoceToClearCache` decorator
+- Fixed cache manager and added `ForceToClearCache` decorator
 - Added new API route to edit user access /users/{id}/access
 
 ### 2.1.1 (2025-02-16)

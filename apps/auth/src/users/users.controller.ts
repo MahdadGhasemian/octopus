@@ -1,3 +1,4 @@
+import { ForceToClearCache, Serialize } from '@app/common';
 import {
   Controller,
   Get,
@@ -75,7 +76,7 @@ export class UsersController {
   @Patch(':id/access')
   @UseGuards(JwtAccessGuard)
   @Serialize(GetUserDto)
-  @FoceToClearCache('/users')
+  @ForceToClearCache('/users')
   @Serialize(GetUserDto)
   @ApiOkResponse({
     type: GetUserDto,
